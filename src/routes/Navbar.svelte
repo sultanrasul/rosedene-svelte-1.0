@@ -1,0 +1,78 @@
+<script lang="ts">
+	import { Button } from 'flowbite-svelte';
+	import { cn } from '$lib/utils';
+	import { AlignJustify, XIcon } from 'lucide-svelte';
+	import { fly } from 'svelte/transition';
+  import BorderBeam from '$lib/components/BorderBeam.svelte';
+  import {DarkMode} from 'flowbite-svelte';
+  import DropdownMenu from '$lib/components/DropdownMenu.svelte';
+  import { onMount } from 'svelte';
+
+  let scrolled = false;
+  let screenWidth: number;
+
+  function scrollToElementWithOffset(id: string) {
+        const element = document.getElementById(id);
+        const yOffset = -100; // Adjust this value as needed
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+
+  // Update the screen width on resize
+  const updateWidth = () => {
+      screenWidth = window.innerWidth;
+  };
+
+  onMount(() => {
+      updateWidth(); // Set initial width
+      window.addEventListener('resize', updateWidth);
+
+      // Cleanup on component destruction
+      return () => {
+          window.removeEventListener('resize', updateWidth);
+      };
+  });
+
+	// Event listener to track scroll position
+	function handleScroll() {
+		scrolled = window.scrollY > 0;
+    console.log(scrolled);
+	}
+
+
+
+</script>
+
+
+<svelte:window on:scroll={handleScroll} />
+
+<!-- <svelte:window bind:innerWidth /> -->
+
+<header class="mt-2 fixed left-0 top-0 z-50 w-full -translate-y-4 animate-fade-in opacity-100 rounded-xl
+    {scrolled ? 'backdrop-blur-lg border-b shadow-xl' : 'backdrop-filter-none'}">
+  <div class="container flex h-20 items-center justify-between">
+    <!-- Logo -->
+    
+    <a class="text-gray-700 self-center whitespace-nowrap text-xl font-bold dark:text-white leading-none" href="/">Rosedene</a>
+
+    <!-- Navigation Links -->
+      
+    {#if screenWidth < 600}
+      <DropdownMenu mainPage={true}/>
+    {:else}
+      <nav class="ml-auto flex h-full items-center space-x-6">
+        <a class="cursor-pointer text-xl text-gray-400 flex items-center h-full leading-none transition-colors" on:click={() => scrollToElementWithOffset("Home")} >Home</a>
+        <a class="cursor-pointer text-xl text-gray-400 flex items-center h-full leading-none transition-colors" on:click={() => scrollToElementWithOffset("Projects")}>Projects</a>
+        <a class="cursor-pointer text-xl text-gray-400 flex items-center h-full leading-none  transition-colors" on:click={() => scrollToElementWithOffset("Contact")}>Contact</a>
+        
+        <DarkMode btnClass="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-1.5" size="lg"/>
+      </nav>
+    {/if}
+
+  </div>
+</header>
+
+
+
+
