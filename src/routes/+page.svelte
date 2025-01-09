@@ -5,12 +5,7 @@
 
     import Hero from './Hero.svelte';
     import Navbar from './Navbar.svelte';
-    import Cards from './Cards.svelte';
-    import Contact from './Contact.svelte';
-    import { cn } from "$lib/utils";
-    import OrbitingCircles from "$lib/components/OrbitingCircles.svelte";
-    let className = "";
-    import DatePicker from '$lib/components/DatePicker.svelte';
+  
 
 	/**
 	 * @param {string} id

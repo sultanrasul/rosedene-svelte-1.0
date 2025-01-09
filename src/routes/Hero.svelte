@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
     import { Section, News, HeroHeader, HeroBody } from 'flowbite-svelte-blocks';
     import { Button, Avatar} from 'flowbite-svelte';
     import { ArrowRightOutline, ArrowDownOutline, GithubSolid } from 'flowbite-svelte-icons';
@@ -7,7 +9,7 @@
     import BlurFade from '$lib/components/BlurFade.svelte';
     import TextReveal from '$lib/components/TextReveal.svelte';
     import NumberTicker from '$lib/components/NumberTicker.svelte';
-    import DatePicker from '$lib/components/DatePicker.svelte';
+    import DatePicker from './DatePicker.svelte';
 
 
   let todaysDate = new Date();
