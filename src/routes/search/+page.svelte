@@ -1,5 +1,10 @@
-<script>
+<script lang="ts">
     // @ts-nocheck
+        import * as Dialog from "../../lib/components/ui/dialog";
+        import * as Carousel from "../../lib/components/ui/carousel";
+        import type { CarouselAPI } from "$lib/components/ui/carousel/context.js";
+
+        
         import { onMount } from 'svelte';
         import Navbar from '../Navbar.svelte';
         import Card from './Card.svelte';
@@ -8,7 +13,21 @@
         let apartments;
         let startDate; // Variable for start date as a Date object
         let endDate;   // Variable for end date as a Date object
-    
+
+        let api: CarouselAPI;
+        let current = 0;
+        let count = 0;
+        
+        $: if (api) {
+            count = api.scrollSnapList().length;
+            api.scrollTo(5)
+            current = api.selectedScrollSnap() + 1;
+        
+            api.on("select", () => {
+                current = api.selectedScrollSnap() + 1;
+            });
+        }
+
         onMount(async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const checkIn = urlParams.get('check_in'); // Format: day/month/year
@@ -56,6 +75,7 @@
                 console.error('Missing check_in or check_out parameters in URL');
             }
         });
+
     </script>
     
 <!-- Main Menu -->
@@ -66,10 +86,28 @@
     </div>
 
     <div class="relative z-10 pt-20 pb-20">
-        <Navbar/>
-        
-        <DatePicker isSearch startDate={startDate} endDate={endDate}/>
-        <div class="flex flex-wrap justify-center gap-4 pt-10">
+        <Navbar/>   
+
+        <Dialog.Root>
+        <Dialog.Trigger>Open</Dialog.Trigger>
+        <Dialog.Content>
+            <Carousel.Root bind:api>
+                <Carousel.Content>
+                  <Carousel.Item><img class="w-full  object-cover " src={`/1.jpg`}/></Carousel.Item>
+                  <Carousel.Item><img class="w-full  object-cover " src={`/2.jpg`}/></Carousel.Item>
+                  <Carousel.Item><img class="w-full  object-cover " src={`/3.jpg`}/></Carousel.Item>
+                  <Carousel.Item><img class="w-full  object-cover " src={`/4.jpg`}/></Carousel.Item>
+                  <Carousel.Item><img class="w-full  object-cover " src={`/5.jpg`}/></Carousel.Item>
+                  <Carousel.Item><img class="w-full  object-cover " src={`/6.jpg`}/></Carousel.Item>
+                </Carousel.Content>
+                <Carousel.Previous />
+                <Carousel.Next />
+            </Carousel.Root>
+        </Dialog.Content>
+    </Dialog.Root>
+    
+    <DatePicker isSearch startDate={startDate} endDate={endDate}/>
+    <div class="flex flex-wrap justify-center gap-4 pt-10">
             {#if apartments}
                 {#each apartments["properties"]["available"] as apartment }
                     <Card apartmentName={apartment.name} apartmentNumber={apartment.name.match(/\d+/)?.[0]} />
