@@ -6,7 +6,7 @@ import flowbitePlugin from 'flowbite/plugin'
 /** @type {import('tailwindcss').Config} */
 const config = {
 	darkMode: ['class'],
-	content: ['./src/**/*.{html,js,svelte,ts}', './node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}','./node_modules/flowbite-svelte-blocks/**/*.{html,js,svelte,ts}'],
+	content: ['./src/**/*.{html,js,svelte,ts}', './node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}','./node_modules/flowbite-svelte-blocks/**/*.{html,js,svelte,ts}',"./node_modules/flowbite/**/*.js"],
 	safelist: ['dark'],
 	theme: {
 		container: {
