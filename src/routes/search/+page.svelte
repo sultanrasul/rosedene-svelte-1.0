@@ -21,6 +21,7 @@
         $: if (api) {
             count = api.scrollSnapList().length;
             api.scrollTo(5)
+            // the number five you can replace with your index that the user has pressed on the gallery presented on the apartment page
             current = api.selectedScrollSnap() + 1;
         
             api.on("select", () => {
