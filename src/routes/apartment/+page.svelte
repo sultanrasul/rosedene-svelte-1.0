@@ -68,23 +68,7 @@
                     month: endDate.getMonth() + 1,
                     year: endDate.getFullYear()
                 };
-    
-                try {
-                    const response = await fetch('http://127.0.0.1:5000/check_calendar', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ date_from: dateFrom, date_to: dateTo , property_id: apartmentDetails.id}),
-                    });
-    
-                    if (!response.ok) {
-                        throw new Error(`Error: ${response.statusText}`);
-                    }
-    
-                    apartmentsList = await response.json();
-                    console.log(apartmentsList);
-                } catch (error) {
-                    console.error('Failed to fetch blocked apartments:', error);
-                }
+
             } else {
                 console.error('Missing check_in or check_out parameters in URL');
             }
@@ -115,7 +99,7 @@
                 <Slideshow/>
             </div>
             <div class="w-full sm:w-1/2 sm:pl-10 pl-0 items-center justify-center text-center">
-                <Calendar startDate={startDate} endDate={endDate}/>
+                <Calendar startDate={startDate} endDate={endDate} apartmentI/>
             </div>
         </div>
 
