@@ -43,6 +43,7 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource/merriweather": "^5.1.1",
+		"@preline/carousel": "^2.5.2",
 		"@svelte-plugins/datepicker": "^1.0.9",
 		"@sveltejs/adapter-static": "^3.0.8",
 		"add": "^2.0.6",
@@ -56,10 +57,13 @@
 		"lucide-svelte": "^0.414.0",
 		"marked": "^13.0.2",
 		"mode-watcher": "^0.4.0",
+		"pagedone": "^1.2.2",
+		"preline": "^2.7.0",
 		"shadcn-svelte": "^0.14.0",
 		"shiki": "^1.11.2",
 		"svelte-inview": "^4.0.2",
 		"svelte-motion": "^0.12.2",
+		"swiper": "^11.2.1",
 		"tailwind-merge": "^2.4.0",
 		"tailwind-variants": "^0.2.1"
 	}
