@@ -1,5 +1,7 @@
 export const apartments = {
     1: {
+        name: "Emperor Apartment 1",
+        id: 3069140,
         bedrooms: 1,
         tvSize: 75,
         squareFeet: 700,
@@ -8,6 +10,8 @@ export const apartments = {
         
     },
     2: {
+        name: "Emperor Apartment 2",
+        id: 3070529,
         bedrooms: 1,
         tvSize: 75,
         squareFeet: 646,
@@ -15,6 +19,8 @@ export const apartments = {
         maxGuests: 6
     },
     3: {
+        name: "Emperor Studio Apartment 3",
+        id: 3070530,
         bedrooms: 0,
         tvSize: 55,
         squareFeet: 355,
@@ -22,6 +28,8 @@ export const apartments = {
         maxGuests: 4
     },
     4: {
+        name: "King Studio Apartment 4",
+        id: 3070531,
         bedrooms: 0,
         tvSize: 43,
         squareFeet: 301,
@@ -29,6 +37,8 @@ export const apartments = {
         maxGuests: 3
     },
     5: {
+        name: "King Studio Apartment 5",
+        id: 3070533,
         bedrooms: 0,
         tvSize: 43,
         squareFeet: 269,
@@ -36,6 +46,8 @@ export const apartments = {
         maxGuests: 4
     },
     6: {
+        name: "Emperor Apartment 6",
+        id: 3070534,
         bedrooms: 1,
         tvSize: 75,
         squareFeet: 700,
@@ -43,6 +55,8 @@ export const apartments = {
         maxGuests: 6
     },
     7: {
+        name: "Emperor Apartment 7",
+        id: 3070536,
         bedrooms: 1,
         tvSize: 75,
         squareFeet: 581,
@@ -50,6 +64,8 @@ export const apartments = {
         maxGuests: 4
     },
     8: {
+        name: "The Cottage Apartment 8",
+        id: 3070537,
         bedrooms: 2,
         tvSize: 55,
         squareFeet: 560,
@@ -57,6 +73,8 @@ export const apartments = {
         maxGuests: 6
     },
     9: {
+        name: "King Studio Apartment 9",
+        id: 3070540,
         bedrooms: 0,
         tvSize: 55,
         squareFeet: 388,
@@ -64,6 +82,8 @@ export const apartments = {
         maxGuests: 4
     },
     10: {
+        name: "The Cottage Apartment 10",
+        id: 3070538,
         bedrooms: 2,
         tvSize: 55,
         squareFeet: 560,

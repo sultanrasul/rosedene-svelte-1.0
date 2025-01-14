@@ -3,17 +3,20 @@
         import * as Dialog from "../../lib/components/ui/dialog";
         import * as Carousel from "../../lib/components/ui/carousel";
         import type { CarouselAPI } from "$lib/components/ui/carousel/context.js";
+        import { apartments } from '../apartments';
+
+        import Slideshow from "./Slideshow.svelte";
 
         
         import { onMount } from 'svelte';
         import Navbar from '../Navbar.svelte';
-        import Card from './Card.svelte';
         import DatePicker from '../DatePicker.svelte';
+        import Calendar from "./Calendar.svelte";
     
-        let apartments;
+        let apartmentsList;
         let startDate; // Variable for start date as a Date object
         let endDate;   // Variable for end date as a Date object
-
+        let apartmentDetails;
 
         let api: CarouselAPI;
         let current = 0;
@@ -21,8 +24,6 @@
         let adults;
         let children;
 
-        let formattedStartDateDMY;
-        let formattedEndDateDMY;
         
         $: if (api) {
             count = api.scrollSnapList().length;
@@ -40,13 +41,12 @@
             const checkIn = urlParams.get('check_in'); // Format: day/month/year
             const checkOut = urlParams.get('check_out'); // Format: day/month/year
 
-            formattedStartDateDMY = urlParams.get('check_in'); // Format: day/month/year
-            formattedEndDateDMY = urlParams.get('check_out'); // Format: day/month/year
-            
-
+            apartmentDetails = apartments[urlParams.get('number')];
+            console.log(apartmentDetails);
             adults = urlParams.get('adults'); 
             children = urlParams.get('children');
-    
+            
+
             if (checkIn && checkOut) {
                 // Convert day/month/year string to Date object
                 const parseDate = (dateStr) => {
@@ -70,18 +70,18 @@
                 };
     
                 try {
-                    const response = await fetch('http://127.0.0.1:5000/blocked_apartments', {
+                    const response = await fetch('http://127.0.0.1:5000/check_calendar', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ date_from: dateFrom, date_to: dateTo }),
+                        body: JSON.stringify({ date_from: dateFrom, date_to: dateTo , property_id: apartmentDetails.id}),
                     });
     
                     if (!response.ok) {
                         throw new Error(`Error: ${response.statusText}`);
                     }
     
-                    apartments = await response.json();
-                    console.log(apartments);
+                    apartmentsList = await response.json();
+                    console.log(apartmentsList);
                 } catch (error) {
                     console.error('Failed to fetch blocked apartments:', error);
                 }
@@ -92,46 +92,34 @@
 
     </script>
     
-<!-- Main Menu -->
-<div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen" id="Home">
-    <div 
+    <!-- Main Menu -->
+    <div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen" id="Home">
+        <div 
         class="absolute inset-0 opacity-[0.4] z-[-1]"
         style="background-image: url('background.png'); background-size: cover; background-position: center;">
     </div>
-
+    
     <div class="relative z-10 pt-20 pb-20">
         <Navbar/>   
 
-        <Dialog.Root>
-        <Dialog.Trigger>Open</Dialog.Trigger>
-        <Dialog.Content>
-            <Carousel.Root bind:api>
-                <Carousel.Content>
-                  <Carousel.Item><img class="w-full  object-cover " src={`/1.jpg`}/></Carousel.Item>
-                  <Carousel.Item><img class="w-full  object-cover " src={`/2.jpg`}/></Carousel.Item>
-                  <Carousel.Item><img class="w-full  object-cover " src={`/3.jpg`}/></Carousel.Item>
-                  <Carousel.Item><img class="w-full  object-cover " src={`/4.jpg`}/></Carousel.Item>
-                  <Carousel.Item><img class="w-full  object-cover " src={`/5.jpg`}/></Carousel.Item>
-                  <Carousel.Item><img class="w-full  object-cover " src={`/6.jpg`}/></Carousel.Item>
-                </Carousel.Content>
-                <Carousel.Previous />
-                <Carousel.Next />
-            </Carousel.Root>
-        </Dialog.Content>
-    </Dialog.Root>
-    
-    <DatePicker isSearch startDate={startDate} endDate={endDate}/>
-    <div class="flex flex-wrap justify-center gap-4 pt-10">
-            {#if apartments}
-                <!-- svelte-ignore a11y_click_events_have_key_events -->
-                {#each apartments["properties"]["available"] as apartment }
-                    <!-- svelte-ignore a11y_click_events_have_key_events -->
-                    <!-- svelte-ignore a11y_no_static_element_interactions -->
-                    <div on:click={() => {window.location.href = `/apartment?number=${apartment.name.match(/\d+/)?.[0]}&check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&kids=${children}`;}}>
-                        <Card apartmentName={apartment.name} apartmentNumber={apartment.name.match(/\d+/)?.[0]} />
-                    </div>
-                {/each}
-            {/if}
+        <div class="text-[#C09A5B] tracking-[0.5em] font-light text-center w-full max-sm:text-center" style="font-family: 'Merriweather', serif;">
+
+            <div class="inline-block">
+              <h2 class="pt-6 text-4xl">{apartmentDetails?.name}</h2>
+              <hr class="mt-2 mx-auto border-[#C09A5B] border-t-[2px]" style="width: auto; height: 1px;" />
+            </div>
+          </div>
+
+        <div class="flex flex-wrap p-10 ">
+            <div class="w-full sm:w-1/2 items-center justify-center text-center h-1/2">
+                <Slideshow/>
+            </div>
+            <div class="w-full sm:w-1/2 sm:pl-10 pl-0 items-center justify-center text-center">
+                <Calendar startDate={startDate} endDate={endDate}/>
+            </div>
         </div>
+
+
+
     </div>
 </div>
