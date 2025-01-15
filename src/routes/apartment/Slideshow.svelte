@@ -1,28 +1,58 @@
+<script>
+    import { onMount } from "svelte";
+    import { apartments } from '../apartments';
+
+    /**
+     * @type {string | null}
+     */
+    let apartmentNumber;
+    let apartmentDetails;
+    
+    // @ts-ignore
+    /**
+     * @type {number[]}
+     */
+    let pictures;
+
+
+    
+    onMount(() => {
+            const urlParams = new URLSearchParams(window.location.search);
+            apartmentNumber = urlParams.get('number');
+            // @ts-ignore
+            apartmentDetails = apartments[urlParams.get('number')];
+            pictures = Array.from({ length: apartmentDetails.amountOfPictures }, (_, i) => i);
+            console.log(apartmentNumber);
+        });
+
+
+    // let pictures = Array.from({ length: amountOfPictures }, (_, i) => i);
+</script>
+
 
 
 <div id="default-carousel" class="relative w-full" data-carousel="slide">
     <!-- Carousel wrapper -->
     <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
-         <!-- Item 1 -->
+        <!-- Item 1 -->
         <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="/1.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+            <img src="/1/1.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
         </div>
-        <!-- Item 2 -->
         <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="/2.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+            <img src="/1/1.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
         </div>
-        <!-- Item 3 -->
         <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="/3.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+            <img src="/1/1.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
         </div>
-        <!-- Item 4 -->
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="/4.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-        </div>
-        <!-- Item 5 -->
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="/5.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-        </div>
+        {#each pictures as _, i}
+            <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                <img src="/1/1.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+            </div>
+        {/each}
+
+  
+        
+
     </div>
     <!-- Slider indicators -->
     <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">

@@ -17,7 +17,7 @@
         let startDate; // Variable for start date as a Date object
         let endDate;   // Variable for end date as a Date object
         let apartmentDetails;
-
+        let apartmentNumber;
         let api: CarouselAPI;
         let current = 0;
         let count = 0;
@@ -42,6 +42,7 @@
             const checkOut = urlParams.get('check_out'); // Format: day/month/year
 
             apartmentDetails = apartments[urlParams.get('number')];
+            apartmentNumber = urlParams.get('number');
             console.log(apartmentDetails);
             adults = urlParams.get('adults'); 
             children = urlParams.get('children');
@@ -96,10 +97,10 @@
 
         <div class="flex flex-wrap p-10 ">
             <div class="w-full sm:w-1/2 items-center justify-center text-center h-1/2">
-                <Slideshow/>
+                <Slideshow apartmentNumber={apartmentNumber}/>
             </div>
             <div class="w-full sm:w-1/2 sm:pl-10 pl-0 items-center justify-center text-center">
-                <Calendar startDate={startDate} endDate={endDate} apartmentI/>
+                <Calendar startDate={startDate} endDate={endDate}/>
             </div>
         </div>
 
