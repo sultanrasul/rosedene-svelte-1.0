@@ -6,7 +6,8 @@ export const apartments = {
         tvSize: 75,
         squareFeet: 700,
         bathrooms: 2,
-        maxGuests: 6
+        maxGuests: 6,
+        amountOfPictures: 8,
         
     },
     2: {
@@ -16,7 +17,8 @@ export const apartments = {
         tvSize: 75,
         squareFeet: 646,
         bathrooms: 2,
-        maxGuests: 6
+        maxGuests: 6,
+        amountOfPictures: 9,
     },
     3: {
         name: "Emperor Studio Apartment 3",
@@ -25,7 +27,8 @@ export const apartments = {
         tvSize: 55,
         squareFeet: 355,
         bathrooms: 1,
-        maxGuests: 4
+        maxGuests: 4,
+        amountOfPictures: 3,
     },
     4: {
         name: "King Studio Apartment 4",
@@ -34,7 +37,8 @@ export const apartments = {
         tvSize: 43,
         squareFeet: 301,
         bathrooms: 1,
-        maxGuests: 3
+        maxGuests: 3,
+        amountOfPictures: 4,
     },
     5: {
         name: "King Studio Apartment 5",
@@ -43,7 +47,8 @@ export const apartments = {
         tvSize: 43,
         squareFeet: 269,
         bathrooms: 1,
-        maxGuests: 4
+        maxGuests: 4,
+        amountOfPictures: 4,
     },
     6: {
         name: "Emperor Apartment 6",
@@ -52,7 +57,8 @@ export const apartments = {
         tvSize: 75,
         squareFeet: 700,
         bathrooms: 2,
-        maxGuests: 6
+        maxGuests: 6,
+        amountOfPictures: 9,
     },
     7: {
         name: "Emperor Apartment 7",
@@ -61,7 +67,8 @@ export const apartments = {
         tvSize: 75,
         squareFeet: 581,
         bathrooms: 2,
-        maxGuests: 4
+        maxGuests: 4,
+        amountOfPictures: 7,
     },
     8: {
         name: "The Cottage Apartment 8",
@@ -70,7 +77,9 @@ export const apartments = {
         tvSize: 55,
         squareFeet: 560,
         bathrooms: 2,
-        maxGuests: 6
+        maxGuests: 6,
+        amountOfPictures: 6,
+
     },
     9: {
         name: "King Studio Apartment 9",
@@ -79,7 +88,8 @@ export const apartments = {
         tvSize: 55,
         squareFeet: 388,
         bathrooms: 1,
-        maxGuests: 4
+        maxGuests: 4,
+        amountOfPictures: 7,
     },
     10: {
         name: "The Cottage Apartment 10",
@@ -88,7 +98,8 @@ export const apartments = {
         tvSize: 55,
         squareFeet: 560,
         bathrooms: 2,
-        maxGuests: 6
+        maxGuests: 6,
+        amountOfPictures: 8,
     }
 
 };
