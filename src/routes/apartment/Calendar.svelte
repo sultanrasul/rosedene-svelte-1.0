@@ -132,6 +132,7 @@
   }
   
   onMount(async () => {
+
     const urlParams = new URLSearchParams(window.location.search);
     const checkIn = urlParams.get('check_in'); // Format: day/month/year
     const checkOut = urlParams.get('check_out'); // Format: day/month/year
@@ -174,26 +175,31 @@
     } else {
       console.error('Missing check_in or check_out parameters in URL');
     }
-  });
 
+    showTwoMonths = window.innerWidth > 1219; // Set initial value based on current width
+    window.addEventListener('resize', () => (showTwoMonths = window.innerWidth > 1219));
+    return () => window.removeEventListener('resize', () => (showTwoMonths = window.innerWidth > 1219));
+  });
+  let showTwoMonths = true;
   </script>
-  
   <div class="">
-    <!-- DatePicker Component -->
-    <div class="">
-      <DatePicker
-        onNavigationChange={handleNavigationChange}
-        bind:disabledDates
-        alwaysShow={true}
-        isOpen={true}
-        bind:startDate
-        bind:endDate
-        isRange
-        isMultipane
-        showYearControls={false}
-        enableFutureDates
-        enablePastDates={false}
-      />
-    </div>
+    <!-- <button on:click={() => {showTwoMonths=!showTwoMonths} }> testing</button> -->
+
+    <DatePicker
+    onNavigationChange={handleNavigationChange}
+    bind:disabledDates
+    alwaysShow={true}
+    isOpen={true}
+    bind:startDate
+    bind:endDate
+    isRange
+    isMultipane={false}
+    showYearControls={false}
+    enableFutureDates
+    enablePastDates={false}
+    />
   </div>
+  
+
+
   

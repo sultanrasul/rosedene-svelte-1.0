@@ -103,6 +103,8 @@ const config = {
 		flowbitePlugin,
 		require('flowbite/plugin'),
 		require('preline/plugin'),
+		// require('@preline/carousel'),
+		// require('@tailwindcss/forms'),
 	]
 };
 
