@@ -132,68 +132,74 @@
           </div>
           
           <!-- Calendar -->
-          <div class="w-full md:w-[40%] flex flex-col items-center justify-center">
+          <div class="w-full md:w-[40%] flex flex-col justify-start items-center pt-20">
             <!-- Availability Heading -->
             <h2 class="mb-4 text-4xl font-semibold text-[#C09A5B] tracking-wider uppercase w-full text-center">
               Availability
             </h2>
             
             <!-- Calendar Container -->
-            <div class="w-[345px] h-[400px] scale-[1.3] responsive-scale text-center border border-[#C09A5B] rounded-3xl border-4 p-3">
+            <div class="w-[345px] h-[400px] scale-[1.3] responsive-scale text-center p-3">
               <Calendar startDate={startDate} endDate={endDate} />
             </div>
           </div>
+
           
           
         </div>
       </div>
     </div>
     
-    <style>
-      @media (min-width: 975px) {
-        .responsive-scale {
-          transform: scale(1.2);
-          margin-top: 2rem;
-        }
-        .responsive-flex {
-          padding-top: 5%;
-          display: flex;
-          justify-content: center; /* Align items horizontally */
-        }
-      }
-    
-      @media (max-width: 975px) {
-        .responsive-scale {
-          transform: scale(1);
-        }
-        .responsive-flex {
-          display: flex;
-          align-items: center;
-        }
-      }
-    
-      @media (max-width: 767px) {
-        .responsive-scale {
-          transform: scale(1.2);
-          margin-top: 10%;
-        }
-        .responsive-flex {
-          display: flex;
-          align-items: center; /* Align items vertically */
-          justify-content: center; /* Align items horizontally */
-        }
-      }
-    
-      @media (max-width: 500px) {
-        .responsive-scale {
-          transform: scale(1);
-          margin-top: 0%;
-        }
-        .responsive-flex {
-          display: flex;
-          align-items: center; /* Align items vertically */
-          justify-content: center; /* Align items horizontally */
-        }
-      }
-    </style>
-    
+<style>
+  @media (min-width: 975px) {
+    .responsive-scale {
+      transform: scale(1.2);
+      margin-top: 2rem;
+    }
+    .responsive-flex {
+      padding-top: 5%;
+      display: flex;
+      justify-content: center; /* Align items horizontally */
+    }
+  }
+
+  @media (max-width: 975px) {
+    .responsive-scale {
+      transform: scale(1);
+    }
+    .responsive-flex {
+      display: flex;
+      justify-content: center; /* Align items horizontally */
+    }
+  }
+
+  @media (max-width: 767px) {
+    .responsive-scale {
+      transform: scale(1.2);
+      margin-top: 10%;
+    }
+    .responsive-flex {
+      display: flex;
+      justify-content: center; /* Align items horizontally */
+    }
+  }
+
+  @media (max-width: 500px) {
+    .responsive-scale {
+      transform: scale(1);
+      margin-top: 0%;
+    }
+    .responsive-flex {
+      display: flex;
+      justify-content: center; /* Align items horizontally */
+    }
+  }
+
+  /* Ensure entire calendar section stays at the top */
+  .w-full.md\:w-\[40\%\].flex {
+    justify-content: flex-start; /* Align content to the top */
+    align-items: center; /* Horizontally center the content */
+    flex-direction: column; /* Stack items vertically */
+  }
+
+</style>
