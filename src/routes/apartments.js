@@ -58,7 +58,7 @@ export const apartments = {
         squareFeet: 700,
         bathrooms: 2,
         maxGuests: 6,
-        amountOfPictures: 9,
+        amountOfPictures: 8,
     },
     7: {
         name: "Emperor Apartment 7",

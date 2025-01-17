@@ -4,6 +4,7 @@
         import * as Carousel from "../../lib/components/ui/carousel";
         import type { CarouselAPI } from "$lib/components/ui/carousel/context.js";
         import { apartments } from '../apartments';
+        import { Home, Building } from "lucide-svelte";
 
         import Slideshow from "./Slideshow.svelte";
 
@@ -12,6 +13,7 @@
         import Navbar from '../Navbar.svelte';
         import DatePicker from '../DatePicker.svelte';
         import Calendar from "./Calendar.svelte";
+        import Slide from "flowbite-svelte/Slide.svelte";
     
         let apartmentsList;
         let startDate; // Variable for start date as a Date object
@@ -24,6 +26,7 @@
         let adults;
         let children;
         let images;
+        let isModalOpen = false;
 
 
         
@@ -102,17 +105,28 @@
             return images;
         }
 
+        function replacePathToSearch() {
+          // Get the current URL
+          const currentUrl = new URL(window.location.href);
+
+          // Replace 'apartment' with 'search' in the pathname
+          const newPathname = currentUrl.pathname.replace('apartment', 'search');
+
+          // Construct the new URL
+          const newUrl = `${currentUrl.origin}${newPathname}${currentUrl.search}`;
+
+          // Redirect to the new URL
+          window.location.href = newUrl;
+      }
+
     </script>
     
     <!-- Main Menu -->
+    <Navbar />
     <div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen" id="Home">
-      <div class="relative z-10 pt-20 pb-20">
-        <Navbar />
+      <div class="relative z-10 pt-20 pb-20 pl-40 pr-40">
     
-        <div
-          class="text-[#C09A5B] tracking-[0.5em] font-light text-center w-full max-md:text-center"
-          style="font-family: 'Merriweather', serif;"
-        >
+        <!-- <div class="text-[#C09A5B] tracking-[0.5em] font-light text-center w-full max-md:text-center" style="font-family: 'Merriweather', serif;">
           <div class="inline-block">
             <h2 class="mb-4 text-4xl font-semibold text-[#C09A5B] tracking-wider uppercase w-full text-center">{apartmentDetails?.name}</h2>
             <hr
@@ -120,86 +134,90 @@
             style="width: auto; height: 1px;"
             />
           </div>
-        </div>
+        </div> -->
+
+        <!-- Breadcrumb -->
+        <ol class="flex items-center whitespace-nowrap pb-4 pl-3">
+          <li class="inline-flex items-center">
+            <a on:click={() => {window.location.href = "/"} } class="flex items-center text-sm text-gray-500 hover:text-[#C09A5B] focus:outline-none  " href="#">
+
+              <Home size="24px" class="shrink-0 me-3 size-4"/>
+              Home
+            </a>
+            <svg class="shrink-0 mx-2 size-4 text-gray-400 dark:text-neutral-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          </li>
+          <li class="inline-flex items-center">
+            <a on:click={replacePathToSearch} class="flex items-center text-sm text-gray-500 hover:text-[#C09A5B] focus:outline-none" href="#">
+              <Building size="24px" class="shrink-0 me-3 size-4"/>
+              Apartments
+              <svg class="shrink-0 mx-2 size-4 text-gray-400 dark:text-neutral-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m9 18 6-6-6-6"></path>
+              </svg>
+            </a>
+          </li>
+          <li class="inline-flex items-center text-sm font-semibold truncate text-[#C09A5B]" aria-current="page">
+            {apartmentDetails?.name}
+          </li>
+        </ol>
         
-        <!-- Layout wrapper -->
-        <div class="flex flex-col md:flex-row p-5 md:space-x-5">
-          <!-- Slideshow -->
-          <div class="w-full md:w-[60%] items-center justify-center text-center p-0 md:p-10">
+        <!-- Images -->
+        <div class="flex flex-col md:flex-row md:space-x-5">
+          <div class="w-full items-center justify-center text-center">
             <div class="pb-5">
-              <Slideshow images={images} />
+              <div class="grid grid-cols-3 gap-4 pt-2">
+                <!-- Selected Image Display -->
+                <div class="col-span-2 flex justify-center items-center">
+                    {#if images}
+                        <img src={images[0].src} alt="" class="rounded-xl max-h-[512px] object-contain shadow-lg" >
+                    {/if}
+                </div>
+            
+                <!-- Thumbnail Gallery -->
+                <div class="col-span-1 flex flex-col space-y-4 max-h-[512px] overflow-y-auto">
+                    {#if images}
+                        {#each images as image, i}
+                            <div>
+                                <img class="h-auto max-w-full rounded-lg  transition-all"src={image.src} alt="">
+                            </div>
+                        {/each}
+                    {/if}
+                </div>
+            </div>
             </div>
           </div>
+
           
           <!-- Calendar -->
-          <div class="w-full md:w-[40%] flex flex-col justify-start items-center pt-20">
-            <!-- Availability Heading -->
-            <h2 class="mb-4 text-4xl font-semibold text-[#C09A5B] tracking-wider uppercase w-full text-center">
-              Availability
+          <!-- <div class="w-full md:w-[40%] flex flex-col justify-start items-center ">
+            
+          <h2 class="mb-4 text-4xl font-semibold text-[#C09A5B] tracking-wider uppercase w-full text-center">
+            Availability
             </h2>
             
-            <!-- Calendar Container -->
-            <div class="w-[345px] h-[400px] scale-[1.3] responsive-scale text-center p-3">
+            
+            <div class="w-[345px] h-[400px] scale-[1.0] responsive-scale text-center ">
               <Calendar startDate={startDate} endDate={endDate} />
+              </div>
+              </div> -->
+              
+              
+              
             </div>
           </div>
-
-          
-          
-        </div>
-      </div>
+          <button on:click={() => {isModalOpen = !isModalOpen;}}>Open Model</button>
     </div>
-    
-<style>
-  @media (min-width: 975px) {
-    .responsive-scale {
-      transform: scale(1.2);
-      margin-top: 2rem;
-    }
-    .responsive-flex {
-      padding-top: 5%;
-      display: flex;
-      justify-content: center; /* Align items horizontally */
-    }
-  }
 
-  @media (max-width: 975px) {
-    .responsive-scale {
-      transform: scale(1);
-    }
-    .responsive-flex {
-      display: flex;
-      justify-content: center; /* Align items horizontally */
-    }
-  }
 
-  @media (max-width: 767px) {
-    .responsive-scale {
-      transform: scale(1.2);
-      margin-top: 10%;
-    }
-    .responsive-flex {
-      display: flex;
-      justify-content: center; /* Align items horizontally */
-    }
-  }
-
-  @media (max-width: 500px) {
-    .responsive-scale {
-      transform: scale(1);
-      margin-top: 0%;
-    }
-    .responsive-flex {
-      display: flex;
-      justify-content: center; /* Align items horizontally */
-    }
-  }
-
-  /* Ensure entire calendar section stays at the top */
-  .w-full.md\:w-\[40\%\].flex {
-    justify-content: flex-start; /* Align content to the top */
-    align-items: center; /* Horizontally center the content */
-    flex-direction: column; /* Stack items vertically */
-  }
-
-</style>
+    {#if isModalOpen}
+    <div class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
+        <div class="relative w-full h-full">
+            <button on:click={() => {isModalOpen = !isModalOpen;}} class="absolute top-4 right-4 text-white text-2xl font-bold">×</button>
+            <div class="w-full h-full flex justify-center items-center">
+                <Slideshow images={images}/>
+            </div>
+        </div>
+    </div>
+  {/if}
+  
