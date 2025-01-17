@@ -106,39 +106,94 @@
     
     <!-- Main Menu -->
     <div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen" id="Home">
-        <!-- svelte-ignore element_invalid_self_closing_tag -->
-      
-        <div class="relative z-10 pt-20 pb-20">
-          <Navbar />
-      
-          <div
-            class="text-[#C09A5B] tracking-[0.5em] font-light text-center w-full max-md:text-center"
-            style="font-family: 'Merriweather', serif;"
-          >
-            <div class="inline-block">
-              <h2 class="pt-6 text-4xl">{apartmentDetails?.name}</h2>
-              <hr
-                class="mt-2 mx-auto border-[#C09A5B] border-t-[2px]"
-                style="width: auto; height: 1px;"
-              />
-            </div>
+      <div class="relative z-10 pt-20 pb-20">
+        <Navbar />
+    
+        <div
+          class="text-[#C09A5B] tracking-[0.5em] font-light text-center w-full max-md:text-center"
+          style="font-family: 'Merriweather', serif;"
+        >
+          <div class="inline-block">
+            <h2 class="mb-4 text-4xl font-semibold text-[#C09A5B] tracking-wider uppercase w-full text-center">{apartmentDetails?.name}</h2>
+            <hr
+            class="mt-2 mx-auto border-[#C09A5B] border-t-[2px]"
+            style="width: auto; height: 1px;"
+            />
           </div>
-      
-          <!-- Layout wrapper -->
-          <div class="flex flex-col md:flex-row p-5 md:space-x-5">
-            <!-- Slideshow -->
-            <div class="w-full md:w-[60%] items-center justify-center text-center">
+        </div>
+        
+        <!-- Layout wrapper -->
+        <div class="flex flex-col md:flex-row p-5 md:space-x-5">
+          <!-- Slideshow -->
+          <div class="w-full md:w-[60%] items-center justify-center text-center p-0 md:p-10">
+            <div class="pb-5">
               <Slideshow images={images} />
             </div>
-      
-            <!-- Calendar -->
-            <div
-              class="w-full md:w-[40%] md:pl-10 pt-10 pl-0 items-center justify-center text-center"
-            >
+          </div>
+          
+          <!-- Calendar -->
+          <div class="w-full md:w-[40%] flex flex-col items-center justify-center">
+            <!-- Availability Heading -->
+            <h2 class="mb-4 text-4xl font-semibold text-[#C09A5B] tracking-wider uppercase w-full text-center">
+              Availability
+            </h2>
+            
+            <!-- Calendar Container -->
+            <div class="w-[345px] h-[400px] scale-[1.3] responsive-scale text-center border border-[#C09A5B] rounded-3xl border-4 p-3">
               <Calendar startDate={startDate} endDate={endDate} />
             </div>
           </div>
+          
+          
         </div>
       </div>
-      
-      
+    </div>
+    
+    <style>
+      @media (min-width: 975px) {
+        .responsive-scale {
+          transform: scale(1.2);
+          margin-top: 2rem;
+        }
+        .responsive-flex {
+          padding-top: 5%;
+          display: flex;
+          justify-content: center; /* Align items horizontally */
+        }
+      }
+    
+      @media (max-width: 975px) {
+        .responsive-scale {
+          transform: scale(1);
+        }
+        .responsive-flex {
+          display: flex;
+          align-items: center;
+        }
+      }
+    
+      @media (max-width: 767px) {
+        .responsive-scale {
+          transform: scale(1.2);
+          margin-top: 10%;
+        }
+        .responsive-flex {
+          display: flex;
+          align-items: center; /* Align items vertically */
+          justify-content: center; /* Align items horizontally */
+        }
+      }
+    
+      @media (max-width: 500px) {
+        .responsive-scale {
+          transform: scale(1);
+          margin-top: 0%;
+        }
+        .responsive-flex {
+          display: flex;
+          align-items: center; /* Align items vertically */
+          justify-content: center; /* Align items horizontally */
+        }
+      }
+    </style>
+    
