@@ -183,7 +183,6 @@
   let showTwoMonths = true;
   </script>
   <div class="">
-    <!-- <button on:click={() => {showTwoMonths=!showTwoMonths} }> testing</button> -->
 
     <DatePicker
     onNavigationChange={handleNavigationChange}
@@ -191,6 +190,7 @@
     alwaysShow={true}
     isOpen={true}
     bind:startDate
+    theme="custom-datepicker"
     bind:endDate
     isRange
     isMultipane={false}
@@ -199,7 +199,18 @@
     enablePastDates={false}
     />
   </div>
-  
+<!--   
+    <DatePicker theme="custom-datepicker" isOpen bind:startDate isRange >
+
+    </DatePicker> -->
+
+  <style>
 
 
   
+    :global(.datepicker[data-picker-theme="custom-datepicker"]) {
+      --datepicker-container-border: 6px solid #C09A5B;
+      
+
+    }
+  </style>
