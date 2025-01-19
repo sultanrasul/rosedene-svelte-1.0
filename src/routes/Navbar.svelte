@@ -49,7 +49,7 @@
 
 <!-- <svelte:window bind:innerWidth /> -->
 
-<header class="mt-2 fixed left-0 top-0 z-50 w-full -translate-y-4 animate-fade-in opacity-100 rounded-xl
+<header class="pt-2 bg-gray-800/0 left-0 top-0 z-50 w-full -translate-y-4 animate-fade-in opacity-100
     {scrolled ? 'backdrop-blur-lg border-b shadow-xl' : 'backdrop-filter-none'}">
   <div class="container flex h-20 items-center justify-between">
     <!-- Logo -->

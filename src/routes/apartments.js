@@ -8,6 +8,15 @@ export const apartments = {
         bathrooms: 2,
         maxGuests: 6,
         amountOfPictures: 8,
+        description: `
+            Emperor Apartment 1 is located on the ground floor of the original building. This is a superior One Bedroom Apartment. The Apartment includes a Shower Room with toilet and an en-suite Shower Room with toilet.
+
+            The Apartment is ideal for a short or extended stay and perfectly suits a corporate traveller who may wish to have family visit and stay at times while in residence. 
+
+            The Emperor Bed is an outstanding feature of the Apartment, bespoke designed for Rosedene Highland House, it is of an exceptional quality, classic style and ultimate comfort. The bedroom can be set up as a twin room. 
+
+            The Apartment includes a 75” flat screen Samsung Smart TV in the lounge and 55” Samsung Smart TV in the bedroom.
+        `,
         
     },
     2: {
@@ -19,6 +28,15 @@ export const apartments = {
         bathrooms: 2,
         maxGuests: 6,
         amountOfPictures: 9,
+        description: `
+            Emperor Apartment 2 is located on the ground floor of the original building. This is a superior One Bedroom Apartment. The Apartment includes a Shower Room with toilet and an en-suite Shower Room with toilet.
+
+            The Apartment is ideal for a short or extended stay and perfectly suits a corporate traveller who may wish to have family visit and stay at times while in residence. 
+
+            The Emperor Bed is an outstanding feature of the Apartment, bespoke designed for Rosedene Highland House, it is of an exceptional quality, classic style and ultimate comfort. The bedroom can be set up as a twin room. 
+
+            The Apartment includes a 75” flat screen Samsung Smart TV in the lounge and 55” Samsung Smart TV in the bedroom.
+        `
     },
     3: {
         name: "Emperor Studio Apartment 3",
@@ -29,6 +47,17 @@ export const apartments = {
         bathrooms: 1,
         maxGuests: 4,
         amountOfPictures: 3,
+        description: `
+            Emperor Studio Apartment 3 is located on the ground floor of the original building. 
+
+            This is a superior Studio Apartment which includes an Emperor Bed, galley kitchen and large shower room. 
+
+            The Apartment is ideal for a short or extended stay and perfectly suits a corporate traveller. 
+
+            The Emperor Bed is an outstanding feature of the Apartment, bespoke designed for Rosedene Highland House, it is of an exceptional quality, classic style and ultimate comfort. This Emperor Studio can be set up as a twin.  
+
+            The Apartment includes a 55" flat screen Samsung Smart TV. 
+        `
     },
     4: {
         name: "King Studio Apartment 4",
@@ -39,6 +68,17 @@ export const apartments = {
         bathrooms: 1,
         maxGuests: 3,
         amountOfPictures: 4,
+        description: `
+            King Studio Apartment 4 is located on the ground floor of the original building. 
+
+            This Studio Apartment has been intricately designed to offer home comforts and an exceptional quality King size bed and large shower room. 
+
+            The Apartment is ideal for a short or extended stay and perfectly suits a corporate traveller. There is a luggage store, built in mirror robes, coat rack, dining/work table and chairs. 
+
+            The King Bed is an outstanding feature of the Apartment, bespoke designed for Rosedene Highland House, it is of an exceptional quality, classic style and ultimate comfort.
+
+            The Apartment includes a 55" flat screen Samsung Smart TV. 
+        `
     },
     5: {
         name: "King Studio Apartment 5",
@@ -49,6 +89,17 @@ export const apartments = {
         bathrooms: 1,
         maxGuests: 4,
         amountOfPictures: 4,
+        description: `
+            King Studio Apartment 5 is located on the first floor of the original building. 
+
+            This Studio Apartment is spacious and cosy offering many home comforts and an exceptional quality King size bed and large shower room. 
+
+            The Apartment is ideal for a short or extended stay and perfectly suits a corporate traveller.  
+
+            The King Bed is an outstanding feature of the Apartment, bespoke designed for Rosedene Highland House, it is of an exceptional quality, classic style and ultimate comfort. This Emperor Studio can be set up as a twin.  
+
+            The Apartment includes a 43" flat screen Samsung Smart TV. 
+        `,
     },
     6: {
         name: "Emperor Apartment 6",
@@ -59,6 +110,16 @@ export const apartments = {
         bathrooms: 2,
         maxGuests: 6,
         amountOfPictures: 8,
+        description: `
+            Emperor Apartment 6 is located on the first floor of the original building. This is a superior One Bedroom Apartment. The Apartment includes a Shower Room with toilet and an en-suite Shower Room with toilet.
+
+            The Apartment is ideal for a short or extended stay and perfectly suits a corporate traveller who may wish to have family stay at times while in residence. 
+
+            The Emperor Bed is an outstanding feature of the Apartment, bespoke designed for Rosedene Highland House, it is of an exceptional quality, classic style and ultimate comfort. The bedroom can be set up as a twin room. 
+
+            The Apartment includes a 75” flat screen Samsung Smart TV in the lounge and 55” Samsung Smart TV in the bedroom.
+
+        `,
     },
     7: {
         name: "Emperor Apartment 7",
@@ -69,6 +130,15 @@ export const apartments = {
         bathrooms: 2,
         maxGuests: 4,
         amountOfPictures: 7,
+        description: `
+            Emperor Apartment 7 is located on the first floor of the original building. This is a superior One Bedroom Apartment. The Apartment includes a Shower Room with toilet and an en-suite Shower Room with toilet.
+
+            The Apartment is ideal for a short or extended stay and perfectly suits a corporate traveller who may wish to have family stay at times while in residence. 
+
+            The Emperor Bed is an outstanding feature of the Apartment, bespoke designed for Rosedene Highland House, it is of an exceptional quality, classic style and ultimate comfort. The bedroom can be set up as a twin room. 
+
+            The Apartment includes a 75” flat screen Samsung Smart TV in the lounge and 55” Samsung Smart TV in the bedroom.
+        `,
     },
     8: {
         name: "The Cottage Apartment 8",
@@ -79,6 +149,15 @@ export const apartments = {
         bathrooms: 2,
         maxGuests: 6,
         amountOfPictures: 6,
+        description: `
+            The cottage Apartment 8 is located on the ground floor, this is an annexe to the original building added circa 1920's. This apartment is self-contained with its own front door, vestibule on entry and parking at the door. 
+
+            Perfectly laid out to include a single bedroom, family Shower Room with toilet and a Master Bedroom including an en-suite shower room with toilet. 
+
+            This is an ideal Apartment for a short to extended corporate stay, either for an individual or to share.  
+
+            The apartment includes a 55” flat screen Samsung Smart TV in the lounge and 55” Samsung Smart TV in the Master Bedroom.
+        `
 
     },
     9: {
@@ -90,6 +169,17 @@ export const apartments = {
         bathrooms: 1,
         maxGuests: 4,
         amountOfPictures: 7,
+        description: `
+            King Studio Apartment 9 is located on the first floor of the annexe of the building, added circa 1920. 
+
+            This Studio Apartment has been carefully designed to offer a comfortable and spacious layout, offering many home comforts and an exceptional quality King size bed and large shower room. 
+
+            The Apartment is ideal for a short or extended stay and perfectly suits a corporate traveller.  
+
+            The King Bed is an outstanding feature of the Apartment, bespoke designed for Rosedene Highland House, it is of an exceptional quality, classic style and ultimate comfort. 
+
+            The Apartment includes a 55" flat screen Samsung Smart TV. 
+        `
     },
     10: {
         name: "The Cottage Apartment 10",
@@ -100,6 +190,15 @@ export const apartments = {
         bathrooms: 2,
         maxGuests: 6,
         amountOfPictures: 8,
+        description: `
+            The cottage Apartment 10 is located on the first-floor annexe to the original building added circa 1920's. 
+
+            The Apartment layout has been well designed to offer a Master Bedroom with en-suite Shower Room, a double bedroom, large bathroom with a 6ft bath and a shower above the bath.  
+
+            This is an ideal Apartment for a short to extended corporate stay, either for an individual or to share.  
+
+            The apartment includes a 55” flat screen Samsung Smart TV in the lounge and 43” Samsung Smart TV in the Master Bedroom.
+        `
     }
 
 };

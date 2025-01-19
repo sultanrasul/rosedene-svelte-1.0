@@ -28,12 +28,12 @@
 
   onMount(() => {
     updateWidth(); // Set initial width
-      window.addEventListener('resize', updateWidth);
+    window.addEventListener('resize', updateWidth);
 
       // Cleanup on component destruction
-      return () => {
-          window.removeEventListener('resize', updateWidth);
-      };
+    return () => {
+        window.removeEventListener('resize', updateWidth);
+    };
 
   });
   /**
