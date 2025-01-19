@@ -5,6 +5,7 @@
     import Carousel from 'svelte-carousel';
     import { browser } from '$app/environment';
     import { onMount } from 'svelte';
+    import { currentPageIndex as sharedCurrentPageIndex } from './store';
     
     let pagesCount;
     let currentPageIndex;
@@ -27,24 +28,31 @@
     
     onMount(() => {
         currentPageIndex = 0;
-    
+
         updateWidth(); // Set initial width
         window.addEventListener('resize', updateWidth);
     
         // Cleanup on component destruction
         return () => {
             window.removeEventListener('resize', updateWidth);
+
         };
+        
     });
     </script>
-    
+
+
     {#if browser}
         <div class="flex flex-col items-center min-h-screen justify-center">
             <!-- Carousel Section -->
             <div class="w-full flex justify-center">
                 <div class="max-w-full" style="max-width: {screenWidth * 0.65}px;"> <!-- Center the carousel -->
+                    <!-- svelte-ignore a11y_click_events_have_key_events -->
+                    <!-- svelte-ignore a11y_no_static_element_interactions -->
                     <Carousel on:pageChange={event => currentPageIndex = event.detail} bind:this={carousel} arrows={true} dots={false}>
                         <!-- Carousel navigation buttons -->
+                        <!-- svelte-ignore a11y_click_events_have_key_events -->
+                        <!-- svelte-ignore a11y_no_static_element_interactions -->
                         <div slot="prev" on:click={() => { carousel.goToPrev({ animated: true }) }}>
                             <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
                                 <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#C09A5B] group-hover:bg-[#C09A5B]/80 group-focus:ring-4 group-focus:ring-[#C09A5B]">
@@ -64,6 +72,7 @@
                         {/each}
     
                         <!-- Forward button -->
+                        <!-- svelte-ignore a11y_click_events_have_key_events -->
                         <div slot="next" on:click={() => { carousel.goToNext({ animated: true }) }}>
                             <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
                                 <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#C09A5B] group-hover:bg-[#C09A5B]/80 group-focus:ring-4 group-focus:ring-[#C09A5B]">
@@ -83,6 +92,8 @@
                 <div class="flex gap-4">
                     {#each images as image, i}
                         <div class="inline-block">
+                            <!-- svelte-ignore a11y_click_events_have_key_events -->
+                            <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
                             <img class="h-[120px] w-[120px] object-cover rounded-lg cursor-pointer transition-all"
                                  class:border-4={i === currentPageIndex}
                                  class:border-[#C09A5B]= {i === currentPageIndex} 

@@ -3,6 +3,7 @@
         import * as Dialog from "../../lib/components/ui/dialog";
         import * as Carousel from "../../lib/components/ui/carousel";
         import type { CarouselAPI } from "$lib/components/ui/carousel/context.js";
+        import { Home, Building } from "lucide-svelte";
 
         
         import { onMount } from 'svelte';
@@ -99,29 +100,12 @@
         style="background-image: url('background.png'); background-size: cover; background-position: center;">
     </div>
 
-    <div class="relative z-10 pt-20 pb-20">
+    <div class="relative z-10 pt-20 pb-20 ">
         <Navbar/>   
+        <DatePicker isSearch startDate={startDate} endDate={endDate}/>
+        
+        <div class="flex flex-wrap justify-center gap-4 pt-10">
 
-        <Dialog.Root>
-        <Dialog.Trigger>Open</Dialog.Trigger>
-        <Dialog.Content>
-            <Carousel.Root bind:api>
-                <Carousel.Content>
-                  <Carousel.Item><img class="w-full  object-cover " src={`/1.jpg`}/></Carousel.Item>
-                  <Carousel.Item><img class="w-full  object-cover " src={`/2.jpg`}/></Carousel.Item>
-                  <Carousel.Item><img class="w-full  object-cover " src={`/3.jpg`}/></Carousel.Item>
-                  <Carousel.Item><img class="w-full  object-cover " src={`/4.jpg`}/></Carousel.Item>
-                  <Carousel.Item><img class="w-full  object-cover " src={`/5.jpg`}/></Carousel.Item>
-                  <Carousel.Item><img class="w-full  object-cover " src={`/6.jpg`}/></Carousel.Item>
-                </Carousel.Content>
-                <Carousel.Previous />
-                <Carousel.Next />
-            </Carousel.Root>
-        </Dialog.Content>
-    </Dialog.Root>
-    
-    <DatePicker isSearch startDate={startDate} endDate={endDate}/>
-    <div class="flex flex-wrap justify-center gap-4 pt-10">
             {#if apartments}
                 <!-- svelte-ignore a11y_click_events_have_key_events -->
                 {#each apartments["properties"]["available"] as apartment }
