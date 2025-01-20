@@ -25,8 +25,8 @@
   export let isSearch = false;  
 
 
-  let children = 0;
-  let adults = 1;
+  export let children = 0;
+  export let adults = 1;
   
   let dateFormatDMY = 'dd/MM/yyyy';
   let dateFormat = 'dd MMMM';
@@ -69,7 +69,7 @@ function decrementChildren(){
   $: formattedEndDateDMY = formatDateDMY(endDate);
 </script>
 
-<div class="flex items-center justify-center py-6 relative">
+<div class="flex items-center justify-center py-6 relative z-[10]">
   <div class="flex items-center gap-4 px-6 py-3 bg-white rounded-full shadow-md relative">
     <!-- Date Input -->
     <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -92,7 +92,7 @@ function decrementChildren(){
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div class="flex items-center gap-2 cursor-pointer text-gray-600 hover:text-blue-500" on:click={toggleGuestPopup}>
       <UserRoundIcon />
-      <span>{adults + children} Guest{(adults + children) > 1 ? 's' : ''}</span>
+      <span> {parseInt(adults, 10) + parseInt(children, 10)} Guest{(parseInt(adults, 10) + parseInt(children, 10)) > 1 ? 's' : ''}</span>
     </div>
 
     
@@ -100,7 +100,7 @@ function decrementChildren(){
     <div class="w-px h-6 bg-gray-300"></div>
 
     <!-- Search Button -->
-    <button on:click={() => {window.location.href = `/search?check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&kids=${children}`;}} 
+    <button on:click={() => {window.location.href = `/search?check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}`;}} 
     class="flex items-center justify-center w-10 h-10 bg-blue-500 rounded-full hover:bg-blue-600 focus:outline-none">
       <Search />
     </button>
