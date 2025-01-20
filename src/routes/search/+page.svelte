@@ -45,8 +45,9 @@
             formattedEndDateDMY = urlParams.get('check_out'); // Format: day/month/year
             
 
-            adults = urlParams.get('adults'); 
-            children = urlParams.get('children');
+            adults = parseInt(urlParams.get('adults'), 10) || 0; 
+            children = parseInt(urlParams.get('children'), 10) || 0;
+
     
             if (checkIn && checkOut) {
                 // Convert day/month/year string to Date object
@@ -76,11 +77,11 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ date_from: dateFrom, date_to: dateTo }),
                     });
-    
+                    
                     if (!response.ok) {
                         throw new Error(`Error: ${response.statusText}`);
                     }
-    
+                    
                     apartments = await response.json();
                     console.log(apartments);
                 } catch (error) {
@@ -100,9 +101,9 @@
         style="background-image: url('background.png'); background-size: cover; background-position: center;">
     </div>
 
-    <div class="relative z-10 pt-20 pb-20 ">
+    <div class="relative z-10 pb-20 ">
         <Navbar/>   
-        <DatePicker isSearch startDate={startDate} endDate={endDate}/>
+        <DatePicker isSearch startDate={startDate} endDate={endDate} children={children} adults={adults}/>
         
         <div class="flex flex-wrap justify-center gap-4 pt-10">
 
@@ -111,7 +112,7 @@
                 {#each apartments["properties"]["available"] as apartment }
                     <!-- svelte-ignore a11y_click_events_have_key_events -->
                     <!-- svelte-ignore a11y_no_static_element_interactions -->
-                    <div on:click={() => {window.location.href = `/apartment?number=${apartment.name.match(/\d+/)?.[0]}&check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&kids=${children}`;}}>
+                    <div on:click={() => {window.location.href = `/apartment?number=${apartment.name.match(/\d+/)?.[0]}&check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}`;}}>
                         <Card apartmentName={apartment.name} apartmentNumber={apartment.name.match(/\d+/)?.[0]} />
                     </div>
                 {/each}

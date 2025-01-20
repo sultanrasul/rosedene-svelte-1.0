@@ -11,7 +11,7 @@
     const apartmentDetails = apartments[apartmentNumber];
 </script>
 
-<div class="cursor-pointer max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+<div class="h-full cursor-pointer max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden dark:bg-gray-800 dark:border-gray-700">
     <!-- Image Section -->
     <div class="relative">
         <img class="w-full object-cover" src={`/${apartmentNumber}.jpg`} alt={apartmentName}/>

@@ -3,8 +3,8 @@
   import * as Dialog from "../../lib/components/ui/dialog";
   import * as Carousel from "../../lib/components/ui/carousel";
   import { apartments } from '../apartments';
-  import { Home, Building , BedDouble, Wifi, UtensilsCrossed, Ruler, TvMinimal, User } from "lucide-svelte";
-
+  import { Home, Building , BedDouble, Wifi, UtensilsCrossed, Ruler, TvMinimal, User, Moon, Banknote, WashingMachine, Check} from "lucide-svelte";
+  import { amenities } from "./amenities";
 
   
   import Slideshow from "./Slideshow.svelte";
@@ -23,13 +23,14 @@
   let carouselInstance;
   let current = 0;
   let count = 0;
+  let nights;
   let adults;
   let children;
   let images;
   let isModalOpen = false;
   let parsedDescription;
   import { currentPageIndex } from "./store";
-    import { parse } from "date-fns";
+  import { parse } from "date-fns";
   
   let galleryContainer;
   
@@ -58,6 +59,8 @@
 
       startDate = parseDate(checkIn);
       endDate = parseDate(checkOut);
+
+      nights = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
 
       const dateFrom = {
         day: startDate.getDate(),
@@ -203,10 +206,10 @@
               </div>
           
               <!-- Thumbnail Gallery -->
-              <div bind:this={galleryContainer} class="col-span-1 flex flex-col space-y-4 max-h-[512px] overflow-y-auto">
+              <div bind:this={galleryContainer} class="col-span-1 flex flex-col space-y-4 max-h-[512px] ">
                 {#if images}
                   <!-- svelte-ignore a11y_click_events_have_key_events -->
-                  {#each images.slice(1) as image, i}
+                  {#each images.slice(1, 3) as image, i}
                     <!-- svelte-ignore a11y_click_events_have_key_events -->
                     <!-- svelte-ignore a11y_no_static_element_interactions -->
                     <div class="group relative inline-block cursor-pointer" on:click={openModel(i+1)}>
@@ -232,7 +235,7 @@
       <!-- info -->
       <!-- Information Section -->
       <div class="flex flex-wrap mt-6 justify-between">
-        <div class="bg-white rounded-lg shadow-lg p-6  w-[70%]">
+        <div class="bg-white rounded-lg shadow-lg p-6  w-[66.4%]">
 
           <!-- Property Title & Key Points -->
           <div>
@@ -315,15 +318,50 @@
   
   
           <!-- Amenities Section -->
-          <div>
+          <div  aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-scale-animation-modal" data-hs-overlay="#hs-scale-animation-modal">
             <h2 class="text-3xl font-bold text-black mb-4">Amenities</h2>
-            <ul class="list-disc list-inside text-sm text-gray-600">
-              <li>Furnished</li>
-              <li>Fire alarm</li>
-              <li>Wi-Fi</li>
-              <li>Large kitchen diner</li>
-            </ul>
+            <div class="grid grid-cols-2 gap-4 text-gray-700 text-sm">
+              <div class="flex items-center">
+                <img src="path/to/dishwasher-icon.svg" alt="Dishwasher icon" class="w-5 h-5 mr-2">
+                <span>Dishwasher</span>
+              </div>
+              <div class="flex items-center">
+                <img src="path/to/bike-parking-icon.svg" alt="Bike Parking icon" class="w-5 h-5 mr-2">
+                <span>Bike parking</span>
+              </div>
+              <div class="flex items-center">
+                <img src="path/to/dining-table-icon.svg" alt="Dining Table icon" class="w-5 h-5 mr-2">
+                <span>Dining table</span>
+              </div>
+              <div class="flex items-center">
+                <img src="path/to/wifi-icon.svg" alt="Wi-Fi icon" class="w-5 h-5 mr-2">
+                <span>Wi-Fi</span>
+              </div>
+              <div class="flex items-center">
+                <img src="path/to/dryer-icon.svg" alt="Dryer icon" class="w-5 h-5 mr-2">
+                <span>Dryer</span>
+              </div>
+              <div class="flex items-center">
+                <img src="path/to/washer-icon.svg" alt="Washer icon" class="w-5 h-5 mr-2">
+                <span>Washer</span>
+              </div>
+              <div class="flex items-center">
+                <img src="path/to/flat-screen-tv-icon.svg" alt="Flat Screen TV icon" class="w-5 h-5 mr-2">
+                <span>Flat screen TV</span>
+              </div>
+              <div class="flex items-center">
+                <img src="path/to/unipol-icon.svg" alt="Unipol Accreditation icon" class="w-5 h-5 mr-2">
+                <span>Unipol national code accredited</span>
+              </div>
+            </div>
+            <button class="mt-4 px-4 py-2 border border-gray-300 rounded-full text-gray-600 text-sm hover:bg-gray-100">
+              Show all amenities
+            </button>
           </div>
+
+          
+
+          
           
           <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
   
@@ -336,19 +374,37 @@
 
         </div>
 
+        <!-- Price Card -->
         <div class="bg-gray-100 rounded-lg shadow-lg p-6 w-[25%] self-start">
-          <div class="text-lg font-bold text-gray-800">From £176.54/week</div>
-          <div class="text-sm text-gray-600">+ £765 security deposit</div>
-          <div class="text-sm text-gray-600 mt-4">No bills included</div>
-          <hr class="my-4">
-          <div class="text-sm text-gray-700">Get a bills package</div>
-          <div class="text-sm text-gray-500">Unlimited energy & Internet</div>
-          <div class="font-semibold text-gray-800">£15.36 per person/week</div>
-          <button class="mt-4 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg">
-            Enquire
+          <h2 class="text-4xl font-bold text-[#C09A5B] mb-4">£176.54/week</h2>
+        
+          <!-- Single Row with Content -->
+          <div class="flex items-center justify-between px-3 py-2 text-[11px] font-medium bg-gray-200 rounded-full text-gray-900 mb-4 space-x-4 whitespace-nowrap"
+               class:justify-around="{children == 0}"
+               class:justify-between="{children > 0}"
+          >
+            <span class="flex items-center">
+              <User size="18px" class="pr-1" /> {adults} Adult{adults > 1 ? 's' : ''}
+            </span>
+            {#if children > 0}
+              <span class="flex items-center">
+                <User size="18px" class="pr-1" /> {children} Child{children > 1 ? 'ren' : ''}
+              </span>
+            {/if}
+
+            <span class="flex items-center">
+              <Moon size="18px" class="pr-1" /> {nights} Night{nights > 1 ? 's' : ''}
+            </span>
+          </div>
+        
+          <div class="text-sm text-gray-500 text-center flex items-center justify-center"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
+
+          <button class="mt-8 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg w-full">
+            Book Now
           </button>
-          
         </div>
+        
+        
         
 
       </div>
@@ -383,4 +439,67 @@
         </div>
     </div>
   {/if}
+  
+  
+  <div id="hs-scale-animation-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="hs-scale-animation-modal-label">
+    <div class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+      <div class="w-full flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto">
+        <div class="flex justify-between items-center py-3 px-4 border-b border-[#C09A5B]">
+          <h3 id="hs-scale-animation-modal-label" class="pt-2 pl-2 font-bold text-[#C09A5B] text-xl">
+            All Amenities
+          </h3>
+          <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none" aria-label="Close" data-hs-overlay="#hs-scale-animation-modal">
+            <span class="sr-only">Close</span>
+            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6 6 18"></path>
+              <path d="m6 6 12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <!-- All Amenities -->
+        <div class="p-4 overflow-y-auto max-h-[500px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+          {#each amenities as {category, icon, items} }
+            <h2 class="mt-1 text-black font-bold text-xl inline-flex">
+              {#if typeof icon === 'string'}
+                <!-- Correctly inserting SVG string with class applied -->
+                {@html `<div mr-2">${icon}</div>`}
+              {:else}
+                <!-- Svelte component with class applied -->
+                <svelte:component this={icon} class="w-6 h-6 mr-2" />
+              {/if}
+              {category}
+            </h2>
+            {#each items as item}
+              <div class="text-black">
+                <p class="inline-flex"><Check class="mr-2" /> {item}</p>
+              </div>
+            {/each}
+          {/each}
+        </div>
+        
+
+        <div class="flex justify-end items-center gap-x-2 py-3 px-4 ">
+          <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" data-hs-overlay="#hs-scale-animation-modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    ::-webkit-scrollbar {
+      width: 8px; /* Width of the scrollbar */
+    }
+  
+    ::-webkit-scrollbar-thumb {
+      background-color: #C09A5B; /* Color of the scrollbar thumb */
+      border-radius: 4px; /* Rounded corners */
+    }
+    
+    ::-webkit-scrollbar-track {
+      background-color: #c0995b7c; /* Color of the scrollbar track */
+      border-radius: 4px; /* Rounded corners */
+    }
+  </style>
   
