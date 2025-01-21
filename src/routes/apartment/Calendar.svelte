@@ -210,7 +210,10 @@
   
     :global(.datepicker[data-picker-theme="custom-datepicker"]) {
       --datepicker-container-border: 6px solid #C09A5B;
-      
+      --datepicker-calendar-range-selected-background: #C09A5B;
+      --datepicker-calendar-day-color-disabled: #23344161;
+
+
 
     }
   </style>

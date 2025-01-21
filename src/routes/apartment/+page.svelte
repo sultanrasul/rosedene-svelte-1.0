@@ -3,7 +3,7 @@
   import * as Dialog from "../../lib/components/ui/dialog";
   import * as Carousel from "../../lib/components/ui/carousel";
   import { apartments } from '../apartments';
-  import { Home, Building , BedDouble, Wifi, UtensilsCrossed, Ruler, TvMinimal, User, Moon, Banknote, WashingMachine, Check} from "lucide-svelte";
+  import { Home, Building , BedDouble, Wifi, UtensilsCrossed, Ruler, TvMinimal, User, Moon, Banknote, WashingMachine, Check, Camera, ShowerHead, Monitor, Flower2, ParkingCircle} from "lucide-svelte";
   import { amenities } from "./amenities";
 
   
@@ -149,18 +149,18 @@
     currentPageIndex.set(imageIndex); // Update the store
     isModalOpen = !isModalOpen;
   }
-  </script>
+</script>
     
   <!-- Main Menu -->
   <div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen" id="Home">
     <Navbar />
-    <div class="relative z-10 pb-20 pl-40 pr-40">
+    <div class="relative z-10 pb-20 sm:pl-0 sm:pr-0 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40">
       
       <!-- Breadcrumb -->
       <ol class="flex items-center whitespace-nowrap pb-4 pl-3">
         <li class="inline-flex items-center">
           <a on:click={() => {window.location.href = "/"} } class="flex items-center text-sm text-gray-500 hover:text-[#C09A5B] focus:outline-none  " href="#">
-  
+
             <Home size="24px" class="shrink-0 me-3 size-4"/>
             Home
           </a>
@@ -184,7 +184,7 @@
       
       <!-- Images -->
       <div class="flex flex-col md:flex-row md:space-x-5">
-        <div class="w-full items-center justify-center text-center">
+        <div class="w-full items-center justify-center text-center relative">
           <div class="pb-5">
             <div class="grid grid-cols-3 gap-4 pt-2">
               <!-- Selected Image Display -->
@@ -206,9 +206,8 @@
               </div>
           
               <!-- Thumbnail Gallery -->
-              <div bind:this={galleryContainer} class="col-span-1 flex flex-col space-y-4 max-h-[512px] ">
+              <div bind:this={galleryContainer} class="col-span-1 flex flex-col space-y-4 max-h-[512px]">
                 {#if images}
-                  <!-- svelte-ignore a11y_click_events_have_key_events -->
                   {#each images.slice(1, 3) as image, i}
                     <!-- svelte-ignore a11y_click_events_have_key_events -->
                     <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -227,9 +226,17 @@
               </div>
             </div>
           </div>
+      
+          <!-- "View All" Button -->
+          <button 
+            class="inline-flex absolute bottom-10 right-5 mb-0 mr-0 bg-white text-[#C09A5B] px-4 py-2 rounded-lg shadow-md hover:bg-[#C09A5B] hover:text-white transition duration-300"
+            on:click={openModel(1)}
+          >
+            <Camera class="mr-2"/> View all
+          </button>
         </div>
-  
       </div>
+      
       
       
       <!-- info -->
@@ -280,7 +287,7 @@
                 <br><br>
               {/each}
             </p>
-  
+
             
             <!-- Read More Section -->
             <div>
@@ -311,47 +318,47 @@
                 </button>
               </p>
             </div>
-  
+
           </div>
-  
+
           <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
-  
-  
+
+
           <!-- Amenities Section -->
           <div  aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-scale-animation-modal" data-hs-overlay="#hs-scale-animation-modal">
             <h2 class="text-3xl font-bold text-black mb-4">Amenities</h2>
             <div class="grid grid-cols-2 gap-4 text-gray-700 text-sm">
               <div class="flex items-center">
-                <img src="path/to/dishwasher-icon.svg" alt="Dishwasher icon" class="w-5 h-5 mr-2">
-                <span>Dishwasher</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-volume-off mr-2 w-[30px] h-[30px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M16 9a5 5 0 0 1 .95 2.293"/><path d="M19.364 5.636a9 9 0 0 1 1.889 9.96"/><path d="m2 2 20 20"/><path d="m7 7-.587.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298V11"/><path d="M9.828 4.172A.686.686 0 0 1 11 4.657v.686"/></svg>
+                <span>Soundproofing</span>
               </div>
               <div class="flex items-center">
-                <img src="path/to/bike-parking-icon.svg" alt="Bike Parking icon" class="w-5 h-5 mr-2">
-                <span>Bike parking</span>
+                <ParkingCircle class="w-[30px] h-[30px] mr-2" />
+                <span>Free on-site parking</span>
               </div>
               <div class="flex items-center">
-                <img src="path/to/dining-table-icon.svg" alt="Dining Table icon" class="w-5 h-5 mr-2">
-                <span>Dining table</span>
+                <ShowerHead class="mr-2 w-[30px] h-[30px]"/>
+                <span>Private bathroom</span>
               </div>
               <div class="flex items-center">
-                <img src="path/to/wifi-icon.svg" alt="Wi-Fi icon" class="w-5 h-5 mr-2">
-                <span>Wi-Fi</span>
+                <Wifi class="w-[30px] h-[30px] mr-2" />
+                <span>Free WiFi</span>
               </div>
               <div class="flex items-center">
-                <img src="path/to/dryer-icon.svg" alt="Dryer icon" class="w-5 h-5 mr-2">
-                <span>Dryer</span>
+                <UtensilsCrossed class="w-[30px] h-[30px] mr-2" />
+                <span>Kitchen</span>
               </div>
               <div class="flex items-center">
-                <img src="path/to/washer-icon.svg" alt="Washer icon" class="w-5 h-5 mr-2">
-                <span>Washer</span>
+                <WashingMachine class="w-[30px] h-[30px] mr-2" />
+                <span>Washing machine</span>
               </div>
               <div class="flex items-center">
-                <img src="path/to/flat-screen-tv-icon.svg" alt="Flat Screen TV icon" class="w-5 h-5 mr-2">
+                <Monitor class="w-[30px] h-[30px] mr-2" />
                 <span>Flat screen TV</span>
               </div>
               <div class="flex items-center">
-                <img src="path/to/unipol-icon.svg" alt="Unipol Accreditation icon" class="w-5 h-5 mr-2">
-                <span>Unipol national code accredited</span>
+                <Flower2 class="w-[30px] h-[30px] mr-2" />
+                <span>Garden</span>
               </div>
             </div>
             <button class="mt-4 px-4 py-2 border border-gray-300 rounded-full text-gray-600 text-sm hover:bg-gray-100">
@@ -363,66 +370,66 @@
 
           
           
-          <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
-  
-          <!-- Bills Package Section -->
+          <!-- <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
+
           <div class="bg-gray-100 rounded-lg p-4 mb-6">
             <p class="font-medium text-gray-700">Get a bills package</p>
             <p class="text-sm text-gray-500">Unlimited energy & Internet</p>
             <p class="font-semibold text-gray-800">£15.36 per person/week</p>
-          </div>
+          </div> -->
 
         </div>
 
         <!-- Price Card -->
-        <div class="bg-gray-100 rounded-lg shadow-lg p-6 w-[25%] self-start">
-          <h2 class="text-4xl font-bold text-[#C09A5B] mb-4">£176.54/week</h2>
-        
-          <!-- Single Row with Content -->
-          <div class="flex items-center justify-between px-3 py-2 text-[11px] font-medium bg-gray-200 rounded-full text-gray-900 mb-4 space-x-4 whitespace-nowrap"
-               class:justify-around="{children == 0}"
-               class:justify-between="{children > 0}"
-          >
-            <span class="flex items-center">
-              <User size="18px" class="pr-1" /> {adults} Adult{adults > 1 ? 's' : ''}
-            </span>
-            {#if children > 0}
+        <div class="w-[25%] self-start">
+          <div class="bg-gray-100 rounded-lg shadow-lg p-6">
+            <h2 class="text-4xl font-bold text-[#C09A5B] mb-4">£176.54/week</h2>
+          
+            <!-- Single Row with Content -->
+            <div class="flex items-center justify-between px-3 py-2 text-[11px] font-medium bg-gray-200 rounded-full text-gray-900 mb-4 space-x-4 whitespace-nowrap"
+                  class:justify-around="{children == 0}"
+                  class:justify-between="{children > 0}"
+            >
               <span class="flex items-center">
-                <User size="18px" class="pr-1" /> {children} Child{children > 1 ? 'ren' : ''}
+                <User size="18px" class="pr-1" /> {adults} Adult{adults > 1 ? 's' : ''}
               </span>
-            {/if}
-
-            <span class="flex items-center">
-              <Moon size="18px" class="pr-1" /> {nights} Night{nights > 1 ? 's' : ''}
-            </span>
+              {#if children > 0}
+                <span class="flex items-center">
+                  <User size="18px" class="pr-1" /> {children} Child{children > 1 ? 'ren' : ''}
+                </span>
+              {/if}
+  
+              <span class="flex items-center">
+                <Moon size="18px" class="pr-1" /> {nights} Night{nights > 1 ? 's' : ''}
+              </span>
+            </div>
+          
+            <div class="text-sm text-gray-500 text-center flex items-center justify-center"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
+  
+            <button class="mt-8 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg w-full">
+              Book Now
+            </button>
           </div>
-        
-          <div class="text-sm text-gray-500 text-center flex items-center justify-center"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
 
-          <button class="mt-8 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg w-full">
-            Book Now
-          </button>
+
+          <!-- Calendar -->
+          <div class="w-full flex flex-col justify-start items-center mt-24">
+            <!-- Availability Heading -->
+            <h2 class="mb-4 text-4xl font-bold text-[#C09A5B] tracking-wider  w-full text-center">
+              Availability
+            </h2>
+
+            
+            <!-- Calendar Container -->
+            <div class="w-[345px] h-[400px] text-center p-3">
+              <Calendar startDate={startDate} endDate={endDate} />
+            </div>
+          </div>
+
+
         </div>
-        
-        
-        
 
       </div>
-
-
-      <!-- Calendar -->
-      <div class="w-full flex flex-col justify-start items-center pt-20">
-        <!-- Availability Heading -->
-        <h2 class="mb-4 text-4xl font-semibold text-[#C09A5B] tracking-wider uppercase w-full text-center">
-          Availability
-        </h2>
-        
-        <!-- Calendar Container -->
-        <div class="w-[345px] h-[400px] text-center p-3">
-          <Calendar startDate={startDate} endDate={endDate} />
-        </div>
-      </div>
-
 
     </div>
   </div>
@@ -440,52 +447,49 @@
     </div>
   {/if}
   
+  <!-- Amenities Modal -->
+  <div id="hs-scale-animation-modal" class="hs-overlay hidden fixed inset-0 z-[80] flex items-center justify-center pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="hs-scale-animation-modal-label">
+    <div class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 w-full max-w-full sm:max-w-2xl lg:max-w-4xl flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto">
+      <div class="flex justify-between items-center py-3 px-4 border-b border-[#C09A5B]">
+        <h3 id="hs-scale-animation-modal-label" class="pt-2 pl-2 font-bold text-[#C09A5B] text-xl">
+          All Amenities
+        </h3>
+        <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none" aria-label="Close" data-hs-overlay="#hs-scale-animation-modal">
+          <span class="sr-only">Close</span>
+          <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
   
-  <div id="hs-scale-animation-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="hs-scale-animation-modal-label">
-    <div class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
-      <div class="w-full flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto">
-        <div class="flex justify-between items-center py-3 px-4 border-b border-[#C09A5B]">
-          <h3 id="hs-scale-animation-modal-label" class="pt-2 pl-2 font-bold text-[#C09A5B] text-xl">
-            All Amenities
-          </h3>
-          <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none" aria-label="Close" data-hs-overlay="#hs-scale-animation-modal">
-            <span class="sr-only">Close</span>
-            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 6 6 18"></path>
-              <path d="m6 6 12 12"></path>
-            </svg>
-          </button>
-        </div>
-        <!-- All Amenities -->
-        <div class="p-4 overflow-y-auto max-h-[500px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
-          {#each amenities as {category, icon, items} }
-            <h2 class="mt-1 text-black font-bold text-xl inline-flex">
+      <!-- All Amenities -->
+      <div class="p-5 overflow-y-auto max-h-[500px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+        {#each amenities as {category, icon, items} }
+          <div class="mt-5 text-black">
+            <div class="flex items-center font-bold text-xl">
               {#if typeof icon === 'string'}
-                <!-- Correctly inserting SVG string with class applied -->
-                {@html `<div mr-2">${icon}</div>`}
+                {@html `<div class="mr-2">${icon}</div>`}
               {:else}
-                <!-- Svelte component with class applied -->
                 <svelte:component this={icon} class="w-6 h-6 mr-2" />
               {/if}
               {category}
-            </h2>
-            {#each items as item}
-              <div class="text-black">
-                <p class="inline-flex"><Check class="mr-2" /> {item}</p>
-              </div>
-            {/each}
-          {/each}
-        </div>
-        
-
-        <div class="flex justify-end items-center gap-x-2 py-3 px-4 ">
-          <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" data-hs-overlay="#hs-scale-animation-modal">
-            Close
-          </button>
-        </div>
+            </div>
+            <!-- Display items side-by-side on larger screens -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
+              {#each items as item}
+                <div class="text-black">
+                  <p class="inline-flex"><Check class="mr-2" /> {item}</p>
+                </div>
+              {/each}
+            </div>
+          </div>
+        {/each}
       </div>
     </div>
   </div>
+  
+  
 
   <style>
     ::-webkit-scrollbar {
@@ -501,5 +505,9 @@
       background-color: #c0995b7c; /* Color of the scrollbar track */
       border-radius: 4px; /* Rounded corners */
     }
+
+
+    
   </style>
+  
   
