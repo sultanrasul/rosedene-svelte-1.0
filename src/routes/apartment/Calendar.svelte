@@ -2,7 +2,7 @@
   // @ts-nocheck
   
   import { DatePicker } from '@svelte-plugins/datepicker';
-  import { format } from 'date-fns';
+  import { format, parse } from 'date-fns';
   import { Search, UserCircle, CalendarDays } from 'lucide-svelte';
   import FormInputs from '../../lib/components/formInputs.svelte';
   import { onMount } from 'svelte';
@@ -140,8 +140,8 @@
 
     apartmentDetails = apartments[urlParams.get('number')];
     console.log(apartmentDetails);
-    adults = urlParams.get('adults');
-    children = urlParams.get('children');
+    adults = parseInt(urlParams.get('adults'),10)
+    children = parseInt(urlParams.get('children'),10)
 
     if (checkIn && checkOut) {
       // Convert day/month/year string to Date object
@@ -209,12 +209,4 @@
 
 
   
-    :global(.datepicker[data-picker-theme="custom-datepicker"]) {
-      --datepicker-container-border: 6px solid #C09A5B;
-      --datepicker-calendar-range-selected-background: #C09A5B;
-      --datepicker-calendar-day-color-disabled: #23344161;
-
-
-
-    }
   </style>
