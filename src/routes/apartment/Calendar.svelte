@@ -33,6 +33,8 @@
   let dateFormat = 'dd MMMM';
   let isOpen = false;
   
+  const toggleDatePicker = () => (isOpen = !isOpen);
+  
   let disabledDates;
   
   const formatBlockedDates = (blockedDatesResponse) => {
@@ -95,22 +97,6 @@
     console.log(disabledDates)
   };
 
-  
-  const toggleDatePicker = () => (isOpen = !isOpen);
-  
-  const formatDate = (dateString) =>
-    dateString && format(new Date(dateString), dateFormat) || '';
-  
-  const formatDateDMY = (dateString) =>
-    dateString && format(new Date(dateString), dateFormatDMY) || '';
-  
-  $: formattedStartDate = formatDate(startDate);
-  $: formattedEndDate = formatDate(endDate);
-  
-  $: formattedStartDateDMY = formatDateDMY(startDate);
-  $: formattedEndDateDMY = formatDateDMY(endDate);
-  
-  // Function to fetch blocked apartments
   async function fetchBlockedApartments(dateFrom, dateTo, propertyId) {
     try {
       const response = await fetch('http://127.0.0.1:5000/check_calendar', {
@@ -130,6 +116,21 @@
       console.error('Failed to fetch blocked apartments:', error);
     }
   }
+  
+  
+  const formatDate = (dateString) =>
+    dateString && format(new Date(dateString), dateFormat) || '';
+  
+  const formatDateDMY = (dateString) =>
+    dateString && format(new Date(dateString), dateFormatDMY) || '';
+  
+  $: formattedStartDate = formatDate(startDate);
+  $: formattedEndDate = formatDate(endDate);
+  
+  $: formattedStartDateDMY = formatDateDMY(startDate);
+  $: formattedEndDateDMY = formatDateDMY(endDate);
+  
+  // Function to fetch blocked apartments
   
   onMount(async () => {
 

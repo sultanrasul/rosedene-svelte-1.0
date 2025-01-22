@@ -3,8 +3,9 @@
   import * as Dialog from "../../lib/components/ui/dialog";
   import * as Carousel from "../../lib/components/ui/carousel";
   import { apartments } from '../apartments';
-  import { Home, Building , BedDouble, Wifi, UtensilsCrossed, Ruler, TvMinimal, User, Moon, Banknote, WashingMachine, Check, Camera, ShowerHead, Monitor, Flower2, ParkingCircle} from "lucide-svelte";
+  import { Info , LogIn, LogOut,Home, Building , BedDouble, Wifi, UtensilsCrossed, Ruler, TvMinimal, User, Moon, Banknote, WashingMachine, Check, Camera, ShowerHead, Monitor, Flower2, ParkingCircle, Users, PersonStanding, CigaretteOff, PawPrint} from "lucide-svelte";
   import { amenities } from "./amenities";
+  import GuestDetails from "./guestDetails.svelte";
 
   
   import Slideshow from "./Slideshow.svelte";
@@ -322,8 +323,8 @@
           </div>
 
           <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
-
-
+          
+          
           <!-- Amenities Section -->
           <div  aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-scale-animation-modal" data-hs-overlay="#hs-scale-animation-modal">
             <h2 class="text-3xl font-bold text-black mb-4">Amenities</h2>
@@ -366,45 +367,91 @@
             </button>
           </div>
 
-          
+          <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
 
-          
-          
-          <!-- <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
 
-          <div class="bg-gray-100 rounded-lg p-4 mb-6">
-            <p class="font-medium text-gray-700">Get a bills package</p>
-            <p class="text-sm text-gray-500">Unlimited energy & Internet</p>
-            <p class="font-semibold text-gray-800">£15.36 per person/week</p>
-          </div> -->
+          <!-- House Rules -->
+          <div class="house-rules space-y-4 text-black p-3">
+            <h2 class="text-2xl font-bold mb-6">House Rules</h2>
+            <div class="space-y-4 ">
 
+              <div class="flex items-start">
+                <span class="w-60 font-medium "> <LogIn class="inline-flex mr-1"/>  Check-in</span>
+                <div class="flex-1">
+                  <span class="text-sm">From 16:00</span>
+                  <p class="text-gray-500 text-sm mt-1">
+                    You'll need to let the property know in advance what time you'll arrive.
+                  </p>
+                </div>
+              </div>
+
+              <hr class="h-px my-8 bg-gray-300 border-0 ">
+              
+              <div class="flex items-start">
+                <span class="w-60 font-medium"> <LogOut class="inline-flex mr-1"/> Check-out</span>
+                <span class="flex-1 text-sm">Until 10:00</span>
+              </div>
+
+              <hr class="h-px my-8 bg-gray-300 border-0 ">
+              
+              <div class="flex items-start">
+                <span class="w-60 font-medium "><Info class="inline-flex mr-1"/> Cancellation/Prepayment
+                </span>
+                <span class="flex-1 text-sm w-2">
+                  Cancellation and prepayment policies vary depending on apartment
+                  type. Please check the conditions of your required room.
+                </span>
+              </div>
+              
+              <hr class="h-px my-8 bg-gray-300 border-0 ">
+              
+              <div class="flex items-start">
+                <span class="w-60"><Users class="inline-flex mr-1"/>Children and Beds</span>
+                <div class="flex-1">
+                  <span class="text-md font-bold">Child policies</span>
+                  <p class="text-sm pt-4">Children of any age are welcome.</p>
+                  <p class="text-sm pt-4">To see correct prices and occupancy information, please add the number of children in your group and their ages to your search.</p>
+                  <p class="text-md font-bold pt-4">Cot and extra bed policies</p>
+                  <p class="text-sm pt-4">Cots and extra beds are not available at this property.</p>
+                </div>
+              </div>
+
+              <hr class="h-px my-8 bg-gray-300 border-0 ">
+              
+              <div class="flex items-start">
+                <span class="w-60 font-medium"><PersonStanding class="inline-flex mr-1"/>No Age Restriction</span>
+                <span class="flex-1 text-sm">There is no age requirement for check-in</span>
+              </div>
+              
+              <hr class="h-px my-8 bg-gray-300 border-0 ">
+              
+              <div class="flex items-start">
+                <span class="w-60 font-medium"> <CigaretteOff class="inline-flex mr-1"/> Smoking</span>
+                <span class="flex-1 text-sm">Smoking is not allowed.</span>
+              </div>
+                            
+              <hr class="h-px my-8 bg-gray-300 border-0 ">
+
+              <div class="flex items-start">
+                <span class="w-60 font-medium"> <PawPrint class="inline-flex mr-1"/> Pets</span>
+                <span class="flex-1 text-sm">Pets are not allowed.</span>
+              </div>
+            </div>
+          </div>
+          
         </div>
 
         <!-- Price Card -->
-        <div class="w-[25%] self-start">
+        <div class="w-[28%] self-start sticky top-6">
           <div class="bg-gray-100 rounded-lg shadow-lg p-6">
             <h2 class="text-4xl font-bold text-[#C09A5B] mb-4">£176.54/week</h2>
           
-            <!-- Single Row with Content -->
-            <div class="flex items-center justify-between px-3 py-2 text-[11px] font-medium bg-gray-200 rounded-full text-gray-900 mb-4 space-x-4 whitespace-nowrap"
-                  class:justify-around="{children == 0}"
-                  class:justify-between="{children > 0}"
-            >
-              <span class="flex items-center">
-                <User size="18px" class="pr-1" /> {adults} Adult{adults > 1 ? 's' : ''}
-              </span>
-              {#if children > 0}
-                <span class="flex items-center">
-                  <User size="18px" class="pr-1" /> {children} Child{children > 1 ? 'ren' : ''}
-                </span>
-              {/if}
-  
-              <span class="flex items-center">
-                <Moon size="18px" class="pr-1" /> {nights} Night{nights > 1 ? 's' : ''}
-              </span>
-            </div>
-          
-            <div class="text-sm text-gray-500 text-center flex items-center justify-center"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
+            
+            <!-- Details -->
+            
+            <GuestDetails startDate={startDate} endDate={endDate} children={children} adults={adults}/>
+
+            <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
   
             <button class="mt-8 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg w-full">
               Book Now
@@ -412,19 +459,6 @@
           </div>
 
 
-          <!-- Calendar -->
-          <div class="w-full flex flex-col justify-start items-center mt-24">
-            <!-- Availability Heading -->
-            <h2 class="mb-4 text-4xl font-bold text-[#C09A5B] tracking-wider  w-full text-center">
-              Availability
-            </h2>
-
-            
-            <!-- Calendar Container -->
-            <div class="w-[345px] h-[400px] text-center p-3">
-              <Calendar startDate={startDate} endDate={endDate} />
-            </div>
-          </div>
 
 
         </div>
@@ -492,6 +526,7 @@
   
 
   <style>
+
     ::-webkit-scrollbar {
       width: 8px; /* Width of the scrollbar */
     }
