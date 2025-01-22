@@ -74,16 +74,20 @@ function decrementChildren(){
     <!-- Date Input -->
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div class="min-w-[230px] flex items-center gap-2 cursor-pointer text-gray-600 hover:text-blue-500" on:click={toggleDatePicker}>
-      <CalendarDays />
-      <span>
-        {#if startDate && endDate}
-          {formattedStartDate} - {formattedEndDate}
-        {:else}
-          Select Date
-        {/if}
-      </span>
-    </div>
+    <DatePicker class="" bind:isOpen bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}>
+      <div class="text-[17px] min-w-[230px] flex items-center gap-2 cursor-pointer text-gray-600 hover:text-blue-500" on:click={toggleDatePicker}>
+        <CalendarDays />
+        <span>
+          {#if startDate && endDate}
+            {formattedStartDate} - {formattedEndDate}
+          {:else}
+          <p>
+            Select Date
+          </p>
+          {/if}
+        </span>
+      </div>
+    </DatePicker>
 
     <div class="w-px h-6 bg-gray-300"></div>
 
@@ -106,10 +110,6 @@ function decrementChildren(){
     </button>
   </div>
 
-  <!-- DatePicker Component -->
-  <div class="z-50 absolute mt-24 transform  bg-white shadow-lg rounded-lg" class:left-[-10%]={!isSearch} class:left-[27%]={isSearch}>
-    <DatePicker bind:isOpen bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}/>  
-  </div>
 
   {#if isGuestPopupOpen}
     <div class="bg-white rounded-3xl top-[7%] w-[200px] p-1 absolute mt-24 left-[50%] transform bg-white shadow-lg rounded-lg">
