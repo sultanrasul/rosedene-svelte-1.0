@@ -31,6 +31,7 @@
 
   export let children = 0;
   export let adults = 1;
+  let childrenAges = [];
   
   let dateFormatDMY = 'dd/MM/yyyy';
   let dateFormat = 'dd MMMM';
@@ -122,23 +123,27 @@
   }
 
   function incrementAdults() {
-    adults = parseInt(adults, 10) + 1;
+    if ((parseInt(adults, 10) + parseInt(children, 10)) < apartmentDetails?.maxGuests) {
+      adults = parseInt(adults, 10) + 1;
+    }
   }
 
   function decrementAdults() {
-      if (adults > 1) {
-          adults = parseInt(adults, 10) - 1;
-      }
+    if (parseInt(adults, 10) > 1) {
+      adults = parseInt(adults, 10) - 1;
+    }
   }
 
   function incrementChildren() {
+    if (parseInt(adults, 10) + parseInt(children, 10) < apartmentDetails?.maxGuests) {
       children = parseInt(children, 10) + 1;
+    }
   }
 
   function decrementChildren() {
-      if (children > 0) {
-          children = parseInt(children, 10) - 1;
-      }
+    if (parseInt(children, 10) > 0) {
+      children = parseInt(children, 10) - 1;
+    }
   }
 
 
@@ -203,7 +208,21 @@
   const formatDateDMY = (dateString) =>
       dateString && format(new Date(dateString), dateFormatDMY) || '';
 
-
+  // Ensure the array length matches the number of children
+  $: {
+      if (children > childrenAges.length) {
+        // Add new -1 entries for additional children
+        childrenAges = [...childrenAges, ...Array(children - childrenAges.length).fill(-1)];
+      } else if (children < childrenAges.length) {
+        // Remove extra entries if children count decreases
+        childrenAges = childrenAges.slice(0, children);
+      }
+    }
+  // Update the age of a specific child
+  function updateAge(index, age) {
+    childrenAges[index] = parseInt(age, 10);
+    console.log(childrenAges);
+  }
   $: formattedStartDate = formatDate(startDate);
   $: formattedEndDate = formatDate(endDate);
 
@@ -238,7 +257,7 @@
     <!-- Guest Input -->
     <div>
 
-      <button id="dropdownCheckboxButton" data-dropdown-toggle="dropdownDefaultCheckbox" type="button" class="w-full flex items-center gap border border-gray-300 rounded-lg p-2 cursor-pointer text-black hover:text-[#C09A5B]">
+      <button id="dropdownCheckboxButton" data-dropdown-toggle="dropdownDefaultCheckbox" type="button" class="overflow-y-auto w-full flex items-center gap border border-gray-300 rounded-lg p-2 cursor-pointer text-black hover:text-[#C09A5B]">
         <UserRoundIcon class="text-xl" />
         <p class="text-sm ml-2">
           {parseInt(adults, 10) + parseInt(children, 10)} Guest{(parseInt(adults, 10) + parseInt(children, 10)) > 1 ? 's' : ''}
@@ -251,9 +270,9 @@
       </button>
     
       <!-- Dropdown menu -->
-      <div id="dropdownDefaultCheckbox" class="z-10 hidden w-full bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
+      <div id="dropdownDefaultCheckbox" class="z-10 hidden w-full bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 max-h-[250px] overflow-y-auto">
         <!-- Input Number -->
-        <div class="py-2 px-3 bg-white border border-gray-200 rounded-lg" >
+        <div class="py-2 px-3 bg-white border border-gray-200 rounded-lg">
           <!-- Adults -->
           <div class="flex justify-between items-center gap-x-5">
             <div>
@@ -266,22 +285,23 @@
                 bind:value={adults}
               />
             </div>
-            
+      
             <div class="flex items-center gap-x-1.5">
               <button on:click={decrementAdults} type="button" class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Decrease" data-hs-input-number-decrement="">
                 <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M5 12h14"></path>
                 </svg>
               </button>
-              <button on:click={incrementAdults} type="button" class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Increase" data-hs-input-number-increment="">                <svg  class="shrink-0 size-3.5"  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+              <button on:click={incrementAdults} type="button" class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Increase" data-hs-input-number-increment="">                
+                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M5 12h14"></path>
                   <path d="M12 5v14"></path>
                 </svg>
               </button>
             </div>
           </div>
-          <hr class="h-px my-2 bg-gray-300 border-0 ">
-          
+          <hr class="h-px my-2 bg-gray-300 border-0">
+      
           <!-- Children -->
           <div class="flex justify-between items-center gap-x-5">
             <div>
@@ -294,128 +314,65 @@
                 bind:value={children}
               />
             </div>
-            
+      
             <div class="flex items-center gap-x-1.5">
               <button on:click={decrementChildren} type="button" class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Decrease" data-hs-input-number-decrement="">
                 <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M5 12h14"></path>
                 </svg>
               </button>
-              <button on:click={incrementChildren} type="button" class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Increase" data-hs-input-number-increment="">                <svg  class="shrink-0 size-3.5"  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+              <button on:click={incrementChildren} type="button" class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Increase" data-hs-input-number-increment="">                
+                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M5 12h14"></path>
                   <path d="M12 5v14"></path>
                 </svg>
               </button>
             </div>
           </div>
-
-
+      
           {#if children > 0}
             <hr class="h-px bg-gray-300 border-0 text-white">
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-1 pt-2 w-full">
+            <div class="grid grid-cols-1 gap-1 pt-2 w-full">
               {#each Array(children) as _, index}
-                <select name="cars" id="cars" class="pr-[4rem] flex items-center gap border border-gray-300 rounded-lg p-2 pr-10 cursor-pointer text-black text-[13px] hover:text-[#C09A5B]">
-                  <option value="0">0 Years old</option>
-                  <option value="1">1 Years old</option>
-                  <option value="2">2 Years old</option>
-                  <option value="3">3 Years old</option>
-                  <option value="4">4 Years old</option>
-                  <option value="5">5 Years old</option>
-                  <option value="6">6 Years old</option>
-                  <option value="7">7 Years old</option>
-                  <option value="9">9 Years old</option>
-                  <option value="10">10 Years old</option>
-                  <option value="11">11 Years old</option>
-                  <option value="12">12 Years old</option>
-                  <option value="13">13 Years old</option>
-                  <option value="14">14 Years old</option>
-                  <option value="15">15 Years old</option>
-                  <option value="16">16 Years old</option>
-                  <option value="17">17 Years old</option>              
-                </select>
+              <select
+                on:change={(e) => updateAge(index, e.target.value)}
+                name="ages"
+                id="ages"
+                class="{childrenAges[index] === -1 ? 'border-red-500' : 'border-gray-300'} outline-none focus:outline-none focus:ring-0 focus:border-gray-300 pr-[4rem] flex items-center gap border rounded-lg p-2 pr-10 cursor-pointer text-black text-[13px] hover:text-[#C09A5B]"
+                style="box-shadow: none !important;"
+              >
+                <option value="-1">Age Needed</option>
+                <option value="0">0 Years old</option>
+                <option value="1">1 Years old</option>
+                <option value="2">2 Years old</option>
+                <option value="3">3 Years old</option>
+                <option value="4">4 Years old</option>
+                <option value="5">5 Years old</option>
+                <option value="6">6 Years old</option>
+                <option value="7">7 Years old</option>
+                <option value="9">9 Years old</option>
+                <option value="10">10 Years old</option>
+                <option value="11">11 Years old</option>
+                <option value="12">12 Years old</option>
+                <option value="13">13 Years old</option>
+                <option value="14">14 Years old</option>
+                <option value="15">15 Years old</option>
+                <option value="16">16 Years old</option>
+                <option value="17">17 Years old</option>
+              </select>
+    
+            
               {/each}
             </div>
           {/if}
-          
-          
-          
-
-
-
-
         </div>
-        <!-- End Input Number -->
       </div>
+      
   
     </div>
 
   </div>
 
-
-  <!-- DatePicker Component -->
-  <!-- <div class="z-50 absolute transform  bg-white shadow-2xl rounded-lg top-[0%] left-[-4%]">
-    <DatePicker align={"right"} bind:isOpen bind:startDate bind:endDate isRange isMultipane={true} showYearControls={false} enableFutureDates enablePastDates={false}/>  
-  </div> -->
-
-  {#if isGuestPopupOpen}
-    <div class="bg-white rounded-3xl top-[7%] p-1 absolute mt-24 transform bg-white shadow-lg rounded-lg">
-      <!-- Adults Section -->
-      <div class="flex items-center justify-between py-2 px-3 bg-white rounded-lg">
-        <!-- Label -->
-        <h1 class="text-black font-medium flex items-center gap-x-1">
-          <!-- <UserRound class="w-[24px]" /> -->
-          <span class="pr-2">Adults</span>
-        </h1>
-    
-        <!-- Input and Buttons -->
-        <div class="flex items-center gap-x-1.5">
-          <!-- Decrease Button -->
-          <button type="button" on:click={decrementAdults} class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-md border border-gray-300 bg-gray-100 text-black shadow-sm hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Decrease">
-            <LucideMinus class="w-[18px]" />
-          </button>
-    
-          <!-- Number Input -->
-          <input class="p-0 w-6 bg-transparent border-0 text-black text-center focus:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" style="-moz-appearance: textfield;" type="number" aria-roledescription="Number field" bind:value={adults} data-hs-input-number-input="" />
-    
-          <!-- Increase Button -->
-          <button type="button" on:click={incrementAdults} class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-md border border-gray-300 bg-gray-100 text-black shadow-sm hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Increase" data-hs-input-number-increment="">
-            <Plus class="w-[18px]" />
-          </button>
-        </div>
-      </div>
-    
-      <!-- Divider -->
-      <div class="h-[1px] bg-gray-200 my-2"></div>
-    
-      <!-- Children Section -->
-      <div class="flex items-center justify-between py-2 px-3 bg-white rounded-lg">
-        <!-- Label -->
-        <h1 class="text-black font-medium flex items-center gap-x-1">
-          <!-- <Baby class="w-[24px]" /> -->
-          <span class="pr-2">Children</span>
-        </h1>
-    
-        <!-- Input and Buttons -->
-        <div class="flex items-center gap-x-1.5">
-          <!-- Decrease Button -->
-          <button type="button" on:click={decrementChildren} class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-md border border-gray-300 bg-gray-100 text-black shadow-sm hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Decrease" data-hs-input-number-decrement="">
-            <LucideMinus class="w-[18px]" />
-          </button>
-    
-          <!-- Number Input -->
-          <input class="p-0 w-6 bg-transparent border-0 text-black text-center focus:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" style="-moz-appearance: textfield;" type="number" aria-roledescription="Number field" bind:value={children} data-hs-input-number-input="" />
-    
-          <!-- Increase Button -->
-          <button type="button" on:click={incrementChildren} class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-md border border-gray-300 bg-gray-100 text-black shadow-sm hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Increase" data-hs-input-number-increment="">
-            <Plus class="w-[18px]" />
-          </button>
-        </div>
-      </div>
-    </div>
-  
-
-  {/if}
-    
 </div>
 
 <!-- DatePicker Component -->
@@ -425,8 +382,37 @@
       --datepicker-calendar-range-selected-background: #C09A5B;
       --datepicker-calendar-day-color-disabled: #23344161;
 
-
-
     }
 
+    #dropdownDefaultCheckbox {
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #C09A5B transparent; /* Thumb and track colors for Firefox */
+  }
+
+  /* Webkit browsers (Chrome, Edge, Safari) */
+  #dropdownDefaultCheckbox::-webkit-scrollbar {
+    width: 8px; /* Scrollbar width */
+  }
+
+  #dropdownDefaultCheckbox::-webkit-scrollbar-track {
+    background: transparent; /* Track color */
+    border-radius: 8px;
+  }
+
+  #dropdownDefaultCheckbox::-webkit-scrollbar-thumb {
+    background-color: #C09A5B; /* Thumb color */
+    border-radius: 8px;
+    border: 2px solid transparent; /* Adds padding */
+    background-clip: content-box; /* Makes border visible */
+  }
+
+  #dropdownDefaultCheckbox::-webkit-scrollbar-thumb:hover {
+    background-color: #C09A5B; /* Darker thumb color on hover */
+  }
+
+  #dropdownDefaultCheckbox::-webkit-scrollbar-corner {
+    background: transparent; /* Corner color */
+  }
+
+    
 </style>

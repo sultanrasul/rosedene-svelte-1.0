@@ -31,6 +31,7 @@
   let dateFormatDMY = 'dd/MM/yyyy';
   let dateFormat = 'dd MMMM';
   let isOpen = false;
+  let childrenAges = [];
 
 
   const toggleDatePicker = () => (isOpen = !isOpen);
@@ -42,23 +43,27 @@
       dateString && format(new Date(dateString), dateFormatDMY) || '';
 
 
-  function incrementAdults(){
-    adults +=1;
-  }
-
-function decrementAdults(){
-    if (adults > 1){
-        adults-=1;
+  function incrementAdults() {
+    if ((parseInt(adults, 10) + parseInt(children, 10)) <  6) {
+      adults = parseInt(adults, 10) + 1;
     }
   }
 
-function incrementChildren(){
-    children +=1;
+  function decrementAdults() {
+    if (parseInt(adults, 10) > 1) {
+      adults = parseInt(adults, 10) - 1;
+    }
   }
 
-function decrementChildren(){
-    if (children > 0){
-        children-=1;
+  function incrementChildren() {
+    if (parseInt(adults, 10) + parseInt(children, 10) < 6) {
+      children = parseInt(children, 10) + 1;
+    }
+  }
+
+  function decrementChildren() {
+    if (parseInt(children, 10) > 0) {
+      children = parseInt(children, 10) - 1;
     }
   }
 
@@ -67,6 +72,22 @@ function decrementChildren(){
 
   $: formattedStartDateDMY = formatDateDMY(startDate);
   $: formattedEndDateDMY = formatDateDMY(endDate);
+
+  // Ensure the array length matches the number of children
+  $: {
+    if (children > childrenAges.length) {
+      // Add new -1 entries for additional children
+      childrenAges = [...childrenAges, ...Array(children - childrenAges.length).fill(-1)];
+    } else if (children < childrenAges.length) {
+      // Remove extra entries if children count decreases
+      childrenAges = childrenAges.slice(0, children);
+    }
+  }
+  // Update the age of a specific child
+  function updateAge(index, age) {
+    childrenAges[index] = parseInt(age, 10);
+    console.log(childrenAges);
+  }
 </script>
 
 <div class="flex items-center justify-center py-6 relative z-[10]">
@@ -92,12 +113,10 @@ function decrementChildren(){
     <div class="w-px h-6 bg-gray-300"></div>
 
     <!-- Guest Input -->
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-<!-- Guest Input -->
+
 <div>
 
-  <button id="dropdownCheckboxButton" data-dropdown-toggle="dropdownDefaultCheckbox"  type="button" class="w-full flex items-center gap  p-2 cursor-pointer text-gray-600 hover:text-[#C09A5B]" >
+  <button id="dropdownCheckboxButton" data-dropdown-toggle="dropdownDefaultCheckbox"  type="button" class="text-gray-600 overflow-y-auto w-full flex items-center gap rounded-lg p-2 cursor-pointer text-black hover:text-[#C09A5B]" >
     <UserRoundIcon class="text-xl" />
     <p class="text-[17px]  ml-2">
       {parseInt(adults, 10) + parseInt(children, 10)} Guest{(parseInt(adults, 10) + parseInt(children, 10)) > 1 ? 's' : ''}
@@ -106,7 +125,7 @@ function decrementChildren(){
   </button>
 
   <!-- Dropdown menu -->
-  <div id="dropdownDefaultCheckbox" class="z-10 hidden w-3/4 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
+  <div id="dropdownDefaultCheckbox" class="min-w-[150px] z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
     <!-- Input Number -->
     <div class="py-2 px-3 bg-white border border-gray-200 rounded-lg" >
       <!-- Adults -->
@@ -167,27 +186,36 @@ function decrementChildren(){
 
       {#if children > 0}
         <hr class="h-px bg-gray-300 border-0 text-white">
-        <div class="grid grid-cols-1 xl:grid-cols-2 gap-1 pt-2 w-full">
+        <div class="grid grid-cols-1 gap-1 pt-2 w-full">
           {#each Array(children) as _, index}
-            <select name="cars" id="cars" class="pr-[4rem] flex items-center gap border border-gray-300 rounded-lg p-2 pr-10 cursor-pointer text-black text-[13px] hover:text-[#C09A5B]">
-              <option value="0">0 Years old</option>
-              <option value="1">1 Years old</option>
-              <option value="2">2 Years old</option>
-              <option value="3">3 Years old</option>
-              <option value="4">4 Years old</option>
-              <option value="5">5 Years old</option>
-              <option value="6">6 Years old</option>
-              <option value="7">7 Years old</option>
-              <option value="9">9 Years old</option>
-              <option value="10">10 Years old</option>
-              <option value="11">11 Years old</option>
-              <option value="12">12 Years old</option>
-              <option value="13">13 Years old</option>
-              <option value="14">14 Years old</option>
-              <option value="15">15 Years old</option>
-              <option value="16">16 Years old</option>
-              <option value="17">17 Years old</option>              
-            </select>
+          <select
+            on:change={(e) => updateAge(index, e.target.value)}
+            name="ages"
+            id="ages"
+            class="{childrenAges[index] === -1 ? 'border-red-500' : 'border-gray-300'} outline-none focus:outline-none focus:ring-0 focus:border-gray-300 pr-[4rem] flex items-center gap border rounded-lg p-2 pr-10 cursor-pointer text-black text-[13px] hover:text-[#C09A5B]"
+            style="box-shadow: none !important;"
+          >
+            <option value="-1">Age Needed</option>
+            <option value="0">0 Years old</option>
+            <option value="1">1 Years old</option>
+            <option value="2">2 Years old</option>
+            <option value="3">3 Years old</option>
+            <option value="4">4 Years old</option>
+            <option value="5">5 Years old</option>
+            <option value="6">6 Years old</option>
+            <option value="7">7 Years old</option>
+            <option value="9">9 Years old</option>
+            <option value="10">10 Years old</option>
+            <option value="11">11 Years old</option>
+            <option value="12">12 Years old</option>
+            <option value="13">13 Years old</option>
+            <option value="14">14 Years old</option>
+            <option value="15">15 Years old</option>
+            <option value="16">16 Years old</option>
+            <option value="17">17 Years old</option>
+          </select>
+
+        
           {/each}
         </div>
       {/if}
@@ -221,15 +249,8 @@ function decrementChildren(){
 
 <!-- DatePicker Component -->
 <style>
-  select {
-      /* for Firefox */
-      -moz-appearance: none;
-      /* for Safari, Chrome, Opera */
-      -webkit-appearance: none;
-  }
-
-  /* for IE10 */
-  select::-ms-expand {
-      display: none;
-  }
+  select:focus {
+    outline: none;
+    box-shadow: none;
+}
 </style>
