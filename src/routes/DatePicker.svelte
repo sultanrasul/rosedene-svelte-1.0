@@ -5,6 +5,7 @@
   import { format } from 'date-fns';
   import { Search, UserCircle, CalendarDays, LucideMinus, Plus, Baby, UserRound, UserRoundIcon } from 'lucide-svelte';
   import FormInputs from '../lib/components/formInputs.svelte';
+    import { onMount } from 'svelte';
 
   const today = new Date();
   const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
@@ -31,7 +32,7 @@
   let dateFormatDMY = 'dd/MM/yyyy';
   let dateFormat = 'dd MMMM';
   let isOpen = false;
-  let childrenAges = [];
+  export let childrenAges = [];
 
 
   const toggleDatePicker = () => (isOpen = !isOpen);
@@ -85,9 +86,12 @@
   }
   // Update the age of a specific child
   function updateAge(index, age) {
-    childrenAges[index] = parseInt(age, 10);
-    console.log(childrenAges);
+    const updatedAges = [...childrenAges];
+    updatedAges[index] = parseInt(age, 10);
+    childrenAges = updatedAges;
+    console.log(childrenAges); // Should show the updated array
   }
+
 </script>
 
 <div class="flex items-center justify-center py-6 relative z-[10]">
@@ -188,34 +192,16 @@
         <hr class="h-px bg-gray-300 border-0 text-white">
         <div class="grid grid-cols-1 gap-1 pt-2 w-full">
           {#each Array(children) as _, index}
-          <select
-            on:change={(e) => updateAge(index, e.target.value)}
-            name="ages"
-            id="ages"
-            class="{childrenAges[index] === -1 ? 'border-red-500' : 'border-gray-300'} outline-none focus:outline-none focus:ring-0 focus:border-gray-300 pr-[4rem] flex items-center gap border rounded-lg p-2 pr-10 cursor-pointer text-black text-[13px] hover:text-[#C09A5B]"
-            style="box-shadow: none !important;"
-          >
-            <option value="-1">Age Needed</option>
-            <option value="0">0 Years old</option>
-            <option value="1">1 Years old</option>
-            <option value="2">2 Years old</option>
-            <option value="3">3 Years old</option>
-            <option value="4">4 Years old</option>
-            <option value="5">5 Years old</option>
-            <option value="6">6 Years old</option>
-            <option value="7">7 Years old</option>
-            <option value="9">9 Years old</option>
-            <option value="10">10 Years old</option>
-            <option value="11">11 Years old</option>
-            <option value="12">12 Years old</option>
-            <option value="13">13 Years old</option>
-            <option value="14">14 Years old</option>
-            <option value="15">15 Years old</option>
-            <option value="16">16 Years old</option>
-            <option value="17">17 Years old</option>
-          </select>
-
-        
+            <select
+              on:change={(e) => updateAge(index, e.target.value)}
+              class="outline-none focus:ring-0 focus:border-gray-300 border rounded-lg p-2 cursor-pointer text-black text-[13px] hover:text-[#C09A5B]"
+              style:box-shadow="none"
+            >
+              <option value="-1" selected={childrenAges[index] === -1}>Age Needed</option>
+              {#each Array.from({ length: 18 }, (_, i) => i) as age}
+                <option value={age} selected={childrenAges[index] === age}>{age} Years old</option>
+              {/each}
+            </select>
           {/each}
         </div>
       {/if}
@@ -237,7 +223,11 @@
     <div class="w-px h-6 bg-gray-300"></div>
 
     <!-- Search Button -->
-    <button on:click={() => {window.location.href = `/search?check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}`;}} 
+    <button on:click={() => 
+    {
+      const agesParam = childrenAges.map(age => `ages=${age}`).join('&');
+      window.location.href = `/search?check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}&${agesParam}`;
+    }} 
     class="flex items-center justify-center w-10 h-10 bg-[#C09A5B]/90 rounded-full hover:bg-[#C09A5B] focus:outline-none">
       <Search />
     </button>

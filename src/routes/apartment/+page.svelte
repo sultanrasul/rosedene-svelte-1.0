@@ -449,7 +449,7 @@
             
             <!-- Details -->
             
-            <GuestDetails startDate={startDate} endDate={endDate} children={children} adults={adults}/>
+            <GuestDetails startDate={startDate} endDate={endDate} children={children} adults={adults} />
 
             <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
   
