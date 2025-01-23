@@ -21,6 +21,7 @@
         let count = 0;
         let adults;
         let children;
+        let childrenAges = [];
 
         let formattedStartDateDMY;
         let formattedEndDateDMY;
@@ -47,7 +48,12 @@
 
             adults = parseInt(urlParams.get('adults'), 10) || 0; 
             children = parseInt(urlParams.get('children'), 10) || 0;
-
+            urlParams.forEach((value, key) => {
+                if (key === 'ages') {
+                    childrenAges.push(Number(value)); // Convert the value to a number
+                }
+            });
+            console.log(childrenAges)
     
             if (checkIn && checkOut) {
                 // Convert day/month/year string to Date object
@@ -103,7 +109,7 @@
 
     <div class="relative z-10 pb-20 ">
         <Navbar/>   
-        <DatePicker isSearch startDate={startDate} endDate={endDate} children={children} adults={adults}/>
+        <DatePicker isSearch startDate={startDate} endDate={endDate} children={children} adults={adults} childrenAges={childrenAges}/>
         
         <div class="flex flex-wrap justify-center gap-4 pt-10">
 
@@ -112,7 +118,11 @@
                 {#each apartments["properties"]["available"] as apartment }
                     <!-- svelte-ignore a11y_click_events_have_key_events -->
                     <!-- svelte-ignore a11y_no_static_element_interactions -->
-                    <div on:click={() => {window.location.href = `/apartment?number=${apartment.name.match(/\d+/)?.[0]}&check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}`;}}>
+                    <div on:click={() => 
+                    {
+                        const agesParam = childrenAges.map(age => `ages=${age}`).join('&');
+                        window.location.href = `/apartment?number=${apartment.name.match(/\d+/)?.[0]}&check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}&${agesParam}`;                        
+                    }}>
                         <Card apartmentName={apartment.name} apartmentNumber={apartment.name.match(/\d+/)?.[0]} />
                     </div>
                 {/each}
