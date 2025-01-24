@@ -139,7 +139,7 @@
         
         <div class="flex flex-wrap justify-center gap-4 pt-10">
 
-            {#if apartments}
+            {#if apartments && nights}
                 <!-- svelte-ignore a11y_click_events_have_key_events -->
                 {#each apartments["properties"]["available"] as apartment }
                     <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -149,7 +149,7 @@
                         const agesParam = childrenAges.map(age => `ages=${age}`).join('&');
                         window.location.href = `/apartment?number=${apartment.name.match(/\d+/)?.[0]}&check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}&${agesParam}`;                        
                     }}>
-                        <Card price={calculateApartmentPrice(apartment.price.price, apartment.price.extra)} apartmentName={apartment.name} apartmentNumber={apartment.name.match(/\d+/)?.[0]} />
+                        <Card nights={nights} price={calculateApartmentPrice(apartment.price.price, apartment.price.extra)} apartmentName={apartment.name} apartmentNumber={apartment.name.match(/\d+/)?.[0]} />
                     </div>
                 {/each}
             {/if}

@@ -6,20 +6,20 @@
     export let apartmentNumber;
     export let apartmentName;
     export let price; // Default price
+    export let nights;
 
     // @ts-ignore
     const apartmentDetails = apartments[apartmentNumber];
 </script>
 
-<div class="h-full cursor-pointer max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+<div class="h-full flex flex-col cursor-pointer max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden dark:bg-gray-800 dark:border-gray-700">
     <!-- Image Section -->
     <div class="relative">
         <img class="w-full object-cover" src={`/${apartmentNumber}.jpg`} alt={apartmentName}/>
-        <!-- <div class="absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent"></div> -->
     </div>
 
     <!-- Content Section -->
-    <div class="relative p-5 bg-transparent">
+    <div class="flex-1 relative p-5 bg-transparent">
         <!-- Apartment Name -->
         <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">{apartmentName}</h5>
 
@@ -29,7 +29,7 @@
         </p>
 
         <!-- Features Section -->
-        <div class="flex flex-wrap gap-2 mb-4">
+        <div class="flex flex-wrap gap-2 mb-0">
             <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
                 <User size="22px" class="pr-1"/> {apartmentDetails['maxGuests']} Guests
             </span>
@@ -52,11 +52,10 @@
                 {apartmentDetails['bathrooms']} Bathroom{apartmentDetails['bathrooms'] > 1 ? 's' : ''}
             </span>
         </div>
-    
-        <!-- Price Section -->
-        <div class="mt-4 text-lg font-bold text-gray-500">
-            <span class="text-gray-900 dark:text-white text-4xl">£{price}</span>/night
-        </div>
     </div>
     
+    <!-- Price Section -->
+    <div class="mt-auto text-lg font-bold text-gray-500 ml-5 mb-5">
+        <span class="text-gray-900 dark:text-white text-4xl">£{price}</span>/{nights} nights
+    </div>
 </div>
