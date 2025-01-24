@@ -21,7 +21,9 @@
         let count = 0;
         let adults;
         let children;
+        let guests;
         let childrenAges = [];
+        let nights;
 
         let formattedStartDateDMY;
         let formattedEndDateDMY;
@@ -48,12 +50,13 @@
 
             adults = parseInt(urlParams.get('adults'), 10) || 0; 
             children = parseInt(urlParams.get('children'), 10) || 0;
+            guests = parseInt(adults, 10) + parseInt(children, 10);
+            
             urlParams.forEach((value, key) => {
                 if (key === 'ages') {
                     childrenAges.push(Number(value)); // Convert the value to a number
                 }
             });
-            console.log(childrenAges)
     
             if (checkIn && checkOut) {
                 // Convert day/month/year string to Date object
@@ -64,6 +67,8 @@
     
                 startDate = parseDate(checkIn);
                 endDate = parseDate(checkOut);
+
+                nights = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
     
                 const dateFrom = {
                     day: startDate.getDate(),
@@ -98,6 +103,27 @@
             }
         });
 
+        function calculateApartmentPrice(dailyPrice, extra) {
+            // Ensure that all values are integers
+            dailyPrice = Math.floor(dailyPrice);
+            extra = Math.floor(extra);
+            nights = Math.floor(nights);
+            guests = Math.floor(guests);
+
+            // Minimum price is based on 2 people
+            let basePrice = (dailyPrice * nights) + extra;
+
+            // If there are more than 2 guests, we add the extra for each additional guest
+            if (guests > 2) {
+                // Calculate the extra for the additional guests
+                let additionalGuests = guests - 2;
+                basePrice += (additionalGuests * extra);
+            }
+
+            // Ensure the final price is an integer
+            return Math.floor(basePrice);
+        }
+
     </script>
     
 <!-- Main Menu -->
@@ -123,7 +149,7 @@
                         const agesParam = childrenAges.map(age => `ages=${age}`).join('&');
                         window.location.href = `/apartment?number=${apartment.name.match(/\d+/)?.[0]}&check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}&${agesParam}`;                        
                     }}>
-                        <Card apartmentName={apartment.name} apartmentNumber={apartment.name.match(/\d+/)?.[0]} />
+                        <Card price={calculateApartmentPrice(apartment.price.price, apartment.price.extra)} apartmentName={apartment.name} apartmentNumber={apartment.name.match(/\d+/)?.[0]} />
                     </div>
                 {/each}
             {/if}
