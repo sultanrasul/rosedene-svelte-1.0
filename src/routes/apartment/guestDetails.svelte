@@ -335,7 +335,7 @@
             </div>
           </div>
           {#if children > 0}
-            <hr class="h-px bg-gray-300 border-0 text-white">
+            <hr class="h-px bg-gray-300 border-0">
             <div class="grid grid-cols-1 gap-1 pt-2 w-full">
               {#each childrenAges as age, index}
                 <select
@@ -345,7 +345,7 @@
                   class="outline-none focus:ring-0 focus:border-gray-300 border rounded-lg p-2 cursor-pointer text-black text-[13px] hover:text-[#C09A5B]"
                   style:box-shadow="none"
                 >
-                  <option value="-1" selected={childrenAges[index] === -1}>Age Needed</option>
+                  <option  value="-1" selected={childrenAges[index] === -1}>Age Needed</option>
                   {#each Array.from({ length: 18 }, (_, i) => i) as age}
                     <option value={age} selected={childrenAges[index] === age}>{age} Years old</option>
                   {/each}

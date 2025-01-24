@@ -6,6 +6,8 @@
   import { Info , LogIn, LogOut,Home, Building , BedDouble, Wifi, UtensilsCrossed, Ruler, TvMinimal, User, Moon, Banknote, WashingMachine, Check, Camera, ShowerHead, Monitor, Flower2, ParkingCircle, Users, PersonStanding, CigaretteOff, PawPrint} from "lucide-svelte";
   import { amenities } from "./amenities";
   import GuestDetails from "./guestDetails.svelte";
+  import { format } from 'date-fns';
+
 
   
   import Slideshow from "./Slideshow.svelte";
@@ -22,12 +24,18 @@
   let apartmentDetails;
   let apartmentNumber;
   let current = 0;
+  let guests;
   let nights;
   let adults;
   let children;
   let images;
   let isModalOpen = false;
   let parsedDescription;
+
+  let dailyPrice;
+  let extra;
+  let displayPrice;
+
   import { currentPageIndex } from "./store";
   import { parse } from "date-fns";
   let galleryContainer;
@@ -43,7 +51,7 @@
     console.log(apartmentDetails);
     adults = urlParams.get('adults'); 
     children = urlParams.get('children');
-
+    guests = parseInt(adults, 10) + parseInt(children, 10)
 
     images = getApartmentImages(apartmentNumber);
 
@@ -57,7 +65,7 @@
         const [day, month, year] = dateStr.split('/').map(Number);
         return new Date(year, month - 1, day); // Month is 0-indexed
       };
-
+      console.log(checkIn, checkOut)
       startDate = parseDate(checkIn);
       endDate = parseDate(checkOut);
 
@@ -75,6 +83,27 @@
         year: endDate.getFullYear()
       };
 
+      try {
+        const response = await fetch('http://127.0.0.1:5000/check_price', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ date_from: dateFrom, date_to: dateTo, property_ids: [apartmentDetails.id] }),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+        
+        const price = await response.json();
+
+        dailyPrice = price[0]["price"]["Prices"]["Season"]["Price"]
+        extra = price[0]["price"]["Prices"]["Season"]["Extra"]
+        displayPrice = calculateApartmentPrice(dailyPrice,extra);
+
+      } catch (error) {
+          console.error('Failed to fetch blocked apartments:', error);
+      }
+      
     } else {
       console.error('Missing check_in or check_out parameters in URL');
     }
@@ -150,6 +179,67 @@
     currentPageIndex.set(imageIndex); // Update the store
     isModalOpen = !isModalOpen;
   }
+
+  function calculateApartmentPrice(dailyPrice, extra) {
+      // Ensure that all values are integers
+      dailyPrice = Math.floor(dailyPrice);
+      extra = Math.floor(extra);
+      nights = Math.floor(nights);
+      guests = Math.floor(guests);
+
+      // Minimum price is based on 2 people
+      let basePrice = (dailyPrice * nights) + extra;
+
+      // If there are more than 2 guests, we add the extra for each additional guest
+      if (guests > 2) {
+          // Calculate the extra for the additional guests
+          let additionalGuests = guests - 2;
+          basePrice += (additionalGuests * extra);
+      }
+
+      // Ensure the final price is an integer
+      return Math.floor(basePrice);
+  }
+
+  let dateFormatDMY = 'dd/MM/yyyy';
+  let dateFormat = 'dd MMMM';
+  
+  const formatDate = (dateString) =>
+      dateString && format(new Date(dateString), dateFormat) || '';
+
+  const formatDateDMY = (dateString) =>
+      dateString && format(new Date(dateString), dateFormatDMY) || '';
+
+  $: formattedStartDate = formatDate(startDate);
+  $: formattedEndDate = formatDate(endDate);
+
+  $: formattedStartDateDMY = formatDateDMY(startDate);
+  $: formattedEndDateDMY = formatDateDMY(endDate);
+
+  $: {
+    // if ((startDate && endDate) || adults || children) {
+    //   console.log('Update the price!');
+    //   console.log(formattedStartDateDMY, formattedEndDateDMY)
+    // 
+    }
+
+    $: {
+      if (formattedEndDateDMY && formattedStartDateDMY) {
+        const millisecondsPerDay = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
+        nights = Math.floor((endDate - startDate) / millisecondsPerDay);
+
+        console.log("Nights: ",nights)
+        displayPrice = calculateApartmentPrice(dailyPrice,extra, adults, children)
+      }
+    }
+    $: {
+      if (adults || children) {
+        console.log("Update the price!");
+        guests = parseInt(adults, 10) + parseInt(children, 10)
+        displayPrice = calculateApartmentPrice(dailyPrice,extra, adults, children)
+      }
+    }
+
 </script>
     
   <!-- Main Menu -->
@@ -444,17 +534,20 @@
         <!-- Price Card -->
         <div class="w-[28%] self-start sticky top-6">
           <div class="bg-gray-100 rounded-lg shadow-lg p-6">
-            <h2 class="text-4xl font-bold text-[#C09A5B] mb-4">£176.54/week</h2>
+            
+            <!-- <h2 class="text-4xl font-bold text-[#C09A5B] mb-4">£{displayPrice} </h2> -->
+            <div class="mt-auto text-xl font-bold text-gray-600 mb-4">
+              <span class="font-bold text-[#C09A5B] text-4xl">£{displayPrice}</span>/{nights}<span class="text-[15px]">nights</span>
+            </div>
+
           
             
             <!-- Details -->
-            <GuestDetails startDate={startDate} endDate={endDate} children={children} adults={adults}/>
+            <GuestDetails bind:startDate={startDate} bind:endDate={endDate} bind:children={children} bind:adults={adults}/>
 
             <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
   
-            <button class="mt-8 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg w-full">
-              Book Now
-            </button>
+            <button class="mt-8 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg w-full">Book Now</button>
           </div>
 
 
