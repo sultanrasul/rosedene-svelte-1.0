@@ -153,16 +153,13 @@
     const checkIn = urlParams.get('check_in'); // Format: day/month/year
     const checkOut = urlParams.get('check_out'); // Format: day/month/year
 
-    urlParams.forEach((value, key) => {
-      if (key === 'ages') {
-        childrenAges.push(Number(value)); // Convert to number and update array
-      }
-    });
-
+    
     apartmentDetails = apartments[urlParams.get('number')];
     adults = parseInt(urlParams.get('adults'),10)
     children = parseInt(urlParams.get('children'),10)
-
+    
+    childrenAges = urlParams.getAll('ages').map(Number); // Convert to numbers
+    console.log('Children Ages:', childrenAges); // Verify the result
 
     if (checkIn && checkOut) {
       // Convert day/month/year string to Date object
@@ -217,21 +214,21 @@
 
   // Ensure the array length matches the number of children
   $: {
-      if (children > childrenAges.length) {
-        // Add new -1 entries for additional children
-        childrenAges = [...childrenAges, ...Array(children - childrenAges.length).fill(-1)];
-      } else if (children < childrenAges.length) {
-        // Remove extra entries if children count decreases
-        childrenAges = childrenAges.slice(0, children);
-      }
+    if (children > childrenAges.length) {
+      // Add new -1 entries for additional children
+      childrenAges = [...childrenAges, ...Array(children - childrenAges.length).fill(-1)];
+    } else if (children < childrenAges.length) {
+      // Remove extra entries if children count decreases
+      childrenAges = childrenAges.slice(0, children);
     }
+  }
   // Update the age of a specific child
-    function updateAge(index, age) {
-      const updatedAges = [...childrenAges];
-      updatedAges[index] = parseInt(age, 10);
-      childrenAges = updatedAges;
-      console.log(childrenAges); // Should show the updated array
-    }
+  function updateAge(index, age) {
+    const updatedAges = [...childrenAges];
+    updatedAges[index] = parseInt(age, 10);
+    childrenAges = updatedAges;
+    console.log(childrenAges); // Should show the updated array
+  }
   $: formattedStartDate = formatDate(startDate);
   $: formattedEndDate = formatDate(endDate);
 
@@ -265,7 +262,6 @@
     
     <!-- Guest Input -->
     <div>
-
       <button id="dropdownCheckboxButton" data-dropdown-toggle="dropdownDefaultCheckbox" type="button" class="overflow-y-auto w-full flex items-center gap border border-gray-300 rounded-lg p-2 cursor-pointer text-black hover:text-[#C09A5B]">
         <UserRoundIcon class="text-xl" />
         <p class="text-sm ml-2">
@@ -338,12 +334,14 @@
               </button>
             </div>
           </div>
-          {#if children >= 1}
+          {#if children > 0}
             <hr class="h-px bg-gray-300 border-0 text-white">
             <div class="grid grid-cols-1 gap-1 pt-2 w-full">
-              {#each Array(children) as _, index}
+              {#each childrenAges as age, index}
                 <select
-                  on:change={(e) => updateAge(index, e.target.value)}
+                  id="child-age-{index}"
+                  bind:value={childrenAges[index]}
+                  on:change={(event) => updateAge(index, event.target.value)}
                   class="outline-none focus:ring-0 focus:border-gray-300 border rounded-lg p-2 cursor-pointer text-black text-[13px] hover:text-[#C09A5B]"
                   style:box-shadow="none"
                 >

@@ -21,9 +21,7 @@
   let endDate;   // Variable for end date as a Date object
   let apartmentDetails;
   let apartmentNumber;
-  let carouselInstance;
   let current = 0;
-  let count = 0;
   let nights;
   let adults;
   let children;
@@ -32,7 +30,6 @@
   let parsedDescription;
   import { currentPageIndex } from "./store";
   import { parse } from "date-fns";
-  
   let galleryContainer;
   
   onMount(async () => {
@@ -42,9 +39,12 @@
 
     apartmentDetails = apartments[urlParams.get('number')];
     apartmentNumber = urlParams.get('number');
+
     console.log(apartmentDetails);
     adults = urlParams.get('adults'); 
     children = urlParams.get('children');
+
+
     images = getApartmentImages(apartmentNumber);
 
     if (apartmentDetails?.description) {
@@ -448,8 +448,7 @@
           
             
             <!-- Details -->
-            
-            <GuestDetails startDate={startDate} endDate={endDate} children={children} adults={adults} />
+            <GuestDetails startDate={startDate} endDate={endDate} children={children} adults={adults}/>
 
             <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
   

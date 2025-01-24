@@ -5,7 +5,7 @@
 
     export let apartmentNumber;
     export let apartmentName;
-    export let price = "£66/night"; // Default price
+    export let price; // Default price
 
     // @ts-ignore
     const apartmentDetails = apartments[apartmentNumber];
@@ -55,7 +55,7 @@
     
         <!-- Price Section -->
         <div class="mt-4 text-lg font-bold text-gray-500">
-            <span class="text-gray-900 dark:text-white text-4xl">{price.split('/')[0]}</span>/night
+            <span class="text-gray-900 dark:text-white text-4xl">£{price}</span>/night
         </div>
     </div>
     
