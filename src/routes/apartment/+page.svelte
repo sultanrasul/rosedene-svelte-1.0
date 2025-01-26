@@ -31,6 +31,10 @@
   let images;
   let isModalOpen = false;
   let parsedDescription;
+  let childrenAges;
+
+  let dateFrom;
+  let dateTo;
 
   let dailyPrice;
   let extra;
@@ -71,13 +75,13 @@
 
       nights = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
 
-      const dateFrom = {
+      dateFrom = {
         day: startDate.getDate(),
         month: startDate.getMonth() + 1,
         year: startDate.getFullYear()
       };
 
-      const dateTo = {
+      dateTo = {
         day: endDate.getDate(),
         month: endDate.getMonth() + 1,
         year: endDate.getFullYear()
@@ -87,7 +91,7 @@
         const response = await fetch('http://127.0.0.1:5000/check_price', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ date_from: dateFrom, date_to: dateTo, property_ids: [apartmentDetails.id] }),
+            body: JSON.stringify({ date_from: dateFrom, date_to: dateTo, property_id: apartmentDetails.id }),
         });
         
         if (!response.ok) {
@@ -96,8 +100,8 @@
         
         const price = await response.json();
 
-        dailyPrice = price[0]["price"]["Prices"]["Season"]["Price"]
-        extra = price[0]["price"]["Prices"]["Season"]["Extra"]
+        dailyPrice = price["price"]["Prices"]["Season"]["Price"]
+        extra = price["price"]["Prices"]["Season"]["Extra"]
         displayPrice = calculateApartmentPrice(dailyPrice,extra);
 
       } catch (error) {
@@ -217,28 +221,55 @@
   $: formattedEndDateDMY = formatDateDMY(endDate);
 
   $: {
-    // if ((startDate && endDate) || adults || children) {
-    //   console.log('Update the price!');
-    //   console.log(formattedStartDateDMY, formattedEndDateDMY)
-    // 
-    }
+    if (formattedEndDateDMY && formattedStartDateDMY) {
+      const millisecondsPerDay = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
+      nights = Math.floor((endDate - startDate) / millisecondsPerDay);
 
-    $: {
-      if (formattedEndDateDMY && formattedStartDateDMY) {
-        const millisecondsPerDay = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
-        nights = Math.floor((endDate - startDate) / millisecondsPerDay);
+      console.log("Nights: ",nights)
+      displayPrice = calculateApartmentPrice(dailyPrice,extra, adults, children)
+    }
+  }
+  $: {
+    if (adults || children) {
+      console.log("Update the price!");
+      guests = parseInt(adults, 10) + parseInt(children, 10)
+      displayPrice = calculateApartmentPrice(dailyPrice,extra, adults, children)
+    }
+  }
 
-        console.log("Nights: ",nights)
-        displayPrice = calculateApartmentPrice(dailyPrice,extra, adults, children)
+  async function bookNow (){
+    try {
+        const response = await fetch('http://127.0.0.1:5000/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(
+              { 
+                date_from: dateFrom, 
+                date_to: dateTo, 
+                property_id: apartmentDetails.id,
+                adults: adults,
+                children: children,
+                childrenAges: childrenAges,              
+              }
+            ),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+        
+        const checkoutURL = await response.json();
+        window.open(checkoutURL.url);
+        console.log(checkoutURL.url);
+
+        // dailyPrice = price[0]["price"]["Prices"]["Season"]["Price"]
+        // extra = price[0]["price"]["Prices"]["Season"]["Extra"]
+        // displayPrice = calculateApartmentPrice(dailyPrice,extra);
+
+      } catch (error) {
+          console.error('Failed to fetch blocked apartments:', error);
       }
-    }
-    $: {
-      if (adults || children) {
-        console.log("Update the price!");
-        guests = parseInt(adults, 10) + parseInt(children, 10)
-        displayPrice = calculateApartmentPrice(dailyPrice,extra, adults, children)
-      }
-    }
+  }
 
 </script>
     
@@ -543,11 +574,11 @@
           
             
             <!-- Details -->
-            <GuestDetails bind:startDate={startDate} bind:endDate={endDate} bind:children={children} bind:adults={adults}/>
+            <GuestDetails bind:childrenAges={childrenAges} bind:startDate={startDate} bind:endDate={endDate} bind:children={children} bind:adults={adults}/>
 
             <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
   
-            <button class="mt-8 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg w-full">Book Now</button>
+            <button class="mt-8 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg w-full" on:click={bookNow}>Book Now</button>
           </div>
 
 

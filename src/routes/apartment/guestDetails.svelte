@@ -31,7 +31,7 @@
 
   export let children = 0;
   export let adults = 1;
-  let childrenAges = [];
+  export let childrenAges = [];
   
   let dateFormatDMY = 'dd/MM/yyyy';
   let dateFormat = 'dd MMMM';
