@@ -2,7 +2,7 @@
 // @ts-nocheck
 
   import { DatePicker } from '@svelte-plugins/datepicker';
-  import { format } from 'date-fns';
+  import { format, startOfHour } from 'date-fns';
   import { Search, UserCircle, CalendarDays, LucideMinus, Plus, Baby, UserRound, UserRoundIcon } from 'lucide-svelte';
   import FormInputs from '../lib/components/formInputs.svelte';
     import { onMount } from 'svelte';
@@ -67,6 +67,58 @@
       children = parseInt(children, 10) - 1;
     }
   }
+  
+  function callToast(){
+    const toastMarkup2 = `
+    <!-- Toast -->
+      <div class="bg-white max-w-xs border border-[2px] text-sm  rounded-lg border-[#C09A5B] text-[#C09A5B]" role="alert" tabindex="-1" aria-labelledby="hs-toast-soft-color-red-label">
+        <div id="hs-toast-soft-color-red-label" class="flex p-3">
+          
+          <p class="text-sm inline-flex">         
+            <svg class="lucide lucide-calendar-days inline-flex" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+            <span class="mt-[4px] ml-1">Minimum 2 Night Stay</span>
+          </p>
+
+
+          </div>
+        </div>
+      </div>
+    <!-- End Toast -->
+    `;
+
+    Toastify({
+      text: toastMarkup2,
+      className: "border-neutral-700 text-neutral-400 max-w-[210px] hs-toastify-on:opacity-100 opacity-0 fixed -top-[150px] right-[20px] z-[90] transition-all duration-300 w-[320px] text-sm border rounded-xl shadow-lg [&>.toast-close]:hidden ",
+      duration: 3000,
+      close: false,
+      escapeMarkup: false
+    }).showToast();
+  }  
+
+  $: {
+    if (startDate && endDate) {
+      const millisecondsPerDay = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
+      if (Math.floor((endDate - startDate) / millisecondsPerDay) < 2){
+        callToast();
+        startDate = null;
+        endDate = null;
+        isOpen = true;
+        
+      }
+    }
+  }
+  $: {
+    if (startDate && endDate) {
+      const millisecondsPerDay = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
+      if (Math.floor((endDate - startDate) / millisecondsPerDay) < 2){
+        callToast();
+        startDate = null;
+        endDate = null;
+        isOpen = true;
+        
+      }
+    }
+  }
 
   $: formattedStartDate = formatDate(startDate);
   $: formattedEndDate = formatDate(endDate);
@@ -99,7 +151,7 @@
     <!-- Date Input -->
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <DatePicker class="" bind:isOpen bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}>
+    <DatePicker theme={"custom-datepicker"} class="" bind:isOpen bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}>
       <div class="text-[17px] min-w-[230px] flex items-center gap-2 cursor-pointer text-gray-600 hover:text-[#C09A5B]" on:click={toggleDatePicker}>
         <CalendarDays />
         <span>
@@ -220,17 +272,25 @@
 
     
 
-    <div class="w-px h-6 bg-gray-300"></div>
+  <div class="w-px h-6 bg-gray-300"></div>
 
     <!-- Search Button -->
-    <button on:click={() => 
-    {
-      const agesParam = childrenAges.map(age => `ages=${age}`).join('&');
-      window.location.href = `/search?check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}&${agesParam}`;
-    }} 
-    class="flex items-center justify-center w-10 h-10 bg-[#C09A5B]/90 rounded-full hover:bg-[#C09A5B] focus:outline-none">
-      <Search />
+    {#if startDate & endDate}
+      <button on:click={() => 
+        {
+          const agesParam = childrenAges.map(age => `ages=${age}`).join('&');
+          window.location.href = `/search?check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}&${agesParam}`;
+        }} 
+        class="flex items-center justify-center w-10 h-10 bg-[#C09A5B]/90 rounded-full hover:bg-[#C09A5B] focus:outline-none">
+        
+        <Search />
     </button>
+    {:else}
+      <button class="cursor-default flex items-center justify-center w-10 h-10 bg-[#C09A5B]/30 rounded-full focus:outline-none">
+        <Search />
+      </button>
+
+    {/if}
   </div>
 
 
@@ -243,4 +303,11 @@
     outline: none;
     box-shadow: none;
 }
+
+:global(.datepicker[data-picker-theme="custom-datepicker"]) {
+      --datepicker-container-border: 2px solid #C09A5B;
+      --datepicker-calendar-range-selected-background: #C09A5B;
+      --datepicker-calendar-day-color-disabled: #23344161;
+
+    }
 </style>

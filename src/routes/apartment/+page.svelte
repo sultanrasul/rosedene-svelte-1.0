@@ -3,7 +3,7 @@
   import * as Dialog from "../../lib/components/ui/dialog";
   import * as Carousel from "../../lib/components/ui/carousel";
   import { apartments } from '../apartments';
-  import { Info , LogIn, LogOut,Home, Building , BedDouble, Wifi, UtensilsCrossed, Ruler, TvMinimal, User, Moon, Banknote, WashingMachine, Check, Camera, ShowerHead, Monitor, Flower2, ParkingCircle, Users, PersonStanding, CigaretteOff, PawPrint} from "lucide-svelte";
+  import { CalendarDays ,Info , LogIn, LogOut,Home, Building , BedDouble, Wifi, UtensilsCrossed, Ruler, TvMinimal, User, Moon, Banknote, WashingMachine, Check, Camera, ShowerHead, Monitor, Flower2, ParkingCircle, Users, PersonStanding, CigaretteOff, PawPrint} from "lucide-svelte";
   import { amenities } from "./amenities";
   import GuestDetails from "./guestDetails.svelte";
   import { format } from 'date-fns';
@@ -26,12 +26,13 @@
   let current = 0;
   let guests;
   let nights;
-  let adults;
-  let children;
+  let adults = 1;
+  let children = 0;
   let images;
   let isModalOpen = false;
   let parsedDescription;
   let childrenAges;
+  let isOpen;
 
   let dateFrom;
   let dateTo;
@@ -52,9 +53,14 @@
     apartmentDetails = apartments[urlParams.get('number')];
     apartmentNumber = urlParams.get('number');
 
+    if (urlParams.get('adults')){
+      adults = urlParams.get('adults'); 
+    }
+    if (urlParams.get('children')){
+      children = urlParams.get('children');
+
+    }
     console.log(apartmentDetails);
-    adults = urlParams.get('adults'); 
-    children = urlParams.get('children');
     guests = parseInt(adults, 10) + parseInt(children, 10)
 
     images = getApartmentImages(apartmentNumber);
@@ -109,7 +115,27 @@
       }
       
     } else {
-      console.error('Missing check_in or check_out parameters in URL');
+        try {
+          const response = await fetch('http://127.0.0.1:5000/check_price', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({property_id: apartmentDetails.id }),
+          });
+          
+          if (!response.ok) {
+              throw new Error(`Error: ${response.statusText}`);
+          }
+          
+          const price = await response.json();
+
+          dailyPrice = price["price"]["Prices"]["Season"]["Price"]
+          extra = price["price"]["Prices"]["Season"]["Extra"]
+          displayPrice = calculateApartmentPrice(dailyPrice,extra);
+
+        } catch (error) {
+            console.error('Failed to fetch blocked apartments:', error);
+        }
+
     }
 
     // Delay the scrolling effect by 2 seconds
@@ -221,17 +247,41 @@
   $: formattedEndDateDMY = formatDateDMY(endDate);
 
   $: {
-    if (formattedEndDateDMY && formattedStartDateDMY) {
+    if (startDate && endDate) {
       const millisecondsPerDay = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
-      nights = Math.floor((endDate - startDate) / millisecondsPerDay);
+      if (Math.floor((endDate - startDate) / millisecondsPerDay) < 2){
+        callToast();
+        startDate = null;
+        endDate = null;
+        isOpen = true;
+        nights = 2;
+        
+      } else{
+        nights = Math.floor((endDate - startDate) / millisecondsPerDay);
+        displayPrice = calculateApartmentPrice(dailyPrice,extra, adults, children)
+        
+        dateFrom = {
+          day: parseInt(formatDateDMY(startDate).split('/')[0]),
+          month: parseInt(formatDateDMY(startDate).split('/')[1]),
+          year: parseInt(formatDateDMY(startDate).split('/')[2])
+        };
 
-      console.log("Nights: ",nights)
-      displayPrice = calculateApartmentPrice(dailyPrice,extra, adults, children)
+        dateTo = {
+          day: parseInt(formatDateDMY(endDate).split('/')[0]),
+          month: parseInt(formatDateDMY(endDate).split('/')[1]),
+          year: parseInt(formatDateDMY(endDate).split('/')[2])
+        };
+
+        console.log(dateFrom)
+        console.log(dateTo)
+
+      }
     }
+    
   }
+
   $: {
     if (adults || children) {
-      console.log("Update the price!");
       guests = parseInt(adults, 10) + parseInt(children, 10)
       displayPrice = calculateApartmentPrice(dailyPrice,extra, adults, children)
     }
@@ -239,37 +289,76 @@
 
   async function bookNow (){
     try {
-        const response = await fetch('http://127.0.0.1:5000/create-checkout-session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(
-              { 
-                date_from: dateFrom, 
-                date_to: dateTo, 
-                property_id: apartmentDetails.id,
-                adults: adults,
-                children: children,
-                childrenAges: childrenAges,              
-              }
-            ),
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`);
-        }
-        
-        const checkoutURL = await response.json();
-        window.open(checkoutURL.url);
-        console.log(checkoutURL.url);
+      const response = await fetch('http://127.0.0.1:5000/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+              date_from: dateFrom,
+              date_to: dateTo,
+              property_id: apartmentDetails.id,
+              adults: adults,
+              children: children,
+              childrenAges: childrenAges,
+          }),
+      });
 
-        // dailyPrice = price[0]["price"]["Prices"]["Season"]["Price"]
-        // extra = price[0]["price"]["Prices"]["Season"]["Extra"]
-        // displayPrice = calculateApartmentPrice(dailyPrice,extra);
-
-      } catch (error) {
-          console.error('Failed to fetch blocked apartments:', error);
+      // Check if the response is not OK (non-2xx status code)
+      if (!response.ok) {
+          // Retrieve the error data and throw a custom error with status and details
+          const errorData = await response.json(); // This assumes the error response contains more details
+          throw {
+              status: response.status,
+              statusText: response.statusText,
+              message: errorData.error || 'Unknown error', // Customize based on your error structure
+              data: errorData,
+          };
       }
+
+      // If the response is successful, parse the checkout URL
+      const checkoutURL = await response.json();
+      window.open(checkoutURL.url);
+      console.log(checkoutURL.url);
+
+    } catch (error) {
+        // Log detailed error information
+        if (error.status == 420) {
+          alert("This apartment is not available for these dates! Please Try Again in a few Minutes")
+        }
+
+
+        // Optionally, handle specific errors (e.g., show alert to the user)
+    }
+
   }
+
+
+
+  function callToast(){
+    const toastMarkup2 = `
+    <!-- Toast -->
+      <div class="bg-white max-w-xs border border-[2px] text-sm  rounded-lg border-[#C09A5B] text-[#C09A5B]" role="alert" tabindex="-1" aria-labelledby="hs-toast-soft-color-red-label">
+        <div id="hs-toast-soft-color-red-label" class="flex p-3">
+          
+          <p class="text-sm inline-flex">         
+            <svg class="lucide lucide-calendar-days inline-flex" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+            <span class="mt-[4px] ml-1">Minimum 2 Night Stay</span>
+          </p>
+
+
+          </div>
+        </div>
+      </div>
+    <!-- End Toast -->
+    `;
+
+    Toastify({
+      text: toastMarkup2,
+      className: "border-neutral-700 text-neutral-400 max-w-[210px] hs-toastify-on:opacity-100 opacity-0 fixed -top-[150px] right-[20px] z-[90] transition-all duration-300 w-[320px] text-sm border rounded-xl shadow-lg [&>.toast-close]:hidden ",
+      duration: 3000,
+      close: false,
+      escapeMarkup: false
+    }).showToast();
+  }  
 
 </script>
     
@@ -574,7 +663,7 @@
           
             
             <!-- Details -->
-            <GuestDetails bind:childrenAges={childrenAges} bind:startDate={startDate} bind:endDate={endDate} bind:children={children} bind:adults={adults}/>
+            <GuestDetails bind:isOpen={isOpen} bind:childrenAges={childrenAges} bind:startDate={startDate} bind:endDate={endDate} bind:children={children} bind:adults={adults}/>
 
             <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
   
