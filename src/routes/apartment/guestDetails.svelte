@@ -35,7 +35,7 @@
   
   let dateFormatDMY = 'dd/MM/yyyy';
   let dateFormat = 'dd MMMM';
-  let isOpen = false;
+  export let isOpen = false;
 
   let disabledDates;
   
