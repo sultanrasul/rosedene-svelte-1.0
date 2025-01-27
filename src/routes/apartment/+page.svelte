@@ -31,7 +31,7 @@
   let images;
   let isModalOpen = false;
   let parsedDescription;
-  let childrenAges;
+  let childrenAges = [];
   let isOpen;
 
   let dateFrom;
@@ -250,7 +250,7 @@
     if (startDate && endDate) {
       const millisecondsPerDay = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
       if (Math.floor((endDate - startDate) / millisecondsPerDay) < 2){
-        callToast();
+        callToastMinNights();
         startDate = null;
         endDate = null;
         isOpen = true;
@@ -259,6 +259,7 @@
       } else{
         nights = Math.floor((endDate - startDate) / millisecondsPerDay);
         displayPrice = calculateApartmentPrice(dailyPrice,extra, adults, children)
+        
         
         dateFrom = {
           day: parseInt(formatDateDMY(startDate).split('/')[0]),
@@ -272,9 +273,10 @@
           year: parseInt(formatDateDMY(endDate).split('/')[2])
         };
 
-        console.log(dateFrom)
-        console.log(dateTo)
-
+        const url = new URL(window.location.href);
+        url.searchParams.set('check_in', formatDateDMY(startDate));
+        url.searchParams.set('check_out', formatDateDMY(endDate));
+        window.history.replaceState({}, '', url);
       }
     }
     
@@ -282,8 +284,11 @@
 
   $: {
     if (adults || children) {
+
       guests = parseInt(adults, 10) + parseInt(children, 10)
       displayPrice = calculateApartmentPrice(dailyPrice,extra, adults, children)
+
+      
     }
   }
 
@@ -322,7 +327,9 @@
     } catch (error) {
         // Log detailed error information
         if (error.status == 420) {
-          alert("This apartment is not available for these dates! Please Try Again in a few Minutes")
+          callToastError("This apartment is not available for these dates! Please Refresh the page or select other dates.")
+          startDate = null;
+          endDate = null;
         }
 
 
@@ -333,7 +340,7 @@
 
 
 
-  function callToast(){
+  function callToastMinNights(){
     const toastMarkup2 = `
     <!-- Toast -->
       <div class="bg-white max-w-xs border border-[2px] text-sm  rounded-lg border-[#C09A5B] text-[#C09A5B]" role="alert" tabindex="-1" aria-labelledby="hs-toast-soft-color-red-label">
@@ -354,6 +361,33 @@
     Toastify({
       text: toastMarkup2,
       className: "border-neutral-700 text-neutral-400 max-w-[210px] hs-toastify-on:opacity-100 opacity-0 fixed -top-[150px] right-[20px] z-[90] transition-all duration-300 w-[320px] text-sm border rounded-xl shadow-lg [&>.toast-close]:hidden ",
+      duration: 3000,
+      close: false,
+      escapeMarkup: false
+    }).showToast();
+  }  
+  
+  function callToastError(message){
+    const toastMarkup2 = `
+    <!-- Toast -->
+      <div class="bg-white max-w-xs border border-[4px] text-sm  rounded-lg border-red-700 text-[#C09A5B]" role="alert" tabindex="-1" aria-labelledby="hs-toast-soft-color-red-label">
+        <div id="hs-toast-soft-color-red-label" class="flex p-3">
+          
+          <p class="text-sm inline-flex">         
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-flex lucide lucide-circle-x"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+            <span class="mt-[4px] ml-1">${message}</span>
+          </p>
+
+
+          </div>
+        </div>
+      </div>
+    <!-- End Toast -->
+    `;
+
+    Toastify({
+      text: toastMarkup2,
+      className: "border-neutral-700 text-neutral-400  hs-toastify-on:opacity-100 opacity-0 fixed -top-[150px] right-[20px] z-[90] transition-all duration-300 w-[320px] text-sm border rounded-xl shadow-lg [&>.toast-close]:hidden ",
       duration: 3000,
       close: false,
       escapeMarkup: false
@@ -664,10 +698,22 @@
             
             <!-- Details -->
             <GuestDetails bind:isOpen={isOpen} bind:childrenAges={childrenAges} bind:startDate={startDate} bind:endDate={endDate} bind:children={children} bind:adults={adults}/>
+            
+            {#if childrenAges.filter(age => age !== -1).length != children}
+              <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Info color="red" class="mr-1" /> Age Needed</div> 
+              {/if}
+              
+              {#if !(startDate && endDate)}
+              <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Info color="red" class="mr-1" /> Select Date</div> 
+            {/if}
 
             <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
-  
-            <button class="mt-8 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg w-full" on:click={bookNow}>Book Now</button>
+            
+            {#if (childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate)}
+              <button class="mt-8 bg-[#C09A5B]/50 text-white font-semibold py-2 px-4 rounded-lg w-full cursor-default">Book Now</button>
+              {:else}
+                <button class="mt-8 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg w-full" on:click={bookNow}>Book Now</button>
+            {/if}
           </div>
 
 
