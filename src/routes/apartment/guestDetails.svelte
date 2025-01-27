@@ -35,6 +35,7 @@
   
   let dateFormatDMY = 'dd/MM/yyyy';
   let dateFormat = 'dd MMMM';
+  export let ageMismatch;
   export let isOpen = false;
 
   let disabledDates;
@@ -125,41 +126,51 @@
   function incrementAdults() {
     if ((parseInt(adults, 10) + parseInt(children, 10)) < apartmentDetails?.maxGuests) {
       adults = parseInt(adults, 10) + 1;
+      const newURL = new URL(window.location.href);
+      newURL.searchParams.set('adults', adults);
+      history.pushState(null, '', newURL);
     }
   }
-
+  
   function decrementAdults() {
     if (parseInt(adults, 10) > 1) {
       adults = parseInt(adults, 10) - 1;
+      const newURL = new URL(window.location.href);
+      newURL.searchParams.set('adults', adults);
+      history.pushState(null, '', newURL);
     }
   }
-
+  
   function incrementChildren() {
     if (parseInt(adults, 10) + parseInt(children, 10) < apartmentDetails?.maxGuests) {
       children = parseInt(children, 10) + 1;
+      const newURL = new URL(window.location.href);
+      newURL.searchParams.set('children', children);
+      history.pushState(null, '', newURL);
     }
   }
-
+  
   function decrementChildren() {
     if (parseInt(children, 10) > 0) {
       children = parseInt(children, 10) - 1;
+      const newURL = new URL(window.location.href);
+      newURL.searchParams.set('children', children);
+      history.pushState(null, '', newURL);
     }
   }
 
 
   onMount(async () => {
-
     const urlParams = new URLSearchParams(window.location.search);
     const checkIn = urlParams.get('check_in'); // Format: day/month/year
     const checkOut = urlParams.get('check_out'); // Format: day/month/year
-
+    
     
     apartmentDetails = apartments[urlParams.get('number')];
     adults = parseInt(urlParams.get('adults'),10)
     children = parseInt(urlParams.get('children'),10)
     
     childrenAges = urlParams.getAll('ages').map(Number); // Convert to numbers
-    console.log('Children Ages:', childrenAges); // Verify the result
 
     if (checkIn && checkOut) {
       // Convert day/month/year string to Date object
@@ -217,6 +228,8 @@
     if (children > childrenAges.length) {
       // Add new -1 entries for additional children
       childrenAges = [...childrenAges, ...Array(children - childrenAges.length).fill(-1)];
+      
+      
     } else if (children < childrenAges.length) {
       // Remove extra entries if children count decreases
       childrenAges = childrenAges.slice(0, children);
@@ -227,7 +240,15 @@
     const updatedAges = [...childrenAges];
     updatedAges[index] = parseInt(age, 10);
     childrenAges = updatedAges;
-    console.log(childrenAges); // Should show the updated array
+    
+    
+    const newURL = new URL(window.location.href);
+    newURL.searchParams.delete('ages');
+    childrenAges.forEach(age => {
+      newURL.searchParams.append('ages', age);
+    });
+
+    history.pushState(null, '', newURL);
   }
   $: formattedStartDate = formatDate(startDate);
   $: formattedEndDate = formatDate(endDate);
@@ -335,17 +356,15 @@
             </div>
           </div>
           {#if children > 0}
-            <hr class="h-px bg-gray-300 border-0">
+            <hr class="h-px bg-gray-300 border-0 text-white">
             <div class="grid grid-cols-1 gap-1 pt-2 w-full">
               {#each childrenAges as age, index}
                 <select
-                  id="child-age-{index}"
-                  bind:value={childrenAges[index]}
-                  on:change={(event) => updateAge(index, event.target.value)}
+                  on:change={(e) => updateAge(index, e.target.value)}
                   class="outline-none focus:ring-0 focus:border-gray-300 border rounded-lg p-2 cursor-pointer text-black text-[13px] hover:text-[#C09A5B]"
                   style:box-shadow="none"
                 >
-                  <option  value="-1" selected={childrenAges[index] === -1}>Age Needed</option>
+                  <option value="-1" selected={childrenAges[index] === -1}>Age Needed</option>
                   {#each Array.from({ length: 18 }, (_, i) => i) as age}
                     <option value={age} selected={childrenAges[index] === age}>{age} Years old</option>
                   {/each}
