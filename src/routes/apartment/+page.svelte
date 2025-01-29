@@ -218,13 +218,13 @@
       guests = Math.floor(guests);
 
       // Minimum price is based on 2 people
-      let basePrice = (dailyPrice * nights) + extra;
+      let basePrice = (dailyPrice * nights);
 
       // If there are more than 2 guests, we add the extra for each additional guest
       if (guests > 2) {
           // Calculate the extra for the additional guests
           let additionalGuests = guests - 2;
-          basePrice += (additionalGuests * extra);
+          basePrice += (additionalGuests * extra * nights);
       }
 
       // Ensure the final price is an integer
