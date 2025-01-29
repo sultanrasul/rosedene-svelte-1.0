@@ -22,9 +22,15 @@ const config = {
 				wave: 'wave-animation 2.5s infinite',
 				shine: "shine 4s linear infinite",
 				"border-beam": "border-beam calc(var(--duration)*1s) infinite linear",
+				'pulse-custom': 'pulse 1.5s infinite',
 				
 			  },
 			  keyframes: {
+				pulse: {
+					'0%': { transform: 'scale(1)', opacity: '1' },
+					'50%': { transform: 'scale(1.2)', opacity: '0.5' },
+					'100%': { transform: 'scale(1)', opacity: '1' },
+				  },
 				'wave-animation': {
 					'0%': { transform: 'rotate(0deg)' },
 					'10%': { transform: 'rotate(14deg)' },
