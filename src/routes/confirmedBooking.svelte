@@ -4,6 +4,63 @@
     import { Check } from "lucide-svelte";
     export let bookingData = {};
 
+    let showBookingDetails = false;
+
+    onMount(async () => {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
+        // Check for the refNumber in the URL
+        const receipt_id = urlParams.get("receipt_id");
+
+        if (receipt_id) {
+            showBookingDetails = true; // Set to true if refNumber is found
+
+            // Set the bookingData if refNumber exists
+            try  {
+                const response = await fetch('http://127.0.0.1:5000/get_booking', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        date_from: dateFrom,
+                        date_to: dateTo,
+                        property_id: apartmentDetails.id,
+                        adults: adults,
+                        children: children,
+                        childrenAges: childrenAges,
+                    }),
+                });
+
+                // Check if the response is not OK (non-2xx status code)
+                if (!response.ok) {
+                    // Retrieve the error data and throw a custom error with status and details
+                    const errorData = await response.json(); // This assumes the error response contains more details
+                    throw {
+                        status: response.status,
+                        statusText: response.statusText,
+                        message: errorData.error || 'Unknown error', // Customize based on your error structure
+                        data: errorData,
+                    };
+                }
+
+                // If the response is successful, parse the checkout URL
+                const checkoutURL = await response.json();
+                window.open(checkoutURL.url);
+                console.log(checkoutURL.url);
+
+                } catch (error) {
+                    // Log detailed error information
+                    
+                }
+        }
+
+        const scrollToo = urlParams.get("scrollToo") || null;
+        if (scrollToo) {
+            console.log("Scroll Too:", scrollToo);
+            scrollToElementWithOffset(scrollToo);
+            window.history.replaceState({}, document.title, "/");
+        }
+    });
 </script>
 
 <div class="flex flex-col items-center justify-center relative">

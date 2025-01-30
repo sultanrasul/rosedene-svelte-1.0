@@ -7,6 +7,7 @@
   import {DarkMode} from 'flowbite-svelte';
   import DropdownMenu from '$lib/components/DropdownMenu.svelte';
   import { onMount } from 'svelte';
+  export let fixed = false;
 
   let scrolled = false;
   let screenWidth: number;
@@ -49,7 +50,11 @@
 
 <!-- <svelte:window bind:innerWidth /> -->
 
-<header class="pt-2 bg-gray-800/0 left-0 top-0 z-50 w-full -translate-y-4 animate-fade-in opacity-100
+<!-- <header class="fixed top-0 left-0 z-50 w-full bg-gray-800/0 transition-transform
+    {scrolled ? 'backdrop-blur-lg border-b shadow-xl' : 'backdrop-filter-none'}"> -->
+
+
+<header class="{fixed ? 'fixed' : ''}  pt-2 bg-gray-800/0 left-0 top-0 z-50 w-full -translate-y-4 animate-fade-in opacity-100
     {scrolled ? 'backdrop-blur-lg border-b shadow-xl' : 'backdrop-filter-none'}">
   <div class="container flex h-20 items-center justify-between">
     <!-- Logo -->
@@ -62,9 +67,9 @@
       <DropdownMenu mainPage={true}/>
     {:else}
       <nav class="ml-auto flex h-full items-center space-x-6">
-        <a class="cursor-pointer text-xl text-gray-400 flex items-center h-full leading-none transition-colors" on:click={() => scrollToElementWithOffset("Home")} >Home</a>
-        <a class="cursor-pointer text-xl text-gray-400 flex items-center h-full leading-none transition-colors" on:click={() => scrollToElementWithOffset("Projects")}>Projects</a>
-        <a class="cursor-pointer text-xl text-gray-400 flex items-center h-full leading-none  transition-colors" on:click={() => scrollToElementWithOffset("Contact")}>Contact</a>
+        <a class="cursor-pointer text-xl text-gray-400 hover:text-[#C09A5B] flex items-center h-full leading-none transition-colors" href="/" >Home</a>
+        <a class="cursor-pointer text-xl text-gray-400 hover:text-[#C09A5B] flex items-center h-full leading-none transition-colors" href="/details">Find Booking</a>
+        <a class="cursor-pointer text-xl text-gray-400 hover:text-[#C09A5B] flex items-center h-full leading-none  transition-colors" >Contact</a>
         
         <DarkMode btnClass="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-1.5" size="lg"/>
       </nav>
