@@ -10,6 +10,7 @@
     import TextReveal from '$lib/components/TextReveal.svelte';
     import NumberTicker from '$lib/components/NumberTicker.svelte';
     import DatePicker from './DatePicker.svelte';
+    import Navbar from './Navbar.svelte';
 
 
   let todaysDate = new Date();
@@ -50,10 +51,11 @@
 </script>
   
 <Section sectionClass="min-h-screen flex flex-col items-center">
+
   <div class="flex flex-wrap ">
     <div>
       <div class="text-[#C09A5B] tracking-[0.5em] font-light text-center w-full max-sm:text-center" style="font-family: 'Merriweather', serif;">
-        <h1 class="pt-16 text-4xl md:text-[70px]">ROSEDENE</h1>
+        <h1 class="pt-32 text-4xl md:text-[70px]">ROSEDENE</h1>
         <div class="inline-block">
           <h2 class="pt-6 text-[25px]">HIGHLAND HOUSE</h2>
           <hr class="mt-2 mx-auto border-[#C09A5B] border-t-[2px]" style="width: auto; height: 1px;" />
