@@ -325,6 +325,7 @@
       window.open(checkoutURL.url, "_self");
       console.log(checkoutURL.url);
 
+
     } catch (error) {
         // Log detailed error information
         if (error.status == 420) {
