@@ -1,9 +1,11 @@
 <script>
 // @ts-nocheck
 
-    import { Check } from "lucide-svelte";
+    import { Check, X } from "lucide-svelte";
 
     export let bookingData = {};
+
+    export let success = true;
 
 
 </script>
@@ -13,16 +15,26 @@
 
     <!-- Check Mark, positioned half inside and half outside -->
     <div class="absolute top-[-30px] left-1/2 transform -translate-x-1/2">
-        <div class="flex items-center justify-center p-4 rounded-full bg-green-500/80 shadow-2xl animate-[pulse_1.5s_ease-out]">
-            <div class="w-[30px] h-[30px] flex items-center justify-center rounded-full bg-green-500">
-                <Check class="w-6 h-6" color="white" />
+        <div class={`flex items-center justify-center p-4 rounded-full shadow-2xl animate-[pulse_1.5s_ease-out] ${success ? 'bg-green-500/80' : 'bg-red-500/80'}`}>
+            <div class={`w-[30px] h-[30px] flex items-center justify-center rounded-full ${success ? 'bg-green-500' : 'bg-red-500'}`}>
+                {#if success}
+                    <Check class="w-6 h-6" color="white" />
+                {:else}
+                    <X class="w-6 h-6" color="white" />
+                {/if}
             </div>
         </div>
-    </div>
+    </div>    
 
     <!-- Payment Success Text -->
-    <h1 class="text-center text-gray-800 text-2xl font-semibold">Payment Success!</h1>
-    <p class="text-center text-gray-500 mt-2">Your Reservation has been complete</p>
+    {#if success}
+        <h1 class="text-center text-gray-800 text-2xl font-semibold">Payment Success!</h1>
+        <p class="text-center text-gray-500 mt-2">Your Reservation has been complete</p>
+        {:else}
+            <h1 class="text-center text-gray-800 text-2xl font-semibold">Payment Unsuccessful!</h1>
+            <p class="text-center text-gray-500 mt-2">It may take 5-10 business days for funds to settle.</p>
+
+    {/if}
 
     <!-- Payment Details -->
     <div class="bg-gray-100 rounded-lg p-6 mt-6">
@@ -33,11 +45,26 @@
                 <div class="text-right text-gray-800 font-medium text-lg">£{bookingData.price}</div>
             </div>
 
-            <!-- Ref Number -->
+            <!-- Error Code if there is one -->
+            {#if !success}
+                <div class="flex items-center col-span-2 w-full text-center justify-between">
+                    <div class="text-gray-500">Error Code</div>
+                    <div class="text-right text-gray-800">{bookingData.errorCode}</div>
+                </div>
+            {/if}
+
+            <!-- Ref Number OR Error -->
             <div class="flex items-center col-span-2 w-full text-center justify-between">
-                <div class="text-gray-500">Ref Number</div>
-                <div class="text-right text-gray-800">{bookingData.booking_reference}</div>
-            </div>
+                {#if success}
+                    <div class="text-gray-500">Ref Number</div>
+                    <div class="text-right text-gray-800">{bookingData.booking_reference}</div>
+                    {:else}  
+                        <div class="text-gray-500">Error</div>
+                        <div class="text-right text-gray-800 w-3/4">{bookingData.error}</div>
+
+                        {/if}
+                    </div>
+                    
 
             <!-- Apartment -->
             <div class="flex items-center col-span-2 w-full text-center justify-between">
@@ -103,8 +130,10 @@
             </div>
 
             <!-- Children Ages -->
-            <div class="text-gray-500">Children Ages</div>
-            <div class="text-right text-gray-800">{bookingData.children_ages}</div>      
+            {#if parseInt(bookingData.children,10) > 0}
+                <div class="text-gray-500">Children Ages</div>
+                <div class="text-right text-gray-800">{bookingData.children_ages}</div>      
+            {/if}
         </div>
     </div>
 </div>

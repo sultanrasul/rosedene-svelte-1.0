@@ -4,7 +4,6 @@
     import { onMount } from 'svelte';
     import { scale } from 'svelte/transition';
     import { Button } from 'flowbite-svelte';
-    import ConfirmedBooking from './confirmedBooking.svelte';
     import Hero from './Hero.svelte'
     import Navbar from './Navbar.svelte'
 

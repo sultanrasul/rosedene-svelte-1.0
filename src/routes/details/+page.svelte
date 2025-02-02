@@ -13,6 +13,8 @@
 
     let showBookingDetails = false;
 
+    let showErrorDetails = false;
+
     let receiptInput = "";
 
     let coundNotFind = false;
@@ -43,6 +45,7 @@
             // If the response is successful, parse the checkout URL
             bookingData = await response.json();
             bookingData = bookingData["metadata"]
+
             showBookingDetails = true;
             console.log(bookingData);
 
@@ -70,12 +73,22 @@
 
         // Check for the refNumber in the URL
         const receipt_id = urlParams.get("receipt_id");
+        const error = urlParams.get("error");
 
         if (receipt_id) {
-
             // Set the bookingData if refNumber exists
             getBookingDetails(receipt_id);
         }
+        if (error){
+
+            urlParams.forEach((value, key) => {
+                bookingData[key] = value;
+            });
+
+            showErrorDetails = true;
+
+        }
+
 
         const scrollToo = urlParams.get("scrollToo") || null;
         if (scrollToo) {
@@ -94,7 +107,7 @@
     
     <!-- Centered Payment Section -->
     <div class="min-h-screen flex flex-col items-center justify-center">
-        {#if !showBookingDetails}
+        {#if !showBookingDetails && !showErrorDetails}
         <Section sectionClass="min-h-screen flex flex-col items-center">
 
             <div class="flex flex-wrap ">
@@ -142,10 +155,12 @@
         {/if}
         <div class="bg-white rounded-lg shadow-lg text-black relative">
             {#if showBookingDetails}
-            
-            <BookingDetails bookingData={bookingData}/>
- 
+                <BookingDetails bookingData={bookingData} success={true}/>
             {/if}
+            {#if showErrorDetails}
+                <BookingDetails bookingData={bookingData} success={false}/>
+            {/if}
+
 
    
         </div>

@@ -67,7 +67,7 @@
                         <!-- Carousel slides -->
                         {#each images as image}
                             <div class="flex justify-center items-center duration-700 ease-in-out" data-carousel-item>
-                                <img src={image.src} class="rounded-xl max-h-[700px] object-contain w-full" alt="..."> <!-- Set w-full for full width -->
+                                <img src={image.src} class="rounded-xl max-h-[600px] object-contain w-full" alt="..."> <!-- Set w-full for full width -->
                             </div>
                         {/each}
     
@@ -88,7 +88,7 @@
             </div>
     
             <!-- Thumbnails Section (separate from the carousel) -->
-            <div class="pt-4 max-h-[300px] overflow-x-auto w-full flex justify-center">
+            <div class="pt-4 max-h-[200px] overflow-x-auto w-full flex justify-center">
                 <div class="flex gap-4">
                     {#each images as image, i}
                         <div class="inline-block">
