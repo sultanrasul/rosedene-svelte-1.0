@@ -11,6 +11,7 @@
     import NumberTicker from '$lib/components/NumberTicker.svelte';
     import DatePicker from './DatePicker.svelte';
     import Navbar from './Navbar.svelte';
+    import Contact from './Contact.svelte';
 
 
   let todaysDate = new Date();
@@ -65,6 +66,7 @@
       <DatePicker/>
     </div>
   </div>
+
 </Section>
 
 

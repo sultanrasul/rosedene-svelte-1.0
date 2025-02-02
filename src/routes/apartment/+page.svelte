@@ -304,6 +304,7 @@
               adults: adults,
               children: children,
               childrenAges: childrenAges,
+              url: window.location.href
           }),
       });
 
@@ -321,7 +322,7 @@
 
       // If the response is successful, parse the checkout URL
       const checkoutURL = await response.json();
-      window.open(checkoutURL.url);
+      window.open(checkoutURL.url, "_self");
       console.log(checkoutURL.url);
 
     } catch (error) {
