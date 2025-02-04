@@ -30,15 +30,13 @@
 
 </script>
 
-    <!-- <img src="/{apartmentNumber}/0.jpg" alt="" class=" object-cover rounded-lg max-w-md"/> -->
-    <div 
-            class="rounded-lg shadow-lg pt-10 pb-2 pl-2 pr-2 max-w-md w-full text-black sm:pr-10 sm:pl-10 sm:pb-10 relative bg-cover bg-center bg-no-repeat"
-            style="background-image: url('/{apartmentNumber}/0.jpg');"
-        >
+<div class="flex flex-col lg:flex-row items-stretch">
+    <img src="/{apartmentNumber}/0.jpg" alt="" class=" object-cover rounded-lg max-w-md"/>
+    <div class="bg-white rounded-lg shadow-lg pt-10 pb-2 pl-2 pr-2 max-w-md w-full text-black sm:pr-10 sm:pl-10 sm:pb-10 relative">
         
 
         <div class="absolute top-[-30px] left-1/2 transform -translate-x-1/2">
-            <div class={`flex items-center justify-center p-4 rounded-full shadow-2xl animate-[_1.5s_ease-out] ${success ? 'bg-green-500/80' : 'bg-red-500/80'}`}>
+            <div class={`flex items-center justify-center p-4 rounded-full shadow-2xl animate-[pulse_1.5s_ease-out] ${success ? 'bg-green-500/80' : 'bg-red-500/80'}`}>
                 <div class={`w-[30px] h-[30px] flex items-center justify-center rounded-full ${success ? 'bg-green-500' : 'bg-red-500'}`}>
                     {#if success}
                         <Check class="w-6 h-6" color="white" />
@@ -57,7 +55,7 @@
             <p class="text-center text-gray-500 mt-2">It may take 5-10 business days for funds to settle.</p>
         {/if}
 
-        <div class="bg-gray-100/80 rounded-lg p-6 mt-6">
+        <div class="bg-gray-100 rounded-lg p-6 mt-6">
             <div class="grid grid-cols-2 gap-4 text-sm">
                 <div class="flex items-center col-span-2 w-full text-center justify-between">
                     <div class="text-gray-500">Amount</div>
@@ -163,3 +161,4 @@
             </div>
         </div>
     </div>
+</div>

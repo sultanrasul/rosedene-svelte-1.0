@@ -15,15 +15,12 @@
   import { onMount } from 'svelte';
   import Navbar from '../Navbar.svelte';
   import DatePicker from '../DatePicker.svelte';
-  import Calendar from "./Calendar.svelte";
   import Slide from "flowbite-svelte/Slide.svelte";
   
-  let apartmentsList;
   let startDate; // Variable for start date as a Date object
   let endDate;   // Variable for end date as a Date object
   let apartmentDetails;
   let apartmentNumber;
-  let current = 0;
   let guests;
   let nights;
   let adults = 1;
@@ -36,7 +33,7 @@
 
   let dateFrom;
   let dateTo;
-
+  let Prices;
   let dailyPrice;
   let extra;
   let displayPrice;
@@ -104,33 +101,32 @@
             throw new Error(`Error: ${response.statusText}`);
         }
         
-        const price = await response.json();
-
-        dailyPrice = price["price"]["Prices"]["Season"]["Price"]
-        extra = price["price"]["Prices"]["Season"]["Extra"]
-        displayPrice = calculateApartmentPrice(dailyPrice,extra);
-
+        Prices = await response.json();
+        Prices = Prices["Prices"]
+        displayPrice = calculateApartmentPrice(Prices);
+        
       } catch (error) {
-          console.error('Failed to fetch blocked apartments:', error);
+        console.error('Failed to fetch blocked apartments:', error);
       }
       
     } else {
-        try {
-          const response = await fetch('http://127.0.0.1:5000/check_price', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({property_id: apartmentDetails.id }),
-          });
-          
-          if (!response.ok) {
-              throw new Error(`Error: ${response.statusText}`);
-          }
-          
-          const price = await response.json();
-
-          dailyPrice = price["price"]["Prices"]["Season"]["Price"]
-          extra = price["price"]["Prices"]["Season"]["Extra"]
-          displayPrice = calculateApartmentPrice(dailyPrice,extra);
+      try {
+        const response = await fetch('http://127.0.0.1:5000/check_price', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({property_id: apartmentDetails.id }),
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        
+        const price = await response.json();
+        
+        Prices = await response.json();
+        Prices = Prices["Prices"]
+        
+          displayPrice = calculateApartmentPrice(Prices);
 
         } catch (error) {
             console.error('Failed to fetch blocked apartments:', error);
@@ -210,26 +206,54 @@
     isModalOpen = !isModalOpen;
   }
 
-  function calculateApartmentPrice(dailyPrice, extra) {
-      // Ensure that all values are integers
-      dailyPrice = Math.floor(dailyPrice);
-      extra = Math.floor(extra);
-      nights = Math.floor(nights);
-      guests = Math.floor(guests);
+  function calculateApartmentPrice(prices) {
+    let totalPrice = 0;
 
-      // Minimum price is based on 2 people
-      let basePrice = (dailyPrice * nights);
+    // Log to inspect the data
+    console.log('Calculating price for', prices);
 
-      // If there are more than 2 guests, we add the extra for each additional guest
-      if (guests > 2) {
-          // Calculate the extra for the additional guests
-          let additionalGuests = guests - 2;
-          basePrice += (additionalGuests * extra * nights);
-      }
+    // Check if prices is defined and contains the 'Season' property
+    if (prices && prices["Season"]) {
+        // Ensure prices["Season"] is an array
+        if (!Array.isArray(prices["Season"])) {
+            prices["Season"] = [prices["Season"]];
+        }
 
-      // Ensure the final price is an integer
-      return Math.floor(basePrice);
-  }
+        let currentDate = new Date(startDate);
+
+        // Iterate over each night in the stay
+        while (currentDate < endDate) {
+            prices["Season"].forEach(season => {
+                const seasonStart = new Date(season["@DateFrom"]);
+                const seasonEnd = new Date(season["@DateTo"]);
+
+                // Ensure valid dates are present
+                if (!isNaN(seasonStart.getTime()) && !isNaN(seasonEnd.getTime())) {
+                    const price = parseFloat(season.Price) || 0; // Default to 0 if price is missing
+                    const extraCharge = parseFloat(season.Extra) || 0; // Default to 0 if extra charge is missing
+
+                    // If the current night falls within a season range, add its price
+                    if (seasonStart <= currentDate && currentDate <= seasonEnd) {
+                        totalPrice += price;
+                        console.log('Extra charge:', extraCharge);
+                        // Add extra charge if there are more than 2 guests
+                        if (guests > 2) {
+                            totalPrice += extraCharge * (guests - 2);
+                        }
+                    }
+                } else {
+                    console.warn('Invalid date range for season:', season);
+                }
+            });
+            currentDate.setDate(currentDate.getDate() + 1);  // Move to next night
+        }
+    } else {
+        console.warn('No valid season data in prices:', prices);
+    }
+
+    return Math.floor(totalPrice);
+}
+
 
   let dateFormatDMY = 'dd/MM/yyyy';
   let dateFormat = 'dd MMMM';
@@ -258,7 +282,7 @@
         
       } else{
         nights = Math.floor((endDate - startDate) / millisecondsPerDay);
-        displayPrice = calculateApartmentPrice(dailyPrice,extra, adults, children)
+        displayPrice = calculateApartmentPrice(Prices)
         
         
         dateFrom = {
@@ -286,7 +310,7 @@
     if (adults || children) {
 
       guests = parseInt(adults, 10) + parseInt(children, 10)
-      displayPrice = calculateApartmentPrice(dailyPrice,extra, adults, children)
+      displayPrice = calculateApartmentPrice(Prices)
 
       
     }

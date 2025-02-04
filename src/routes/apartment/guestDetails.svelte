@@ -69,7 +69,7 @@
     console.log('start', currentPeriod.start);
     console.log('end', currentPeriod.end);
     console.log('past period', isPastPeriod);
-    if (direction !== "previous" && !isPastPeriod){
+    if (!isPastPeriod){
       // Parse the start and end dates
       const parseDate = (dateStr) => {
         const [year, month, day] = dateStr.split('-').map(Number);
