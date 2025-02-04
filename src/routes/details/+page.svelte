@@ -8,6 +8,8 @@
     import Navbar from "../Navbar.svelte";
     import { Section } from "flowbite-svelte-blocks";
     import { ColumnSolid } from "flowbite-svelte-icons";
+    import { apartments } from '../apartments';
+
 
     let bookingData = {};
 
@@ -18,6 +20,8 @@
     let bookingReferenceinput = "";
 
     let coundNotFind = false;
+    
+    let apartmentDetails;
 
 
     async function getBookingDetails(bookingReference){
@@ -47,6 +51,8 @@
             bookingData = bookingData["reservation_data"]
 
             showBookingDetails = true;
+            apartmentDetails = apartments[bookingData.Apartment.match(/\d+/)?.[0]]
+
             console.log(bookingData);
 
         } catch (error) {
@@ -78,6 +84,7 @@
         if (ref_number) {
             // Set the bookingData if refNumber exists
             getBookingDetails(ref_number);
+
         }
         if (error){
 
