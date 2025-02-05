@@ -7,7 +7,7 @@
     import Hero from './Hero.svelte'
     import Navbar from './Navbar.svelte'
 
-
+    
     onMount( () => {
 
         const scrollToo = urlParams.get("scrollToo") || null;

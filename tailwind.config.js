@@ -6,7 +6,13 @@ import flowbitePlugin from 'flowbite/plugin'
 /** @type {import('tailwindcss').Config} */
 const config = {
 	darkMode: ['class'],
-	content: ['./node_modules/preline/dist/*.js',,'./src/**/*.{html,js,svelte,ts}', './node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}','./node_modules/flowbite-svelte-blocks/**/*.{html,js,svelte,ts}',"./node_modules/flowbite/**/*.js"],
+	content: [
+		'./node_modules/preline/preline.js',
+		'./node_modules/preline/dist/*.js',
+		'./src/**/*.{html,js,svelte,ts}',
+		'./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}',
+		'./node_modules/flowbite-svelte-blocks/**/*.{html,js,svelte,ts}',
+		"./node_modules/flowbite/**/*.js"],
 	safelist: ['dark'],
 	theme: {
 		container: {
@@ -108,7 +114,7 @@ const config = {
 		require('@tailwindcss/typography'),
 		flowbitePlugin,
 		require('flowbite/plugin'),
-		require('preline/plugin'),
+		require('preline/plugin.js'),
 		// require('@preline/carousel'),
 		// require('@tailwindcss/forms'),
 	]
