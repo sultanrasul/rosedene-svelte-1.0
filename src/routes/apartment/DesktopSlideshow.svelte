@@ -16,6 +16,7 @@
      */
     let carousel; // for calling methods of the carousel instance
     export let images;
+    export let apartmentNumber;
     
     const handleNextClick = () => {
         // @ts-ignore
@@ -65,9 +66,9 @@
                         </div>
     
                         <!-- Carousel slides -->
-                        {#each images as image}
+                        {#each Array(images).fill().map((_, i) => i) as i}
                             <div class="flex justify-center items-center duration-700 ease-in-out" data-carousel-item>
-                                <img src={image.src} class="rounded-xl max-h-[600px] object-contain w-full" alt="..."> <!-- Set w-full for full width -->
+                                <img src={`/${apartmentNumber}/${i}.jpg`} class="rounded-xl max-h-[600px] object-contain w-full" alt="..."> <!-- Set w-full for full width -->
                             </div>
                         {/each}
     
@@ -90,7 +91,7 @@
             <!-- Thumbnails Section (separate from the carousel) -->
             <div class="pt-4 max-h-[200px] overflow-x-auto w-full flex justify-center">
                 <div class="flex gap-4">
-                    {#each images as image, i}
+                    {#each Array(images).fill().map((_, i) => i) as i}
                         <div class="inline-block">
                             <!-- svelte-ignore a11y_click_events_have_key_events -->
                             <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
@@ -100,7 +101,7 @@
                                  class:opacity-100={i === currentPageIndex}
                                  class:opacity-60={i !== currentPageIndex}
                                  on:click={() => { carousel.goTo(i); }} 
-                                 src={image.src} alt=""
+                                 src={`/${apartmentNumber}/${i}.jpg`} alt=""
                             />
                         </div>
                     {/each}

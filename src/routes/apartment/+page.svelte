@@ -1,4 +1,6 @@
+
 <script lang="ts">
+  
   // @ts-nocheck
   import * as Dialog from "../../lib/components/ui/dialog";
   import * as Carousel from "../../lib/components/ui/carousel";
@@ -10,13 +12,12 @@
 
 
   
-  import Slideshow from "./Slideshow.svelte";
+  import SlideshowDesktop from "./DesktopSlideshow.svelte";
   
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import Navbar from '../Navbar.svelte';
   import DatePicker from '../DatePicker.svelte';
   import Slide from "flowbite-svelte/Slide.svelte";
-  
   let startDate; // Variable for start date as a Date object
   let endDate;   // Variable for end date as a Date object
   let apartmentDetails;
@@ -25,7 +26,6 @@
   let nights;
   let adults = 1;
   let children = 0;
-  let images;
   let isModalOpen = false;
   let parsedDescription;
   let childrenAges = [];
@@ -37,18 +37,31 @@
   let dailyPrice;
   let extra;
   let displayPrice;
+  let screenWidth: number;
 
   import { currentPageIndex } from "./store";
   import { parse } from "date-fns";
+    import MobileSlideshow from "./MobileSlideshow.svelte";
   let galleryContainer;
   
+    // Update the screen width on resize
+  const updateWidth = () => {
+      screenWidth = window.innerWidth;
+  };
+
   onMount(async () => {
+    updateWidth(); // Set initial width
+    window.addEventListener('resize', updateWidth);
+
     const urlParams = new URLSearchParams(window.location.search);
     const checkIn = urlParams.get('check_in'); // Format: day/month/year
     const checkOut = urlParams.get('check_out'); // Format: day/month/year
 
     apartmentDetails = apartments[urlParams.get('number')];
     apartmentNumber = urlParams.get('number');
+
+    await tick(); // Force a reactivity update before rendering components
+
 
     if (urlParams.get('adults')){
       adults = urlParams.get('adults'); 
@@ -60,7 +73,6 @@
     console.log(apartmentDetails);
     guests = parseInt(adults, 10) + parseInt(children, 10)
 
-    images = getApartmentImages(apartmentNumber);
 
     if (apartmentDetails?.description) {
       parseDescription(apartmentDetails.description);
@@ -133,47 +145,14 @@
         }
 
     }
-
-    // Delay the scrolling effect by 2 seconds
-    setTimeout(() => {
-      const scrollInterval = setInterval(() => {
-        if (galleryContainer) {
-          galleryContainer.scrollTop += 1;  // Scroll down by 1px
-        }
-      }, 30);  // Adjust interval (in milliseconds) for smoothness
-
-      // Clear the interval once the gallery has reached the bottom
-      galleryContainer.addEventListener('scroll', () => {
-        if (galleryContainer.scrollHeight - galleryContainer.scrollTop === galleryContainer.clientHeight) {
-          clearInterval(scrollInterval); // Stop when we reach the bottom
-        }
-      });
-    }, 2000); // Delay the start by 2000ms (2 seconds)
+        // Cleanup on component destruction
+    return () => {
+      window.removeEventListener('resize', updateWidth);
+    };
+    
   });
 
   
-  function getApartmentImages(apartmentNumber) {
-    // Check if the apartment exists in the apartments object
-    const apartment = apartments[apartmentNumber];
-    if (!apartment) {
-      console.error(`Apartment with ID ${apartmentNumber} does not exist.`);
-      return [];
-    }
-  
-    const { amountOfPictures } = apartment; // Get the amount of pictures
-    const images = []; // Initialize an array for images
-  
-    // Loop through the amount of pictures and generate image objects
-    for (let i = 0; i < amountOfPictures; i++) {
-      images.push({
-        alt: `Apartment ${apartmentNumber} Image ${i + 1}`,
-        src: `/${apartmentNumber}/${i}.jpg`,
-        title: `apartment-${apartmentNumber}-image-${i + 1}`
-      });
-    }
-  
-    return images;
-  }
 
   function parseDescription(description) {
     const details = description
@@ -423,334 +402,362 @@
 </script>
     
   <!-- Main Menu -->
-  <div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen" id="Home">
-    <Navbar />
-    <div class="relative z-10 pb-20 sm:pl-0 sm:pr-0 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40">
-      
-      <!-- Breadcrumb -->
-      <ol class="flex items-center whitespace-nowrap pb-4 pl-3">
-        <li class="inline-flex items-center">
-          <a on:click={() => {window.location.href = "/"} } class="flex items-center text-sm text-gray-500 hover:text-[#C09A5B] focus:outline-none  " href="#">
 
-            <Home size="24px" class="shrink-0 me-3 size-4"/>
-            Home
-          </a>
-          <svg class="shrink-0 mx-2 size-4 text-gray-400 dark:text-neutral-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m9 18 6-6-6-6"></path>
-          </svg>
-        </li>
-        <li class="inline-flex items-center">
-          <a on:click={replacePathToSearch} class="flex items-center text-sm text-gray-500 hover:text-[#C09A5B] focus:outline-none" href="#">
-            <Building size="24px" class="shrink-0 me-3 size-4"/>
-            Apartments
+  {#if apartmentNumber}
+    <div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen" id="Home">
+      <Navbar />
+      <div class="relative z-10 pb-20 sm:pl-0 sm:pr-0 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40">
+        
+        <!-- Breadcrumb -->
+        <ol class="flex items-center whitespace-nowrap pb-4 pl-3">
+          <li class="inline-flex items-center">
+            <a on:click={() => {window.location.href = "/"} } class="flex items-center text-sm text-gray-500 hover:text-[#C09A5B] focus:outline-none  " href="#">
+
+              <Home size="24px" class="shrink-0 me-3 size-4"/>
+              Home
+            </a>
             <svg class="shrink-0 mx-2 size-4 text-gray-400 dark:text-neutral-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="m9 18 6-6-6-6"></path>
             </svg>
-          </a>
-        </li>
-        <li class="inline-flex items-center text-sm font-semibold truncate text-[#C09A5B]" aria-current="page">
-          {apartmentDetails?.name}
-        </li>
-      </ol>
-      
-      <!-- Images -->
-      <div class="flex flex-col md:flex-row md:space-x-5">
-        <div class="w-full items-center justify-center text-center relative">
-          <div class="pb-5">
-            <div class="grid grid-cols-3 gap-4 pt-2">
-              <!-- Selected Image Display -->
-              <div class="col-span-2 flex justify-center items-center">
-                {#if images}
-                  <!-- svelte-ignore a11y_click_events_have_key_events -->
-                  <!-- svelte-ignore a11y_no_static_element_interactions -->
-                  <div class="group relative inline-block cursor-pointer" on:click={openModel(0)}>
-                    <img 
-                        class="h-auto max-w-full rounded-lg transition-all" 
-                        src="{images[0].src}" 
-                        alt=""
-                    >
-                    <div 
-                        class="absolute inset-0 bg-[#C09A5B] opacity-0 group-hover:opacity-20 rounded-lg transition-opacity duration-300"
-                    ></div>
-                  </div>
-                {/if}
-              </div>
-          
-              <!-- Thumbnail Gallery -->
-              <div bind:this={galleryContainer} class="col-span-1 flex flex-col space-y-4 max-h-[512px]">
-                {#if images}
-                  {#each images.slice(1, 3) as image, i}
-                    <!-- svelte-ignore a11y_click_events_have_key_events -->
-                    <!-- svelte-ignore a11y_no_static_element_interactions -->
-                    <div class="group relative inline-block cursor-pointer" on:click={openModel(i+1)}>
-                      <img 
-                          class="h-auto max-w-full rounded-lg transition-all" 
-                          src="{image.src}" 
-                          alt=""
-                      >
-                      <div 
-                          class="absolute inset-0 bg-[#C09A5B] opacity-0 group-hover:opacity-20 rounded-lg transition-opacity duration-300"
-                      ></div>
+          </li>
+          <li class="inline-flex items-center">
+            <a on:click={replacePathToSearch} class="flex items-center text-sm text-gray-500 hover:text-[#C09A5B] focus:outline-none" href="#">
+              <Building size="24px" class="shrink-0 me-3 size-4"/>
+              Apartments
+              <svg class="shrink-0 mx-2 size-4 text-gray-400 dark:text-neutral-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m9 18 6-6-6-6"></path>
+              </svg>
+            </a>
+          </li>
+          <li class="inline-flex items-center text-sm font-semibold truncate text-[#C09A5B]" aria-current="page">
+            {apartmentDetails?.name}
+          </li>
+        </ol>
+        
+        <!-- Images -->
+        {#if screenWidth < 768}
+          <MobileSlideshow images={apartmentDetails["amountOfPictures"]} apartmentNumber = {apartmentNumber}/>
+
+
+            <footer class="fixed bottom-0 left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow-sm md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 dark:border-gray-600">
+              <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <a href="https://flowbite.com/" class="hover:underline">Flowbite™</a>. All Rights Reserved.
+              </span>
+              <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+                  <li>
+                      <a href="#" class="hover:underline me-4 md:me-6">About</a>
+                  </li>
+                  <li>
+                      <a href="#" class="hover:underline me-4 md:me-6">Privacy Policy</a>
+                  </li>
+                  <li>
+                      <a href="#" class="hover:underline me-4 md:me-6">Licensing</a>
+                  </li>
+                  <li>
+                      <a href="#" class="hover:underline">Contact</a>
+                  </li>
+              </ul>
+          </footer>
+        
+          {:else}
+            <div class="flex flex-col md:flex-row md:space-x-5">
+              <div class="w-full items-center justify-center text-center relative">
+                <div class="pb-5">
+                  <div class="grid grid-cols-3 gap-4 pt-2">
+                    <!-- Selected Image Display -->
+                    <div class="col-span-2 flex justify-center items-center">
+                      {#if apartmentNumber}
+                        <!-- svelte-ignore a11y_click_events_have_key_events -->
+                        <!-- svelte-ignore a11y_no_static_element_interactions -->
+                        <div class="group relative inline-block cursor-pointer" on:click={openModel(0)}>
+                          <img 
+                              class="h-auto max-w-full rounded-lg transition-all" 
+                              src="{apartmentNumber}/0.jpg" 
+                              alt=""
+                          >
+                          <div 
+                              class="absolute inset-0 bg-[#C09A5B] opacity-0 group-hover:opacity-20 rounded-lg transition-opacity duration-300"
+                          ></div>
+                        </div>
+                      {/if}
                     </div>
-                  {/each}
-                {/if}
-              </div>
-            </div>
-          </div>
-      
-          <!-- "View All" Button -->
-          <button 
-            class="inline-flex absolute bottom-10 right-5 mb-0 mr-0 bg-white text-[#C09A5B] px-4 py-2 rounded-lg shadow-md hover:bg-[#C09A5B] hover:text-white transition duration-300"
-            on:click={openModel(1)}
-          >
-            <Camera class="mr-2"/> View all
-          </button>
-        </div>
-      </div>
-      
-      
-      
-      <!-- info -->
-      <!-- Information Section -->
-      <div class="flex flex-wrap mt-6 justify-between">
-        <div class="bg-white rounded-lg shadow-lg p-6  w-[66.4%]">
-
-          <!-- Property Title & Key Points -->
-          <div>
-            <!-- Title -->
-            <h2 class="text-4xl font-bold text-[#C09A5B] mb-4">{apartmentDetails?.name}</h2>
+                
+                    <!-- Thumbnail Gallery -->
+                    <div bind:this={galleryContainer} class="col-span-1 flex flex-col space-y-4 max-h-[512px] hidden md:block">
+                      {#if apartmentNumber}
+                        {#each Array(2).fill().map((_, i) => i + 1) as i}
+                          <!-- svelte-ignore a11y_click_events_have_key_events -->
+                          <!-- svelte-ignore a11y_no_static_element_interactions -->
+                          <div class="group relative inline-block cursor-pointer" on:click={openModel(i)}>
+                            <img 
+                              class="h-auto max-w-full rounded-lg transition-all" 
+                              src={`/${apartmentNumber}/${i}.jpg`} 
+                              alt=""
+                            >
+                            <div 
+                              class="absolute inset-0 bg-[#C09A5B] opacity-0 group-hover:opacity-20 rounded-lg transition-opacity duration-300"
+                            ></div>
+                          </div>
+                        {/each}
+                      {/if}
+                    </div>
+                  </div>
+                </div>
             
-            <!-- Features -->
-            <div class="flex flex-wrap gap-2 mb-4 ">
-              <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full text-gray-900">
-                <User size="22px" class="pr-1" /> {apartmentDetails?.maxGuests} Guests
-              </span>
-              <!-- <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full text-gray-900">
-                <TvMinimal size="22px" class="pr-1" /> {apartmentDetails?.tvSize}" Flat-screen TV
-              </span> -->
-              <!-- <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full text-gray-900">
-                <Ruler size="22px" class="pr-1" /> {apartmentDetails?.squareFeet} Feet²
-              </span> -->
-              {#if apartmentDetails?.bedrooms !== 0}
-              <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full text-gray-900">
-                <BedDouble size="22px" class="pr-1" /> {apartmentDetails?.bedrooms} Bedroom{apartmentDetails?.bedrooms > 1 ? 's' : ''}
-              </span>
-              {/if}
-              <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full text-gray-900">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pr-1 lucide lucide-toilet">
-                  <path d="M7 12h13a1 1 0 0 1 1 1 5 5 0 0 1-5 5h-.598a.5.5 0 0 0-.424.765l1.544 2.47a.5.5 0 0 1-.424.765H5.402a.5.5 0 0 1-.424-.765L7 18" />
-                  <path d="M8 18a5 5 0 0 1-5-5V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8" />
-                </svg>
-                {apartmentDetails?.bathrooms} Bathroom{apartmentDetails?.bathrooms > 1 ? 's' : ''}
-              </span>
-            </div>
-          </div>
-          
-          <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
-          
-          <!-- Overview Section -->
-          <div class="mb-6">
-            <h2 class="text-3xl font-bold text-black mb-4">Overview</h2>
-            
-            <p class="text-sm text-gray-600">  
-              {#each parsedDescription?.slice(0, 2) as line}
-                {line}
-                <br><br>
-              {/each}
-            </p>
-
-            
-            <!-- Read More Section -->
-            <div>
-              <div id="hs-show-hide-collapse-heading" class="hs-collapse hidden w-full overflow-hidden transition-[height] duration-300" aria-labelledby="hs-show-hide-collapse">
-                <p class="text-sm text-gray-600 mt-4">
-    
-                  {#each parsedDescription?.slice(2) as line}
-                    {line}
-                    <br><br>
-                  {/each}        
-    
-                </p>
-              </div>
-              
-              <p class="mt-4">
+                <!-- "View All" Button -->
                 <button 
-                  type="button" 
-                  class="{parsedDescription?.length > 2 ? '' : 'hidden'} hs-collapse-toggle inline-flex items-center gap-x-1 text-sm font-semibold rounded-lg border border-transparent text-[#C09A5B] hover:underline focus:outline-none focus:underline focus:text-[#C09A5B] disabled:opacity-50 disabled:pointer-events-none" 
-                  id="hs-show-hide-collapse" 
-                  aria-expanded="false" 
-                  aria-controls="hs-show-hide-collapse-heading" 
-                  data-hs-collapse="#hs-show-hide-collapse-heading">
-                  <span class="hs-collapse-open:hidden">Read more</span>
-                  <span class="hs-collapse-open:block hidden">Read less</span>
-                  <svg class="hs-collapse-open:rotate-180 shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m6 9 6 6 6-6"></path>
-                  </svg>
+                  class="inline-flex absolute bottom-10 right-5 mb-0 mr-0 bg-white text-[#C09A5B] px-4 py-2 rounded-lg shadow-md hover:bg-[#C09A5B] hover:text-white transition duration-300"
+                  on:click={openModel(1)}
+                >
+                  <Camera class="mr-2"/> View all
                 </button>
+              </div>
+            </div>
+        {/if}
+        
+        
+        
+        <!-- info -->
+        <!-- Information Section -->
+        <div class="flex flex-wrap mt-0 justify-between">
+          <div class="bg-white rounded-lg shadow-lg p-6 w-full md:w-[66.4%]">
+
+            <!-- Property Title & Key Points -->
+            <div>
+              <!-- Title -->
+              <h2 class="text-4xl font-bold text-[#C09A5B] mb-4">{apartmentDetails?.name}</h2>
+              
+              <!-- Features -->
+              <div class="flex flex-wrap gap-2 mb-4 ">
+                <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full text-gray-900">
+                  <User size="22px" class="pr-1" /> {apartmentDetails?.maxGuests} Guests
+                </span>
+                <!-- <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full text-gray-900">
+                  <TvMinimal size="22px" class="pr-1" /> {apartmentDetails?.tvSize}" Flat-screen TV
+                </span> -->
+                <!-- <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full text-gray-900">
+                  <Ruler size="22px" class="pr-1" /> {apartmentDetails?.squareFeet} Feet²
+                </span> -->
+                {#if apartmentDetails?.bedrooms !== 0}
+                <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full text-gray-900">
+                  <BedDouble size="22px" class="pr-1" /> {apartmentDetails?.bedrooms} Bedroom{apartmentDetails?.bedrooms > 1 ? 's' : ''}
+                </span>
+                {/if}
+                <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full text-gray-900">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pr-1 lucide lucide-toilet">
+                    <path d="M7 12h13a1 1 0 0 1 1 1 5 5 0 0 1-5 5h-.598a.5.5 0 0 0-.424.765l1.544 2.47a.5.5 0 0 1-.424.765H5.402a.5.5 0 0 1-.424-.765L7 18" />
+                    <path d="M8 18a5 5 0 0 1-5-5V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8" />
+                  </svg>
+                  {apartmentDetails?.bathrooms} Bathroom{apartmentDetails?.bathrooms > 1 ? 's' : ''}
+                </span>
+              </div>
+            </div>
+            
+            <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
+            
+            <!-- Overview Section -->
+            <div class="mb-6">
+              <h2 class="text-3xl font-bold text-black mb-4">Overview</h2>
+              
+              <p class="text-sm text-gray-600">  
+                {#each parsedDescription?.slice(0, 2) as line}
+                  {line}
+                  <br><br>
+                {/each}
               </p>
-            </div>
 
-          </div>
-
-          <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
-          
-          
-          <!-- Amenities Section -->
-          <div  aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-scale-animation-modal" data-hs-overlay="#hs-scale-animation-modal">
-            <h2 class="text-3xl font-bold text-black mb-4">Amenities</h2>
-            <div class="grid grid-cols-2 gap-4 text-gray-700 text-sm">
-              <div class="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-volume-off mr-2 w-[30px] h-[30px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M16 9a5 5 0 0 1 .95 2.293"/><path d="M19.364 5.636a9 9 0 0 1 1.889 9.96"/><path d="m2 2 20 20"/><path d="m7 7-.587.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298V11"/><path d="M9.828 4.172A.686.686 0 0 1 11 4.657v.686"/></svg>
-                <span>Soundproofing</span>
-              </div>
-              <div class="flex items-center">
-                <ParkingCircle class="w-[30px] h-[30px] mr-2" />
-                <span>Free on-site parking</span>
-              </div>
-              <div class="flex items-center">
-                <ShowerHead class="mr-2 w-[30px] h-[30px]"/>
-                <span>Private bathroom</span>
-              </div>
-              <div class="flex items-center">
-                <Wifi class="w-[30px] h-[30px] mr-2" />
-                <span>Free WiFi</span>
-              </div>
-              <div class="flex items-center">
-                <UtensilsCrossed class="w-[30px] h-[30px] mr-2" />
-                <span>Kitchen</span>
-              </div>
-              <div class="flex items-center">
-                <WashingMachine class="w-[30px] h-[30px] mr-2" />
-                <span>Washing machine</span>
-              </div>
-              <div class="flex items-center">
-                <Monitor class="w-[30px] h-[30px] mr-2" />
-                <span>Flat screen TV</span>
-              </div>
-              <div class="flex items-center">
-                <Flower2 class="w-[30px] h-[30px] mr-2" />
-                <span>Garden</span>
-              </div>
-            </div>
-            <button class="mt-4 px-4 py-2 border border-gray-300 rounded-full text-gray-600 text-sm hover:bg-gray-100">
-              Show all amenities
-            </button>
-          </div>
-
-          <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
-
-
-          <!-- House Rules -->
-          <div class="house-rules space-y-4 text-black p-3">
-            <h2 class="text-2xl font-bold mb-6">House Rules</h2>
-            <div class="space-y-4 ">
-
-              <div class="flex items-start">
-                <span class="w-60 font-medium "> <LogIn class="inline-flex mr-1"/>  Check-in</span>
-                <div class="flex-1">
-                  <span class="text-sm">From 16:00</span>
-                  <p class="text-gray-500 text-sm mt-1">
-                    You'll need to let the property know in advance what time you'll arrive.
+              
+              <!-- Read More Section -->
+              <div>
+                <div id="hs-show-hide-collapse-heading" class="hs-collapse hidden w-full overflow-hidden transition-[height] duration-300" aria-labelledby="hs-show-hide-collapse">
+                  <p class="text-sm text-gray-600 mt-4">
+      
+                    {#each parsedDescription?.slice(2) as line}
+                      {line}
+                      <br><br>
+                    {/each}        
+      
                   </p>
                 </div>
+                
+                <p class="mt-4">
+                  <button 
+                    type="button" 
+                    class="{parsedDescription?.length > 2 ? '' : 'hidden'} hs-collapse-toggle inline-flex items-center gap-x-1 text-sm font-semibold rounded-lg border border-transparent text-[#C09A5B] hover:underline focus:outline-none focus:underline focus:text-[#C09A5B] disabled:opacity-50 disabled:pointer-events-none" 
+                    id="hs-show-hide-collapse" 
+                    aria-expanded="false" 
+                    aria-controls="hs-show-hide-collapse-heading" 
+                    data-hs-collapse="#hs-show-hide-collapse-heading">
+                    <span class="hs-collapse-open:hidden">Read more</span>
+                    <span class="hs-collapse-open:block hidden">Read less</span>
+                    <svg class="hs-collapse-open:rotate-180 shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m6 9 6 6 6-6"></path>
+                    </svg>
+                  </button>
+                </p>
               </div>
 
-              <hr class="h-px my-8 bg-gray-300 border-0 ">
-              
-              <div class="flex items-start">
-                <span class="w-60 font-medium"> <LogOut class="inline-flex mr-1"/> Check-out</span>
-                <span class="flex-1 text-sm">Until 10:00</span>
-              </div>
+            </div>
 
-              <hr class="h-px my-8 bg-gray-300 border-0 ">
-              
-              <div class="flex items-start">
-                <span class="w-60 font-medium "><Info class="inline-flex mr-1"/> Cancellation/Prepayment
-                </span>
-                <span class="flex-1 text-sm w-2">
-                  Cancellation and prepayment policies vary depending on apartment
-                  type. Please check the conditions of your required room.
-                </span>
-              </div>
-              
-              <hr class="h-px my-8 bg-gray-300 border-0 ">
-              
-              <div class="flex items-start">
-                <span class="w-60"><Users class="inline-flex mr-1"/>Children and Beds</span>
-                <div class="flex-1">
-                  <span class="text-md font-bold">Child policies</span>
-                  <p class="text-sm pt-4">Children of any age are welcome.</p>
-                  <p class="text-sm pt-4">To see correct prices and occupancy information, please add the number of children in your group and their ages to your search.</p>
-                  <p class="text-md font-bold pt-4">Cot and extra bed policies</p>
-                  <p class="text-sm pt-4">Cots and extra beds are not available at this property.</p>
+            <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
+            
+            
+            <!-- Amenities Section -->
+            <div  aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-scale-animation-modal" data-hs-overlay="#hs-scale-animation-modal">
+              <h2 class="text-3xl font-bold text-black mb-4">Amenities</h2>
+              <div class="grid grid-cols-2 gap-4 text-gray-700 text-sm">
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-volume-off mr-2 w-[30px] h-[30px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M16 9a5 5 0 0 1 .95 2.293"/><path d="M19.364 5.636a9 9 0 0 1 1.889 9.96"/><path d="m2 2 20 20"/><path d="m7 7-.587.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298V11"/><path d="M9.828 4.172A.686.686 0 0 1 11 4.657v.686"/></svg>
+                  <span>Soundproofing</span>
+                </div>
+                <div class="flex items-center">
+                  <ParkingCircle class="w-[30px] h-[30px] mr-2" />
+                  <span>Free on-site parking</span>
+                </div>
+                <div class="flex items-center">
+                  <ShowerHead class="mr-2 w-[30px] h-[30px]"/>
+                  <span>Private bathroom</span>
+                </div>
+                <div class="flex items-center">
+                  <Wifi class="w-[30px] h-[30px] mr-2" />
+                  <span>Free WiFi</span>
+                </div>
+                <div class="flex items-center">
+                  <UtensilsCrossed class="w-[30px] h-[30px] mr-2" />
+                  <span>Kitchen</span>
+                </div>
+                <div class="flex items-center">
+                  <WashingMachine class="w-[30px] h-[30px] mr-2" />
+                  <span>Washing machine</span>
+                </div>
+                <div class="flex items-center">
+                  <Monitor class="w-[30px] h-[30px] mr-2" />
+                  <span>Flat screen TV</span>
+                </div>
+                <div class="flex items-center">
+                  <Flower2 class="w-[30px] h-[30px] mr-2" />
+                  <span>Garden</span>
                 </div>
               </div>
+              <button class="mt-4 px-4 py-2 border border-gray-300 rounded-full text-gray-600 text-sm hover:bg-gray-100">
+                Show all amenities
+              </button>
+            </div>
 
-              <hr class="h-px my-8 bg-gray-300 border-0 ">
-              
-              <div class="flex items-start">
-                <span class="w-60 font-medium"><PersonStanding class="inline-flex mr-1"/>No Age Restriction</span>
-                <span class="flex-1 text-sm">There is no age requirement for check-in</span>
-              </div>
-              
-              <hr class="h-px my-8 bg-gray-300 border-0 ">
-              
-              <div class="flex items-start">
-                <span class="w-60 font-medium"> <CigaretteOff class="inline-flex mr-1"/> Smoking</span>
-                <span class="flex-1 text-sm">Smoking is not allowed.</span>
-              </div>
-                            
-              <hr class="h-px my-8 bg-gray-300 border-0 ">
+            <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
 
-              <div class="flex items-start">
-                <span class="w-60 font-medium"> <PawPrint class="inline-flex mr-1"/> Pets</span>
-                <span class="flex-1 text-sm">Pets are not allowed.</span>
+
+            <!-- House Rules -->
+            <div class="house-rules space-y-4 text-black p-3">
+              <h2 class="text-2xl font-bold mb-6">House Rules</h2>
+              <div class="space-y-4 ">
+
+                <div class="flex items-start">
+                  <span class="w-60 font-medium "> <LogIn class="inline-flex mr-1"/>  Check-in</span>
+                  <div class="flex-1">
+                    <span class="text-sm">From 16:00</span>
+                    <p class="text-gray-500 text-sm mt-1">
+                      You'll need to let the property know in advance what time you'll arrive.
+                    </p>
+                  </div>
+                </div>
+
+                <hr class="h-px my-8 bg-gray-300 border-0 ">
+                
+                <div class="flex items-start">
+                  <span class="w-60 font-medium"> <LogOut class="inline-flex mr-1"/> Check-out</span>
+                  <span class="flex-1 text-sm">Until 10:00</span>
+                </div>
+
+                <hr class="h-px my-8 bg-gray-300 border-0 ">
+                
+                <div class="flex items-start">
+                  <span class="w-60 font-medium "><Info class="inline-flex mr-1"/> Cancellation/Prepayment
+                  </span>
+                  <span class="flex-1 text-sm w-2">
+                    Cancellation and prepayment policies vary depending on apartment
+                    type. Please check the conditions of your required room.
+                  </span>
+                </div>
+                
+                <hr class="h-px my-8 bg-gray-300 border-0 ">
+                
+                <div class="flex items-start">
+                  <span class="w-60"><Users class="inline-flex mr-1"/>Children and Beds</span>
+                  <div class="flex-1">
+                    <span class="text-md font-bold">Child policies</span>
+                    <p class="text-sm pt-4">Children of any age are welcome.</p>
+                    <p class="text-sm pt-4">To see correct prices and occupancy information, please add the number of children in your group and their ages to your search.</p>
+                    <p class="text-md font-bold pt-4">Cot and extra bed policies</p>
+                    <p class="text-sm pt-4">Cots and extra beds are not available at this property.</p>
+                  </div>
+                </div>
+
+                <hr class="h-px my-8 bg-gray-300 border-0 ">
+                
+                <div class="flex items-start">
+                  <span class="w-60 font-medium"><PersonStanding class="inline-flex mr-1"/>No Age Restriction</span>
+                  <span class="flex-1 text-sm">There is no age requirement for check-in</span>
+                </div>
+                
+                <hr class="h-px my-8 bg-gray-300 border-0 ">
+                
+                <div class="flex items-start">
+                  <span class="w-60 font-medium"> <CigaretteOff class="inline-flex mr-1"/> Smoking</span>
+                  <span class="flex-1 text-sm">Smoking is not allowed.</span>
+                </div>
+                              
+                <hr class="h-px my-8 bg-gray-300 border-0 ">
+
+                <div class="flex items-start">
+                  <span class="w-60 font-medium"> <PawPrint class="inline-flex mr-1"/> Pets</span>
+                  <span class="flex-1 text-sm">Pets are not allowed.</span>
+                </div>
               </div>
             </div>
+            
           </div>
-          
-        </div>
 
-        <!-- Price Card -->
-        <div class="w-[28%] self-start sticky top-6">
-          <div class="bg-gray-100 rounded-lg shadow-lg p-6">
-            
-            <!-- <h2 class="text-4xl font-bold text-[#C09A5B] mb-4">£{displayPrice} </h2> -->
-            <div class="mt-auto text-xl font-bold text-gray-600 mb-4">
-              <span class="font-bold text-[#C09A5B] text-4xl">£{displayPrice}</span>/{nights}<span class="text-[15px]">nights</span>
-            </div>
+          <!-- Price Card -->
+          <div class="w-[28%] self-start sticky top-6 hidden md:block">
+            <div class="bg-gray-100 rounded-lg shadow-lg p-6">
+              
+              <!-- <h2 class="text-4xl font-bold text-[#C09A5B] mb-4">£{displayPrice} </h2> -->
+              <div class="mt-auto text-xl font-bold text-gray-600 mb-4">
+                <span class="font-bold text-[#C09A5B] text-4xl">£{displayPrice}</span>/{nights}<span class="text-[15px]">nights</span>
+              </div>
 
-          
             
-            <!-- Details -->
-            <GuestDetails bind:isOpen={isOpen} bind:childrenAges={childrenAges} bind:startDate={startDate} bind:endDate={endDate} bind:children={children} bind:adults={adults}/>
-            
-            {#if childrenAges.filter(age => age !== -1).length != children}
-              <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Info color="red" class="mr-1" /> Age Needed</div> 
+              
+              <!-- Details -->
+              <GuestDetails bind:isOpen={isOpen} bind:childrenAges={childrenAges} bind:startDate={startDate} bind:endDate={endDate} bind:children={children} bind:adults={adults}/>
+              
+              {#if childrenAges.filter(age => age !== -1).length != children}
+                <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Info color="red" class="mr-1" /> Age Needed</div> 
+                {/if}
+                
+                {#if !(startDate && endDate)}
+                <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Info color="red" class="mr-1" /> Select Date</div> 
               {/if}
+
+              <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
               
-              {#if !(startDate && endDate)}
-              <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Info color="red" class="mr-1" /> Select Date</div> 
-            {/if}
+              {#if (childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate)}
+                <button class="mt-8 bg-[#C09A5B]/50 text-white font-semibold py-2 px-4 rounded-lg w-full cursor-default">Book Now</button>
+                {:else}
+                  <button class="mt-8 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg w-full" on:click={bookNow}>Book Now</button>
+              {/if}
+            </div>
 
-            <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
-            
-            {#if (childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate)}
-              <button class="mt-8 bg-[#C09A5B]/50 text-white font-semibold py-2 px-4 rounded-lg w-full cursor-default">Book Now</button>
-              {:else}
-                <button class="mt-8 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg w-full" on:click={bookNow}>Book Now</button>
-            {/if}
+
+
+
           </div>
-
-
-
 
         </div>
 
       </div>
-
     </div>
-  </div>
+  {/if}
   
 
   <!-- Full Gallary -->
@@ -759,7 +766,8 @@
         <div class="relative w-full h-full">
             <button on:click={() => {isModalOpen = !isModalOpen;}} class="absolute top-4 right-4 text-white text-2xl font-bold">×</button>
             <div class="w-full h-full flex justify-center items-center">
-                <Slideshow images={images}/>
+                <SlideshowDesktop images={apartmentDetails["amountOfPictures"]} apartmentNumber = {apartmentNumber}/>
+
             </div>
         </div>
     </div>
