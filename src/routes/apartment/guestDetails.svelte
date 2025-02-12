@@ -40,26 +40,7 @@
 
   let disabledDates;
   
-  const formatBlockedDates = (blockedDatesResponse) => {
-    let updatedDisabledDates = [...disabledDates];  // Clone the existing disabledDates array
 
-    blockedDatesResponse.forEach(blockedDate => {
-      if (blockedDate.IsBlocked === "true") {
-        // Parse the @Date value and create a Date object
-        const dateStr = blockedDate["@Date"];
-        const [year, month, day] = dateStr.split('-').map(Number);
-
-        // Create a Date object (month is 0-indexed in JavaScript)
-        const blockedDateObj = format(new Date(year, month - 1, day), 'MMMM dd, yyyy'); // Month is 0-indexed
-
-        // Add the new Date object to the updatedDisabledDates array
-        updatedDisabledDates.push(blockedDateObj);
-      }
-    });
-
-    // Reassign the disabledDates array to trigger reactivity
-    disabledDates = updatedDisabledDates;
-  };
 
 
 
@@ -69,59 +50,10 @@
     console.log('start', currentPeriod.start);
     console.log('end', currentPeriod.end);
     console.log('past period', isPastPeriod);
-    if (!isPastPeriod){
-      // Parse the start and end dates
-      const parseDate = (dateStr) => {
-        const [year, month, day] = dateStr.split('-').map(Number);
-        return new Date(year, month - 1, day); // Month is 0-indexed
-      };
-  
-      const startDate = parseDate(currentPeriod.start);
-      const endDate = parseDate(currentPeriod.end);
-  
-      // Get the first day of the start month
-      const firstDayOfMonth = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
-  
-      // Get the last day of the start month
-      const lastDayOfMonth = new Date(startDate.getFullYear(), startDate.getMonth() + 2, 0);
-  
-      const dateFrom = {
-        day: firstDayOfMonth.getDate(),
-        month: firstDayOfMonth.getMonth() + 1,
-        year: firstDayOfMonth.getFullYear(),
-      };
-  
-      const dateTo = {
-        day: lastDayOfMonth.getDate(),
-        month: lastDayOfMonth.getMonth() + 1,
-        year: lastDayOfMonth.getFullYear(),
-      };
-  
-      // Fetch the blocked apartments using the new dateFrom and dateTo
-      formatBlockedDates(await fetchBlockedApartments(dateFrom, dateTo, apartmentDetails.id));
-    }
 
   };
 
-  async function fetchBlockedApartments(dateFrom, dateTo, propertyId) {
-    try {
-      const response = await fetch('http://127.0.0.1:5000/check_calendar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ date_from: dateFrom, date_to: dateTo, property_id: propertyId }),
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-  
-      const apartmentsList = await response.json();
-      console.log(disabledDates);
-      return apartmentsList;  // Return the fetched list
-    } catch (error) {
-      console.error('Failed to fetch blocked apartments:', error);
-    }
-  }
+
 
   function incrementAdults() {
     if ((parseInt(adults, 10) + parseInt(children, 10)) < apartmentDetails?.maxGuests) {
@@ -201,7 +133,6 @@
       };
 
       // Fetch the blocked apartments using the new dateFrom and dateTo
-      formatBlockedDates(await fetchBlockedApartments(dateFrom, dateTo, apartmentDetails.id));
     } else {
       console.error('Missing check_in or check_out parameters in URL');
     }
