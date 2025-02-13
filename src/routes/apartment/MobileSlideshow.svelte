@@ -1,112 +1,75 @@
 <script>
-    // @ts-nocheck
-    
-    // @ts-ignore
-    import Carousel from 'svelte-carousel';
-    import { browser } from '$app/environment';
-    import { onMount } from 'svelte';
-    import { currentPageIndex as sharedCurrentPageIndex } from './store';
-    import { json } from '@sveltejs/kit';
-    
-    let currentPageIndex;
-    // @ts-ignore
-    /**
-     * @type {{ goToNext: () => void; goToPrev: (arg0: { animated: boolean; }) => void; }}
-     */
-    let carousel; // for calling methods of the carousel instance
-    export let images = 0;
-    export let apartmentNumber;
-    let loaded;
-    
-    const handleNextClick = () => {
-        // @ts-ignore
-        if (carousel) {
-            carousel.goToNext();
-        }
-    };
+  import { onMount } from 'svelte';
 
-      let carouselData = {
-        "loadingClasses": "opacity-0",
-        "dotsItemClasses": "hs-carousel-active:bg-blue-700 hs-carousel-active:border-blue-700 size-3 border border-gray-400 rounded-full cursor-pointer dark:border-neutral-600 dark:hs-carousel-active:bg-blue-500 dark:hs-carousel-active:border-blue-500",
-        // "isSnap": true
-      }
+  let swiper;
+  export let images = 0;
+  export let apartmentNumber;
 
-      let data = { "loadingClasses": "opacity-0", "slidesQty": { "xs": 1, "lg": 3 }, "isCentered": true, "isSnap": true }
+  onMount(() => {
+    swiper = new Swiper(".default-carousel", {
+      loop: true,
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+  });
+</script>
 
-    
-    
-    </script>
-    
-    <!-- Slider -->
-    <div id="snap" data-carousel={JSON.stringify(data)} class="relative w-full" >
-      <div class="carousel flex vertical-scrollbar snap-x snap-mandatory overflow-x-auto">
-        <div class="carousel-body h-full gap-2 opacity-0">
-
-        <div class="carousel-slide snap-center">
-          <div class="bg-base-200 flex h-full justify-center ">
-            <img src="/10/0.jpg" alt="test"
-                 class="w-full h-auto rounded-lg object-cover" />
+<div class="w-full relative">
+  <div class="swiper default-carousel swiper-container">
+    <div class="swiper-wrapper">
+      {#each Array.from({ length: images }, (_, i) => i) as i}
+        <div class="swiper-slide" key={i}>
+          <div class="bg-indigo-50 rounded-2xl flex justify-center items-center relative">
+            <img src={`/${apartmentNumber}/${i}.jpg`} alt={`Image ${i + 1}`} class="w-full h-auto object-cover rounded-lg" />
           </div>
         </div>
-        <div class="carousel-slide snap-center">
-          <div class="bg-base-200 flex h-full justify-center ">
-            <img src="/10/1.jpg" alt="test"
-                 class="w-full h-auto rounded-lg object-cover" />
-          </div>
-        </div>
-        <div class="carousel-slide snap-center">
-          <div class="bg-base-200 flex h-full justify-center ">
-            <img src="/10/2.jpg" alt="test"
-                 class="w-full h-auto rounded-lg object-cover" />
-          </div>
-        </div>
-        <div class="carousel-slide snap-center">
-          <div class="bg-base-200 flex h-full justify-center ">
-            <img src="/10/3.jpg" alt="test"
-                 class="w-full h-auto rounded-lg object-cover" />
-          </div>
-        </div>
-        <div class="carousel-slide snap-center">
-          <div class="bg-base-200 flex h-full justify-center ">
-            <img src="/10/4.jpg" alt="test"
-                 class="w-full h-auto rounded-lg object-cover" />
-          </div>
-        </div>
-        <div class="carousel-slide snap-center">
-          <div class="bg-base-200 flex h-full justify-center ">
-            <img src="/10/5.jpg" alt="test"
-                 class="w-full h-auto rounded-lg object-cover" />
-          </div>
-        </div>
-        <div class="carousel-slide snap-center">
-          <div class="bg-base-200 flex h-full justify-center ">
-            <img src="/10/6.jpg" alt="test"
-                 class="w-full h-auto rounded-lg object-cover" />
-          </div>
-        </div>
-        <div class="carousel-slide snap-center">
-          <div class="bg-base-200 flex h-full justify-center ">
-            <img src="/10/7.jpg" alt="test"
-                 class="w-full h-auto rounded-lg object-cover" />
-          </div>
-        </div>
-
-        </div>
-      </div>
-    
-      <!-- Previous Slide -->
-      <button type="button" class="carousel-prev">
-        <span class="size-9.5 bg-base-100 flex items-center justify-center rounded-full shadow">
-          <span class="icon-[tabler--chevron-left] size-5 cursor-pointer rtl:rotate-180"></span>
-        </span>
-        <span class="sr-only">Previous</span>
-      </button>
-      <!-- Next Slide -->
-      <button type="button" class="carousel-next">
-        <span class="sr-only">Next</span>
-        <span class="size-9.5 bg-base-100 flex items-center justify-center rounded-full shadow">
-          <span class="icon-[tabler--chevron-right] size-5 cursor-pointer rtl:rotate-180"></span>
-        </span>
-      </button>
+      {/each}
     </div>
-<!-- End Slider -->
+    <!-- Navigation Buttons -->
+    <button id="slider-button-left" class="swiper-button-prev group !p-2 flex justify-center items-center border border-solid border-indigo-600 !w-12 !h-12 transition-all duration-500 rounded-full absolute top-1/2 left-5 transform -translate-y-1/2 hover:bg-indigo-600" data-carousel-prev>
+      <svg class="h-5 w-5 text-indigo-600 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10.0002 11.9999L6 7.99971L10.0025 3.99719" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+    <button id="slider-button-right" class="swiper-button-next group !p-2 flex justify-center items-center border border-solid border-indigo-600 !w-12 !h-12 transition-all duration-500 rounded-full absolute top-1/2 right-5 transform -translate-y-1/2 hover:bg-indigo-600" data-carousel-next>
+      <svg class="h-5 w-5 text-indigo-600 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M5.99984 4.00012L10 8.00029L5.99748 12.0028" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+    
+    <div class="swiper-pagination"></div>
+  </div>
+</div>
+
+<style>
+  .swiper-wrapper {
+    width: 100%;
+    height: max-content !important;
+    position: relative;
+  }
+
+  /* Full-width image style */
+  .swiper-slide img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  /* Navigation buttons on top of the image */
+  .swiper-button-prev, .swiper-button-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10; /* Ensure buttons are on top of the image */
+  }
+
+  .swiper-pagination-bullet {
+    background: #4f46e5;
+  }
+</style>
