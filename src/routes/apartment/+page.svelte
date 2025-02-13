@@ -233,7 +233,7 @@
   async function bookNow (){
     console.log("testing")
     try {
-      const response = await fetch('http://127.0.0.1:5000/create-checkout-session', {
+      const response = await fetch('http://10.133.156.15:5000/create-checkout-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -371,11 +371,11 @@
         </ol>
       
 
+        <div class="block md:hidden">
+          <MobileSlideshow images={data.apartmentDetails.amountOfPictures} apartmentNumber = {data.number}/>
+        </div>
         {#if screenWidth < 768 }
 
-            {#key screenWidth < 768}
-              <MobileSlideshow  images={data.apartmentDetails.amountOfPictures} apartmentNumber = {data.number}/>
-            {/key}
             <footer class="fixed bottom-0 left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow-sm md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 dark:border-gray-600">
               <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <a href="https://flowbite.com/" class="hover:underline">Flowbite™</a>. All Rights Reserved.
               </span>

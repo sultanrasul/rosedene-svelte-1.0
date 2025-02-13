@@ -12,7 +12,9 @@ const config = {
 		'./src/**/*.{html,js,svelte,ts}',
 		'./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}',
 		'./node_modules/flowbite-svelte-blocks/**/*.{html,js,svelte,ts}',
-		"./node_modules/flowbite/**/*.js"],
+		"./node_modules/flowbite/**/*.js",
+		"./node_modules/flyonui/dist/js/*.js"
+	],
 	safelist: ['dark'],
 	theme: {
 		container: {
@@ -115,6 +117,8 @@ const config = {
 		flowbitePlugin,
 		require('flowbite/plugin'),
 		require('preline/plugin.js'),
+		require('flyonui'),
+		require('flyonui/plugin')
 		// require('@preline/carousel'),
 		// require('@tailwindcss/forms'),
 	]

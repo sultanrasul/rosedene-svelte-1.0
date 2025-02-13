@@ -30,7 +30,7 @@ export async function load({ url }) {
     async function fetchApartmentPrice(propertyId) {
         try {
 
-            const response = await fetch('http://127.0.0.1:5000/check_price', {
+            const response = await fetch('http://10.133.156.15:5000/check_price', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({property_id: propertyId }),
@@ -52,7 +52,7 @@ export async function load({ url }) {
     // @ts-ignore
     async function fetchBlockedApartments(propertyId) {
         try {
-            const response = await fetch('http://127.0.0.1:5000/check_calendar', {
+            const response = await fetch('http://10.133.156.15:5000/check_calendar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ property_id: propertyId }),

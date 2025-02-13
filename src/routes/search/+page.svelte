@@ -37,7 +37,7 @@
             const dateTo = { day: endDate.getDate(), month: endDate.getMonth() + 1, year: endDate.getFullYear() };
 
             try {
-                const response = await fetch('http://127.0.0.1:5000/blocked_apartments', {
+                const response = await fetch('http://10.133.156.15:5000/blocked_apartments', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ date_from: dateFrom, date_to: dateTo }),
