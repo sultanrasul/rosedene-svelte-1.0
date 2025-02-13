@@ -26,7 +26,7 @@
 
     async function getBookingDetails(bookingReference){
         try  {
-            const response = await fetch('http://127.0.0.1:5000/get_booking', {
+            const response = await fetch('http://10.133.156.15:5000/get_booking', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
