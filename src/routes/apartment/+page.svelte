@@ -15,7 +15,6 @@
   import { innerWidth, innerHeight } from 'svelte/reactivity/window';
 
 
-
   
   import SlideshowDesktop from "./DesktopSlideshow.svelte";
   
@@ -101,6 +100,8 @@
   import { currentPageIndex } from "./store";
   import { parse } from "date-fns";
     import MobileSlideshow from "./MobileSlideshow.svelte";
+    import { DateRangePicker } from "bits-ui";
+    import { BACKEND_URL } from "../conf";
   let galleryContainer;
 
 
@@ -127,6 +128,7 @@
   }
 
   function calculateApartmentPrice(prices) {
+    console.log(prices)
     let totalPrice = 0;
 
     // Log to inspect the data
@@ -233,7 +235,7 @@
   async function bookNow (){
     console.log("testing")
     try {
-      const response = await fetch('http://10.133.156.15:5000/create-checkout-session', {
+      const response = await fetch(`${BACKEND_URL}/create-checkout-session`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -344,6 +346,7 @@
       <Navbar />
       <div class="relative z-10 pb-20 sm:pl-0 sm:pr-0 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40">
         
+
         <!-- Breadcrumb -->
         <ol class="flex items-center whitespace-nowrap pb-4 pl-3">
           <li class="inline-flex items-center">
@@ -533,6 +536,12 @@
 
             </div>
 
+            {#if screenWidth < 768 }
+              <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
+              
+              <GuestDetails class="text-black" bind:childrenAges={childrenAges} bind:startDate={startDate} bind:endDate={endDate} bind:children={children} bind:adults={adults}/>
+            {/if}
+
             <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
             
             
@@ -652,41 +661,72 @@
             
           </div>
 
+          
           <!-- Price Card -->
-          <div class="w-[28%] self-start sticky top-6 hidden md:block">
-            <div class="bg-gray-100 rounded-lg shadow-lg p-6">
-              
-              <!-- <h2 class="text-4xl font-bold text-[#C09A5B] mb-4">£{displayPrice} </h2> -->
-              <div class="mt-auto text-xl font-bold text-gray-600 mb-4">
-                <span class="font-bold text-[#C09A5B] text-4xl">£{displayPrice}</span>/{nights}<span class="text-[15px]">nights</span>
-              </div>
+          {#if screenWidth > 768 }
+            <div class="w-[28%] text-black self-start sticky top-6 hidden md:block">
+              <div class="bg-white border-2 border-gray-100 rounded-xl shadow-xl p-6">
+                <!-- Price Display -->
+                <div class="mb-6">
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-4xl font-bold text-[#C09A5B]">£{displayPrice}</span>
+                    <span class="text-lg text-gray-500">/{nights} nights</span>
+                  </div>
+                  <!-- <div class="text-sm text-gray-400 mt-1">Total includes taxes and charges</div> -->
+                  <div class="flex items-center text-sm text-gray-500 mt-1">
+                    <Banknote class="w-4 h-4 mr-2 text-[#C09A5B]" />
+                    <span class="text-sm text-gray-400">Total includes taxes and charges</span>
 
-            
-              
-              <!-- Details -->
-              <GuestDetails bind:isOpen={isOpen} bind:childrenAges={childrenAges} bind:startDate={startDate} bind:endDate={endDate} bind:children={children} bind:adults={adults}/>
-              
-              {#if childrenAges.filter(age => age !== -1).length != children}
-                <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Info color="red" class="mr-1" /> Age Needed</div> 
-                {/if}
+                  </div>
+                </div>
                 
-                {#if !(startDate && endDate)}
-                <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Info color="red" class="mr-1" /> Select Date</div> 
-              {/if}
+            
+                <!-- Guest Details -->
+                <div class="mb-6">
+                  <GuestDetails 
+                    bind:disabledDates={data.disabledDates} 
+                    bind:childrenAges={childrenAges} 
+                    bind:startDate={startDate} 
+                    bind:endDate={endDate} 
+                    bind:children={children} 
+                    bind:adults={adults}
+                  />
+                </div>
+            
+                <!-- Validation Messages -->
+                <div class="space-y-3 mb-6">
+                  {#if childrenAges.filter(age => age !== -1).length != children}
+                    <div class="flex items-center text-sm text-red-500">
+                      <Info class="w-4 h-4 mr-2" />
+                      <span>Please specify ages for all children</span>
+                    </div>
+                  {/if}
+                  
+                  {#if !(startDate && endDate)}
+                    <div class="flex items-center text-sm text-red-500">
+                      <Info class="w-4 h-4 mr-2" />
+                      <span>Please select your dates</span>
+                    </div>
+                  {/if}
+            
 
-              <div class="text-sm text-gray-500 text-center flex items-center ml-2 mt-4"><Banknote color="#C09A5B" class="mr-1" /> Includes taxes and charges</div>          
-              
-              {#if (childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate)}
-                <button class="mt-8 bg-[#C09A5B]/50 text-white font-semibold py-2 px-4 rounded-lg w-full cursor-default">Book Now</button>
-                {:else}
-                <button class="mt-8 bg-[#C09A5B] text-white font-semibold py-2 px-4 rounded-lg w-full" on:click={() => bookNow()}>Book Now</button>
-                {/if}
+                </div>
+            
+                <!-- Book Now Button -->
+                <button 
+                  class={`w-full py-3 rounded-xl font-semibold transition-all duration-200
+                    ${(childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate) ?
+                      'bg-[#C09A5B]/30 text-gray-400 cursor-not-allowed' :
+                      'bg-[#C09A5B] hover:bg-[#B08A4F] text-white shadow-md hover:shadow-lg'
+                    }`}
+                  disabled={(childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate)}
+                  on:click={() => bookNow()}
+                >
+                  Book Now
+                </button>
+              </div>
             </div>
-
-
-
-
-          </div>
+          {/if}
 
         </div>
 
@@ -725,6 +765,7 @@
       </div>
   
       <!-- All Amenities -->
+
       <div class="p-5 overflow-y-auto max-h-[500px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
         {#each amenities as {category, icon, items} }
           <div class="mt-5 text-black">

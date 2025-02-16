@@ -3,7 +3,8 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	server: {
-		host: '10.133.156.15', // Bind to this IP address
+		// host: '192.168.178.79', 
+		host: '192.168.178.105', 
 	  },
 	plugins: [sveltekit()],
 	optimizeDeps: {

@@ -12,50 +12,54 @@
     const apartmentDetails = apartments[apartmentNumber];
 </script>
 
-<div class="h-full flex flex-col cursor-pointer max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+<div class="flex flex-col cursor-pointer max-w-sm bg-gray-800  rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden dark:bg-white ">
     <!-- Image Section -->
-    <div class="relative">
-        <img class="w-full object-cover" src={`/${apartmentNumber}.jpg`} alt={apartmentName}/>
+    <div class="relative overflow-hidden">
+        <img class="w-full object-cover hover:scale-105 transition-transform duration-300" src={`/${apartmentNumber}.jpg`} alt={apartmentName}/>
     </div>
 
     <!-- Content Section -->
-    <div class="flex-1 relative p-5 bg-transparent">
+    <div class="flex-1 flex flex-col p-6">
         <!-- Apartment Name -->
-        <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">{apartmentName}</h5>
+        <h3 class="mb-3 text-2xl font-bold text-[#C09A5B] ">{apartmentName}</h3>
 
-        <!--Apartment Description -->
-        <p class="mb-3 text-sm text-gray-700 dark:text-gray-400">
+        <!-- Apartment Description -->
+        <p class="mb-4 text-gray-300 dark:text-gray-600 text-base leading-relaxed">
             Located in Nakagyo Ward, this hotel is known for its helpful staff, great location, and additional amenities like a bath and laundry.
         </p>
 
         <!-- Features Section -->
-        <div class="flex flex-wrap gap-2 mb-0">
-            <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                <User size="22px" class="pr-1"/> {apartmentDetails['maxGuests']} Guests
-            </span>
-            <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                <TvMinimal size="22px" class="pr-1"/> {apartmentDetails['tvSize']}" Flat-screen TV
-            </span>
-            <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                <Ruler size="22px" class="pr-1"/> {apartmentDetails['squareFeet']} Feet²
-            </span>
-            {#if apartmentDetails["bedrooms"] !== 0}
-            <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                <BedDouble size="22px" class="pr-1"/> {apartmentDetails['bedrooms']} Bedroom{apartmentDetails['bedrooms'] > 1 ? 's' : ''}
-            </span>
-            {/if}
-            <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pr-1 lucide lucide-toilet">
-                    <path d="M7 12h13a1 1 0 0 1 1 1 5 5 0 0 1-5 5h-.598a.5.5 0 0 0-.424.765l1.544 2.47a.5.5 0 0 1-.424.765H5.402a.5.5 0 0 1-.424-.765L7 18"/>
-                    <path d="M8 18a5 5 0 0 1-5-5V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8"/>
-                </svg>
-                {apartmentDetails['bathrooms']} Bathroom{apartmentDetails['bathrooms'] > 1 ? 's' : ''}
-            </span>
+        <div class="flex flex-wrap gap-2 mt-auto mb-5">
+            {#each [
+                { icon: User, text: `${apartmentDetails['maxGuests']} Guests` },
+                { icon: TvMinimal, text: `${apartmentDetails['tvSize']}" TV` },
+                { icon: Ruler, text: `${apartmentDetails['squareFeet']} ft²` },
+                ...(apartmentDetails["bedrooms"] !== 0 ? [{ icon: BedDouble, text: `${apartmentDetails['bedrooms']} Bedroom${apartmentDetails['bedrooms'] > 1 ? 's' : ''}` }] : []),
+                { icon: 'toilet', text: `${apartmentDetails['bathrooms']} Bathroom${apartmentDetails['bathrooms'] > 1 ? 's' : ''}` }
+            ] as feature}
+                <span class="inline-flex items-center px-2.5 py-1 text-xs text-white font-medium bg-gray-700 border border-gray-600 rounded-full dark:bg-gray-50 dark:border-gray-200 dark:text-gray-700 transition-colors">
+                    {#if feature.icon === 'toilet'}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1">
+                            <path d="M7 12h13a1 1 0 0 1 1 1 5 5 0 0 1-5 5h-.598a.5.5 0 0 0-.424.765l1.544 2.47a.5.5 0 0 1-.424.765H5.402a.5.5 0 0 1-.424-.765L7 18"/>
+                            <path d="M8 18a5 5 0 0 1-5-5V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8"/>
+                        </svg>
+                    {:else}
+                        <feature.icon size="14" class="mr-1"/>
+                    {/if}
+                    {feature.text}
+                </span>
+            {/each}
         </div>
-    </div>
-    
-    <!-- Price Section -->
-    <div class="mt-auto text-lg font-bold text-gray-500 ml-5 mb-5">
-        <span class="text-gray-900 dark:text-white text-4xl">£{price}</span>/{nights} nights
+
+        <!-- Price Section -->
+        <div class="flex items-center justify-between pt-4 border-t border-gray-700 dark:border-gray-100">
+            <div class="flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-[#C09A5B]">£{price}</span>
+                <span class="text-gray-400 dark:text-gray-500 text-sm">/{nights} nights</span>
+            </div>
+            <button class="px-4 py-2 text-sm font-semibold text-white bg-[#C09A5B] rounded-lg hover:bg-[#B08A4F] transition-colors duration-200">
+                Read More
+            </button>
+        </div>
     </div>
 </div>

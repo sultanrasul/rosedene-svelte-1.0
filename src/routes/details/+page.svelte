@@ -9,6 +9,7 @@
     import { Section } from "flowbite-svelte-blocks";
     import { ColumnSolid } from "flowbite-svelte-icons";
     import { apartments } from '../apartments';
+    import { BACKEND_URL } from "../conf";
 
 
     let bookingData = {};
@@ -26,7 +27,7 @@
 
     async function getBookingDetails(bookingReference){
         try  {
-            const response = await fetch('http://10.133.156.15:5000/get_booking', {
+            const response = await fetch(`${BACKEND_URL}/get_booking`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

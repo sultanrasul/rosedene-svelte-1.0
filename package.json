@@ -45,11 +45,12 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource/merriweather": "^5.1.1",
+		"@internationalized/date": "^3.7.0",
 		"@preline/carousel": "^2.5.2",
 		"@svelte-plugins/datepicker": "^1.0.9",
 		"@sveltejs/adapter-static": "^3.0.8",
 		"add": "^2.0.6",
-		"bits-ui": "^0.21.12",
+		"bits-ui": "^0.21.16",
 		"carousel": "^0.0.3",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
