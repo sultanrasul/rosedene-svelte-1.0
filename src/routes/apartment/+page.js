@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { apartments } from '../apartments';
+import { BACKEND_URL } from '../conf';
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ url }) {
@@ -30,7 +31,7 @@ export async function load({ url }) {
     async function fetchApartmentPrice(propertyId) {
         try {
 
-            const response = await fetch('http://10.133.156.15:5000/check_price', {
+            const response = await fetch(`${BACKEND_URL}/check_price`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({property_id: propertyId }),
@@ -52,7 +53,7 @@ export async function load({ url }) {
     // @ts-ignore
     async function fetchBlockedApartments(propertyId) {
         try {
-            const response = await fetch('http://10.133.156.15:5000/check_calendar', {
+            const response = await fetch(`${BACKEND_URL}/check_calendar`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ property_id: propertyId }),

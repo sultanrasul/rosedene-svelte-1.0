@@ -117,8 +117,6 @@ const config = {
 		flowbitePlugin,
 		require('flowbite/plugin'),
 		require('preline/plugin.js'),
-		require('flyonui'),
-		require('flyonui/plugin')
 		// require('@preline/carousel'),
 		// require('@tailwindcss/forms'),
 	]

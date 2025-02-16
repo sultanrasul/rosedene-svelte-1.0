@@ -38,7 +38,7 @@
   export let ageMismatch;
   export let isOpen = false;
 
-  let disabledDates;
+  export let disabledDates;
   
 
 
@@ -188,116 +188,112 @@
   $: formattedEndDateDMY = formatDateDMY(endDate);
 </script>
 
-<div class=" justify-center items-center relative z-[10] w-full">
-  
-  <!-- svelte-ignore a11y_click_events_have_key_events -->
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div class="flex flex-col gap-4">
+<div class="flex justify-center items-center relative z-[10] w-full">
+  <div class="flex flex-col gap-4 w-full max-w-2xl">
     <!-- Date Input -->
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <div class="w-full group">
+      <DatePicker bind:disabledDates={disabledDates} theme={"custom-datepicker"} class="w-full" align={"right"} bind:isOpen bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}>
+        <div 
+          class="text-base md:text-[17px] flex items-center justify-center gap-2 cursor-pointer text-gray-700 bg-white border-2 border-gray-300 rounded-lg px-4 py-3 transition-all duration-200 hover:border-[#C09A5B]"
+          on:click={toggleDatePicker}
+        >
+          <CalendarDays class="w-5 h-5 md:w-6 md:h-6 text-[#C09A5B] shrink-0" />
+          <span class="font-medium truncate text-center">
+            {#if startDate && !endDate}
+              <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">Check Out</span>
+            {:else if startDate && endDate}
+              <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">{formattedEndDate}</span>
+            {:else}
+              <span class="text-gray-900">Check In</span> – <span class="text-gray-900">Check Out</span>
+            {/if}
+          </span>
+        </div>
+      </DatePicker>
+    </div>
 
-    <DatePicker class="" theme={"custom-datepicker"} align={"right"} bind:disabledDates onNavigationChange={handleNavigationChange} bind:isOpen bind:startDate bind:endDate isRange isMultipane={true} showYearControls={false} enableFutureDates enablePastDates={false}> 
-
-      <div class="flex items-center gap-2 border border-gray-300 rounded-lg p-2 cursor-pointer text-black hover:text-[#C09A5B]" on:click={toggleDatePicker}>
-        <CalendarDays class="text-xl" />
-        <p class="text-sm">
-          {#if startDate && endDate}
-            {formattedStartDate} - {formattedEndDate}
-          {:else}
-            Select Date
-          {/if}
-        </p>
-      </div>
-    </DatePicker>
-
-
-    
     <!-- Guest Input -->
-    <div>
-      <button id="dropdownCheckboxButton" data-dropdown-toggle="dropdownDefaultCheckbox" type="button" class="overflow-y-auto w-full flex items-center gap border border-gray-300 rounded-lg p-2 cursor-pointer text-black hover:text-[#C09A5B]">
-        <UserRoundIcon class="text-xl" />
-        <p class="text-sm ml-2">
-          {parseInt(adults, 10) + parseInt(children, 10)} Guest{(parseInt(adults, 10) + parseInt(children, 10)) > 1 ? 's' : ''}
-        </p>
-        
-        <!-- Move SVG to the right -->
-        <svg class="ml-auto text-right hs-dropdown-open:rotate-180 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m6 9 6 6 6-6"/>
+    <div class="w-full relative">
+      <button 
+        data-dropdown-toggle="dropdownDefaultCheckbox"
+        class="w-full flex items-center justify-between cursor-pointer bg-white border-2 border-gray-300 rounded-lg px-4 py-3 transition-all duration-200 hover:border-[#C09A5B]"
+      >
+        <div class="flex items-center gap-2">
+          <UserRoundIcon class="w-5 h-5 md:w-6 md:h-6 text-[#C09A5B]" />
+          <span class="text-base md:text-[17px] font-medium text-gray-700">
+            {parseInt(adults, 10) + parseInt(children, 10)} 
+            <span class="text-gray-500">Guest{(parseInt(adults, 10) + parseInt(children, 10)) > 1 ? 's' : ''}</span>
+          </span>
+        </div>
+        <svg class="w-4 h-4 text-gray-400 transform transition-transform" class:rotate-180={isGuestPopupOpen} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
         </svg>
       </button>
-    
-      <!-- Dropdown menu -->
-      <div id="dropdownDefaultCheckbox" class="z-10 hidden w-full bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 max-h-[250px] overflow-y-auto">
-        <!-- Input Number -->
-        <div class="py-2 px-3 bg-white border border-gray-200 rounded-lg">
+
+      <!-- Dropdown Menu -->
+      <div 
+        id="dropdownDefaultCheckbox"
+        class={`min-w-[240px] z-20 hidden absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white border-2 border-gray-200 rounded-lg shadow-xl`}
+      >
+        <div class="p-4 space-y-4">
           <!-- Adults -->
-          <div class="flex justify-between items-center gap-x-5">
+          <div class="flex justify-between items-center">
             <div>
-              <span class="block text-xs text-gray-500">Adults</span>
-              <input
-                class="w-12 p-0 bg-transparent border-0 text-gray-800 text-left focus:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                style="-moz-appearance: textfield;"
-                type="number"
-                aria-roledescription="Number field"
-                bind:value={adults}
-              />
+              <span class="block text-sm font-medium text-gray-700 mb-1">Adults</span>
+              <p class="text-xs text-gray-400">Ages 13+</p>
             </div>
-      
-            <div class="flex items-center gap-x-1.5">
-              <button on:click={decrementAdults} type="button" class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Decrease" data-hs-input-number-decrement="">
-                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M5 12h14"></path>
-                </svg>
+            <div class="flex items-center gap-3">
+              <button 
+                on:click={decrementAdults}
+                class="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50" 
+                disabled={adults <= 1}
+              >
+                −
               </button>
-              <button on:click={incrementAdults} type="button" class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Increase" data-hs-input-number-increment="">                
-                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M5 12h14"></path>
-                  <path d="M12 5v14"></path>
-                </svg>
+              <span class="w-8 text-center font-medium">{adults}</span>
+              <button 
+                on:click={incrementAdults}
+                class="p-2 rounded-lg border border-gray-200 hover:bg-gray-50"
+              >
+                +
               </button>
             </div>
           </div>
-          <hr class="h-px my-2 bg-gray-300 border-0">
-      
+
           <!-- Children -->
-          <div class="flex justify-between items-center gap-x-5">
+          <div class="flex justify-between items-center">
             <div>
-              <span class="block text-xs text-gray-500">Children</span>
-              <input
-                class="w-12 p-0 bg-transparent border-0 text-gray-800 text-left focus:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                style="-moz-appearance: textfield;"
-                type="number"
-                aria-roledescription="Number field"
-                bind:value={children}
-              />
+              <span class="block text-sm font-medium text-gray-700 mb-1">Children</span>
+              <p class="text-xs text-gray-400">Ages 2-12</p>
             </div>
-      
-            <div class="flex items-center gap-x-1.5">
-              <button on:click={decrementChildren} type="button" class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Decrease" data-hs-input-number-decrement="">
-                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M5 12h14"></path>
-                </svg>
+            <div class="flex items-center gap-3">
+              <button 
+                on:click={decrementChildren}
+                class="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50" 
+                disabled={children <= 0}
+              >
+                −
               </button>
-              <button on:click={incrementChildren} type="button" class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" tabindex="-1" aria-label="Increase" data-hs-input-number-increment="">                
-                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M5 12h14"></path>
-                  <path d="M12 5v14"></path>
-                </svg>
+              <span class="w-8 text-center font-medium">{children}</span>
+              <button 
+                on:click={incrementChildren}
+                class="p-2 rounded-lg border border-gray-200 hover:bg-gray-50"
+              >
+                +
               </button>
             </div>
           </div>
+
           {#if children > 0}
-            <hr class="h-px bg-gray-300 border-0 text-white">
-            <div class="grid grid-cols-1 gap-1 pt-2 w-full">
-              {#each childrenAges as age, index}
+            <div class="pt-4 space-y-3">
+              <h4 class="text-sm font-medium text-gray-700">Children's Ages</h4>
+              {#each Array(children) as _, index}
                 <select
                   on:change={(e) => updateAge(index, e.target.value)}
-                  class="outline-none focus:ring-0 focus:border-gray-300 border rounded-lg p-2 cursor-pointer text-black text-[13px] hover:text-[#C09A5B]"
-                  style:box-shadow="none"
+                  class="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#C09A5B] focus:border-[#C09A5B]"
                 >
-                  <option value="-1" selected={childrenAges[index] === -1}>Age Needed</option>
+                  <option value="-1" selected={childrenAges[index] === -1}>Select Age</option>
                   {#each Array.from({ length: 18 }, (_, i) => i) as age}
-                    <option value={age} selected={childrenAges[index] === age}>{age} Years old</option>
+                    <option value={age}>{age} years old</option>
                   {/each}
                 </select>
               {/each}
@@ -305,12 +301,8 @@
           {/if}
         </div>
       </div>
-      
-  
     </div>
-
   </div>
-
 </div>
 
 <!-- DatePicker Component -->

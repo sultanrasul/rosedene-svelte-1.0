@@ -1,61 +1,21 @@
 <script>
 // @ts-nocheck
 
-    import { Section, News, HeroHeader, HeroBody } from 'flowbite-svelte-blocks';
-    import { Button, Avatar} from 'flowbite-svelte';
-    import { ArrowRightOutline, ArrowDownOutline, GithubSolid } from 'flowbite-svelte-icons';
     import { onMount } from 'svelte';
-    import GradualSpacing from "$lib/components/GradualSpacing.svelte";
-    import BlurFade from '$lib/components/BlurFade.svelte';
-    import TextReveal from '$lib/components/TextReveal.svelte';
-    import NumberTicker from '$lib/components/NumberTicker.svelte';
     import DatePicker from './DatePicker.svelte';
     import Navbar from './Navbar.svelte';
     import Contact from './Contact.svelte';
-
-
-  let todaysDate = new Date();
-
-  /**
-	 * @type {number}
-	 */
-  let screenWidth;
+    import Calendar from './Calendar.svelte';
 
 
 
-  const updateWidth = () => {
-      screenWidth = window.innerWidth;
-  };
-
-
-  onMount(() => {
-    updateWidth(); // Set initial width
-    window.addEventListener('resize', updateWidth);
-
-      // Cleanup on component destruction
-    return () => {
-        window.removeEventListener('resize', updateWidth);
-    };
-
-  });
-  /**
-	 * @param {string} id
-	 */
-  function scrollToElementWithOffset(id) {
-        const element = document.getElementById(id);
-        const yOffset = -100; // Adjust this value as needed
-        // @ts-ignore
-        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-
-        window.scrollTo({ top: y, behavior: 'smooth' });
-    }
 </script>
   
-<div class="min-h-screen flex flex-col items-center pt-40">
+<div class=" flex flex-col items-center pt-40">
 
   <div class="flex flex-wrap ">
     <div>
-      <img src="/Logo.svg" class="max-w-lg" alt="">
+      <img src="/Logo.svg" class="max-w-lg w-full" alt="">
 
       <!-- <div class="text-[#C09A5B] tracking-[0.5em] font-light text-center w-full max-sm:text-center" style="font-family: 'Merriweather', serif;">
         <h1 class="pt-32 text-4xl md:text-[70px]">ROSEDENE</h1>
@@ -67,7 +27,8 @@
       </div> -->
 
 
-      <DatePicker/>
+      <!-- <MobileDatePicker/> -->
+       <DatePicker/>
     </div>
   </div>
 

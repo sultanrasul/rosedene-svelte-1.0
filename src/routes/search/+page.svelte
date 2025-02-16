@@ -7,6 +7,7 @@
     import DatePicker from '../DatePicker.svelte';
     import CardLoading from "./cardLoading.svelte";
     import { PricingBodyHead } from "flowbite-svelte-blocks";
+    import { BACKEND_URL } from '../conf';
 
     let apartments;
     let startDate, endDate, nights, loading = true;
@@ -37,7 +38,7 @@
             const dateTo = { day: endDate.getDate(), month: endDate.getMonth() + 1, year: endDate.getFullYear() };
 
             try {
-                const response = await fetch('http://10.133.156.15:5000/blocked_apartments', {
+                const response = await fetch(`${BACKEND_URL}/blocked_apartments`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ date_from: dateFrom, date_to: dateTo }),
