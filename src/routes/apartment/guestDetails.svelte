@@ -26,6 +26,7 @@
   export let startDate;
   export let endDate;
   export let isSearch = false;  
+  export let dropdownID = "dropdownDefaultCheckbox";
   let apartmentDetails;
 
 
@@ -214,7 +215,7 @@
     <!-- Guest Input -->
     <div class="w-full relative">
       <button 
-        data-dropdown-toggle="dropdownDefaultCheckbox"
+        data-dropdown-toggle={dropdownID}
         class="w-full flex items-center justify-between cursor-pointer bg-white border-2 border-gray-300 rounded-lg px-4 py-3 transition-all duration-200 hover:border-[#C09A5B]"
       >
         <div class="flex items-center gap-2">
@@ -231,7 +232,7 @@
 
       <!-- Dropdown Menu -->
       <div 
-        id="dropdownDefaultCheckbox"
+        id={dropdownID}
         class={`min-w-[240px] z-20 hidden absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white border-2 border-gray-200 rounded-lg shadow-xl`}
       >
         <div class="p-4 space-y-4">
@@ -314,35 +315,7 @@
 
     }
 
-    #dropdownDefaultCheckbox {
-    scrollbar-width: thin; /* For Firefox */
-    scrollbar-color: #C09A5B transparent; /* Thumb and track colors for Firefox */
-  }
 
-  /* Webkit browsers (Chrome, Edge, Safari) */
-  #dropdownDefaultCheckbox::-webkit-scrollbar {
-    width: 8px; /* Scrollbar width */
-  }
-
-  #dropdownDefaultCheckbox::-webkit-scrollbar-track {
-    background: transparent; /* Track color */
-    border-radius: 8px;
-  }
-
-  #dropdownDefaultCheckbox::-webkit-scrollbar-thumb {
-    background-color: #C09A5B; /* Thumb color */
-    border-radius: 8px;
-    border: 2px solid transparent; /* Adds padding */
-    background-clip: content-box; /* Makes border visible */
-  }
-
-  #dropdownDefaultCheckbox::-webkit-scrollbar-thumb:hover {
-    background-color: #C09A5B; /* Darker thumb color on hover */
-  }
-
-  #dropdownDefaultCheckbox::-webkit-scrollbar-corner {
-    background: transparent; /* Corner color */
-  }
 
     
 </style>

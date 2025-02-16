@@ -536,11 +536,14 @@
 
             </div>
 
-            {#if screenWidth < 768 }
-              <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
-              
-              <GuestDetails class="text-black" bind:childrenAges={childrenAges} bind:startDate={startDate} bind:endDate={endDate} bind:children={children} bind:adults={adults}/>
-            {/if}
+            <div class="text-black">
+              <div class="block md:hidden">
+                <hr class="h-px my-8 bg-[#C09A5B] border-0">
+                
+                <GuestDetails dropdownID="phone" bind:childrenAges={childrenAges} bind:startDate={startDate} bind:endDate={endDate} bind:children={children} bind:adults={adults}/>
+              </div>
+            </div>
+
 
             <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
             
@@ -682,7 +685,7 @@
                 
             
                 <!-- Guest Details -->
-                <div class="mb-6">
+                <div class="text-black mb-6 hidden md:block ">
                   <GuestDetails 
                     bind:disabledDates={data.disabledDates} 
                     bind:childrenAges={childrenAges} 
@@ -690,6 +693,7 @@
                     bind:endDate={endDate} 
                     bind:children={children} 
                     bind:adults={adults}
+                    dropdownID={"desktop"}
                   />
                 </div>
             

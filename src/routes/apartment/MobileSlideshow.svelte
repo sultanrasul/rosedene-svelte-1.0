@@ -1,24 +1,26 @@
-<script>
+  <script>
+  // @ts-nocheck
   import { onMount } from 'svelte';
-
+  
   let swiper;
   export let images = 0;
   export let apartmentNumber;
-
+  
   onMount(() => {
     swiper = new Swiper(".default-carousel", {
       loop: true,
+      speed: 1200,
       pagination: {
         el: ".swiper-pagination",
         clickable: true,
       },
       navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
+        nextEl: ".button-next",
+        prevEl: ".button-prev",
       },
     });
   });
-</script>
+  </script>
 
 <div class="w-full relative">
   <div class="swiper default-carousel swiper-container">
@@ -31,45 +33,41 @@
         </div>
       {/each}
     </div>
+
     <!-- Navigation Buttons -->
-    <button id="slider-button-left" class="swiper-button-prev group !p-2 flex justify-center items-center border border-solid border-indigo-600 !w-12 !h-12 transition-all duration-500 rounded-full absolute top-1/2 left-5 transform -translate-y-1/2 hover:bg-indigo-600" data-carousel-prev>
-      <svg class="h-5 w-5 text-indigo-600 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M10.0002 11.9999L6 7.99971L10.0025 3.99719" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
+    <button type="button" class="button-next absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+      <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#C09A5B] group-hover:bg-[#C09A5B]/80 group-focus:ring-4 group-focus:ring-[#C09A5B]">
+        <svg class="w-4 h-4 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+        </svg>
+        <span class="sr-only">Next</span>
+      </span>
     </button>
-    <button id="slider-button-right" class="swiper-button-next group !p-2 flex justify-center items-center border border-solid border-indigo-600 !w-12 !h-12 transition-all duration-500 rounded-full absolute top-1/2 right-5 transform -translate-y-1/2 hover:bg-indigo-600" data-carousel-next>
-      <svg class="h-5 w-5 text-indigo-600 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M5.99984 4.00012L10 8.00029L5.99748 12.0028" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
+
+    <button type="button" class="button-prev absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+      <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#C09A5B] group-hover:bg-[#C09A5B]/80 group-focus:ring-4 group-focus:ring-[#C09A5B]">
+        <svg class="w-4 h-4 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+        </svg>
+        <span class="sr-only">Previous</span>
+      </span>
     </button>
-    
-    <div class="swiper-pagination"></div>
+
+    <div class="swiper-pagination !text-[#C09A5B]"></div>
   </div>
 </div>
 
+
 <style>
-  .swiper-wrapper {
-    width: 100%;
-    height: max-content !important;
-    position: relative;
+  :global(.swiper-pagination-bullet) {
+    background: #C09A5B !important;
+    opacity: 0.5 !important;
+    width: 10px;
+    height: 10px;
   }
-
-  /* Full-width image style */
-  .swiper-slide img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
-
-  /* Navigation buttons on top of the image */
-  .swiper-button-prev, .swiper-button-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10; /* Ensure buttons are on top of the image */
-  }
-
-  .swiper-pagination-bullet {
-    background: #4f46e5;
+  
+  :global(.swiper-pagination-bullet-active) {
+    opacity: 1 !important;
+    background: #C09A5B !important;
   }
 </style>
