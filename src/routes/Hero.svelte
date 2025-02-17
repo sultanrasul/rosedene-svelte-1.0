@@ -14,7 +14,7 @@
 <div class=" flex flex-col items-center pt-40">
 
   <div class="flex flex-wrap ">
-    <div>
+    <div class="p-4 md:p-0">
       <img src="/Logo.svg" class="max-w-lg w-full" alt="">
 
       <!-- <div class="text-[#C09A5B] tracking-[0.5em] font-light text-center w-full max-sm:text-center" style="font-family: 'Merriweather', serif;">
@@ -28,10 +28,13 @@
 
 
       <!-- <MobileDatePicker/> -->
-       <DatePicker/>
-    </div>
-  </div>
+       <div class=" pl-5 pr-5 md:p-0">
+         <DatePicker/>
 
+       </div>
+      </div>
+    </div>
+    
 </div>
 
 

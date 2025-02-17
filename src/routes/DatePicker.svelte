@@ -33,6 +33,7 @@
     let dateFormat = 'dd MMMM';
     let isOpen = false;
     export let childrenAges = [];
+    console.log(childrenAges);
   
   
     const toggleDatePicker = () => (isOpen = !isOpen);
@@ -136,13 +137,7 @@
         childrenAges = childrenAges.slice(0, children);
       }
     }
-    // Update the age of a specific child
-    function updateAge(index, age) {
-      const updatedAges = [...childrenAges];
-      updatedAges[index] = parseInt(age, 10);
-      childrenAges = updatedAges;
-      console.log(childrenAges); // Should show the updated array
-    }
+
   
   </script>
   
@@ -241,22 +236,23 @@
             </div>
           </div>
 
-          {#if children > 0}
-            <div class="pt-4 space-y-3">
-              <h4 class="text-sm font-medium text-gray-700">Children's Ages</h4>
-              {#each Array(children) as _, index}
-                <select
-                  on:change={(e) => updateAge(index, e.target.value)}
-                  class="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#C09A5B] focus:border-[#C09A5B]"
-                >
-                  <option value="-1" selected={childrenAges[index] === -1}>Select Age</option>
-                  {#each Array.from({ length: 18 }, (_, i) => i) as age}
-                    <option value={age}>{age} years old</option>
-                  {/each}
-                </select>
-              {/each}
-            </div>
-          {/if}
+        <!-- In the Guest Input section, update the each loop and select elements: -->
+        {#if children > 0}
+          <div class="pt-4 space-y-3">
+            <h4 class="text-sm font-medium text-gray-700">Children's Ages</h4>
+            {#each childrenAges as age, index}
+              <select
+                bind:value={childrenAges[index]}
+                class="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#C09A5B] focus:border-[#C09A5B]"
+              >
+                <option value={-1}>Select Age</option>
+                {#each Array.from({ length: 18 }, (_, i) => i) as ageValue}
+                  <option value={ageValue}>{ageValue} years old</option>
+                {/each}
+              </select>
+            {/each}
+          </div>
+        {/if}
         </div>
       </div>
       </div>

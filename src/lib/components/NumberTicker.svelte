@@ -19,11 +19,11 @@
   
   <div
     class={cn(
-      "inline-block  text-black dark:text-white tracking-normal dark:text-gray-400",
+      "text-4xl font-bold text-[#C09A5B]",
       className
     )}
     {...$$restProps}
   >
-    {$num.toFixed(0)}
+    £{$num.toFixed(0)}
   </div>
   

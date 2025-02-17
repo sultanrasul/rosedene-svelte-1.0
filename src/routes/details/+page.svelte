@@ -112,35 +112,34 @@
     <div class="absolute inset-0 bg-black opacity-[0.4] z-[-1]" style="background-image: url('background.png'); background-size: cover; background-position: center;"></div>
     <Navbar fixed/>
     
-    
     <!-- Centered Payment Section -->
-    <div class="min-h-screen flex flex-col items-center justify-center">
+    <div class="min-h-screen flex flex-col items-center justify-center pt-20 pb-8 px-4 md:pt-24"> <!-- Added padding and responsive top spacing -->
         {#if !showBookingDetails && !showErrorDetails}
-            <Section sectionClass="min-h-screen flex flex-col items-center">
-                <div class="flex flex-wrap ">
-                <div>
-                    <div class="text-[#C09A5B] tracking-[0.5em] font-light text-center w-full max-sm:text-center" style="font-family: 'Merriweather', serif;">
-                    <h1 class="pt-32 text-4xl md:text-[70px]">ROSEDENE</h1>
-                    <div class="inline-block">
-                        <h2 class="pt-6 text-[25px]">HIGHLAND HOUSE</h2>
-                        <hr class="mt-2 mx-auto border-[#C09A5B] border-t-[2px]" style="width: auto; height: 1px;" />
+            <Section sectionClass="flex flex-col items-center w-full max-w-4xl"> <!-- Added max-width -->
+                <div class="flex flex-wrap w-full justify-center">
+                    <div class="w-full">
+                        <div class="text-[#C09A5B] tracking-[0.5em] font-light text-center" style="font-family: 'Merriweather', serif;">
+                            <h1 class="pt-8 md:pt-12 text-3xl md:text-[70px]">ROSEDENE</h1> <!-- Adjusted top padding -->
+                            <div class="inline-block">
+                                <h2 class="pt-4 md:pt-6 text-xl md:text-[25px]">HIGHLAND HOUSE</h2> <!-- Responsive text size -->
+                                <hr class="mt-2 mx-auto border-[#C09A5B] border-t-[2px]" style="width: auto; height: 1px;" />
+                            </div>
+                            <p class="pt-2 pb-4 text-sm md:text-[17.5px] tracking-[0.2em]">Ness Islands Inverness</p>
+                        </div>
                     </div>
-                    <p class="pt-4 pb-4 text-[17.5px] tracking-[0.2em]">Ness Islands Inverness</p>
-                    </div>
-                </div>
                 </div>
                 
-                <div class="bg-white rounded-lg p-5 mt-10">
-
-                    <h1 class="text-2xl text-gray-700">Booking Information</h1>
-                    <p class="text-sm text-gray-500 pt-1 ">Enter your booking reference number to view your booking details</p>
-
+                <div class="bg-white rounded-lg p-4 md:p-6 mt-6 w-full max-w-md mx-4"> <!-- Added max-width and horizontal margin -->
+                    <h1 class="text-xl md:text-2xl text-gray-700">Booking Information</h1>
+                    <p class="text-xs md:text-sm text-gray-500 pt-1">Enter your booking reference number to view your booking details</p>
 
                     {#if coundNotFind}
-                        <div class="text-sm text-gray-500 text-center flex items-center ml-1 mt-4"><Info color="red" class="mr-1" /> Booking Not Found</div> 
+                        <div class="text-xs md:text-sm text-gray-500 text-center flex items-center justify-center ml-1 mt-3">
+                            <Info color="red" class="mr-1 w-4 h-4" /> Booking Not Found
+                        </div> 
                     {/if}
 
-                    <div class="w-full max-w-sm pt-5">
+                    <div class="w-full pt-4">
                         <div class="relative flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="absolute w-5 h-5 top-2.5 left-2.5 text-slate-600">
                             <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" />
@@ -154,23 +153,20 @@
                         </button> 
                         </div>
                     </div>
-
                 </div>
             </Section>   
         {/if}
 
-        <div class="bg-white rounded-lg shadow-lg text-black relative">
+        <div class="bg-white rounded-lg shadow-lg text-black relative w-full max-w-4xl mx-4 mt-6 mb-8"> <!-- Added constraints -->
+            <!-- ... keep booking details code the same ... -->
             {#if showBookingDetails}
                 <BookingDetails bookingData={bookingData} success={true}/>
             {/if}
 
             {#if showErrorDetails}
                 <BookingDetails bookingData={bookingData} success={false}/>
-            {/if}
-   
+            {/if}        
         </div>
-        
-        
     </div>
 </div>
 
