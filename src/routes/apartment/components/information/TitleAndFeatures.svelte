@@ -1,0 +1,34 @@
+<script>
+
+    import { BedDouble, User } from "lucide-svelte";
+
+    export let apartmentName;
+    export let maxGuests;
+    export let bedrooms;
+    export let bathrooms;
+
+</script>
+<div>
+    <!-- Title -->
+    <h2 class="text-4xl max-[489px]:text-2xl font-bold text-[#C09A5B] mb-4">{apartmentName}</h2>
+    
+    <!-- Features -->
+    <div class="flex flex-wrap gap-2 mb-4 ">
+      <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full text-gray-900">
+        <User size="22px" class="pr-1" /> {maxGuests} Guests
+      </span>
+      
+      {#if bedrooms !== 0}
+      <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full text-gray-900">
+        <BedDouble size="22px" class="pr-1" /> {bedrooms} Bedroom{bedrooms > 1 ? 's' : ''}
+      </span>
+      {/if}
+      <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-gray-200 rounded-full text-gray-900">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pr-1 lucide lucide-toilet">
+          <path d="M7 12h13a1 1 0 0 1 1 1 5 5 0 0 1-5 5h-.598a.5.5 0 0 0-.424.765l1.544 2.47a.5.5 0 0 1-.424.765H5.402a.5.5 0 0 1-.424-.765L7 18" />
+          <path d="M8 18a5 5 0 0 1-5-5V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8" />
+        </svg>
+        {bathrooms} Bathroom{bathrooms > 1 ? 's' : ''}
+      </span>
+    </div>
+  </div>

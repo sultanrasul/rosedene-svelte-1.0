@@ -5,7 +5,7 @@
     import Carousel from 'svelte-carousel';
     import { browser } from '$app/environment';
     import { onMount } from 'svelte';
-    import { currentPageIndex as sharedCurrentPageIndex } from './store';
+    import { currentPageIndex as sharedCurrentPageIndex } from '../../store';
     
     let pagesCount;
     let currentPageIndex;
@@ -68,7 +68,7 @@
                         <!-- Carousel slides -->
                         {#each Array(images).fill().map((_, i) => i) as i}
                             <div class="flex justify-center items-center duration-700 ease-in-out" data-carousel-item>
-                                <img src={`/${apartmentNumber}/${i}.jpg`} class="rounded-xl max-h-[600px] object-contain w-full" alt="..."> <!-- Set w-full for full width -->
+                                <img src={`/${apartmentNumber}/${i}.jpg`} class="overflow-hidden rounded-xl object-contain w-full" alt="..."> <!-- Set w-full for full width -->
                             </div>
                         {/each}
     

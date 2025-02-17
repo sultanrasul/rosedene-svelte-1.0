@@ -9,7 +9,7 @@
   onMount(() => {
     swiper = new Swiper(".default-carousel", {
       loop: true,
-      speed: 1200,
+      speed: 500,
       pagination: {
         el: ".swiper-pagination",
         clickable: true,
@@ -27,8 +27,8 @@
     <div class="swiper-wrapper">
       {#each Array.from({ length: images }, (_, i) => i) as i}
         <div class="swiper-slide" key={i}>
-          <div class="bg-indigo-50 rounded-2xl flex justify-center items-center relative">
-            <img src={`/${apartmentNumber}/${i}.jpg`} alt={`Image ${i + 1}`} class="w-full h-auto object-cover rounded-lg" />
+          <div class=" flex justify-center items-center relative">
+            <img src={`/${apartmentNumber}/${i}.jpg`} alt={`Image ${i + 1}`} class="w-full h-auto object-cover " />
           </div>
         </div>
       {/each}

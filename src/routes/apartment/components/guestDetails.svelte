@@ -6,7 +6,7 @@
   import { Search, UserCircle, CalendarDays, LucideMinus, Plus, Baby, UserRound, UserRoundIcon, Triangle } from 'lucide-svelte';
   import FormInputs from '$lib/components/formInputs.svelte';
   import { onMount } from 'svelte';
-  import { apartments } from '../apartments';
+  import { apartments } from '../../apartments';
   
 
   const today = new Date();
@@ -167,35 +167,47 @@
       childrenAges = childrenAges.slice(0, children);
     }
   }
-  // Update the age of a specific child
-  function updateAge(index, age) {
-    const updatedAges = [...childrenAges];
-    updatedAges[index] = parseInt(age, 10);
-    childrenAges = updatedAges;
-    
-    
-    const newURL = new URL(window.location.href);
-    newURL.searchParams.delete('ages');
-    childrenAges.forEach(age => {
-      newURL.searchParams.append('ages', age);
-    });
 
-    history.pushState(null, '', newURL);
-  }
   $: formattedStartDate = formatDate(startDate);
   $: formattedEndDate = formatDate(endDate);
 
   $: formattedStartDateDMY = formatDateDMY(startDate);
   $: formattedEndDateDMY = formatDateDMY(endDate);
+
+  export function flashInputs() {
+    const elements = document.querySelectorAll('#flashGuestsInput');
+    
+    const flash = (element) => {
+      element.style.transition = 'border-color 0.5s ease';
+      setTimeout(() => {
+        element.style.borderColor = '#C09A5B';
+        setTimeout(() => {
+          element.style.borderColor = '#e5e7eb';
+          setTimeout(() => {
+            element.style.borderColor = '#C09A5B';
+            setTimeout(() => {
+              element.style.borderColor = '#e5e7eb';
+            }, 400);
+          }, 400);
+        }, 400);
+      }, 0);
+    };
+
+    elements.forEach(flash);
+  }
 </script>
 
-<div class="flex justify-center items-center relative z-[10] w-full">
+<div class="flex justify-center items-center relative z-[10] w-full" id="guestDetails">
   <div class="flex flex-col gap-4 w-full max-w-2xl">
     <!-- Date Input -->
     <div class="w-full group">
+      
       <DatePicker bind:disabledDates={disabledDates} theme={"custom-datepicker"} class="w-full" align={"right"} bind:isOpen bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}>
-        <div 
-          class="text-base md:text-[17px] flex items-center justify-center gap-2 cursor-pointer text-gray-700 bg-white border-2 border-gray-300 rounded-lg px-4 py-3 transition-all duration-200 hover:border-[#C09A5B]"
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
+        <button 
+          id="flashGuestsInput"
+          class="guest-control-btn w-full text-base md:text-[17px] flex items-center justify-center gap-2 cursor-pointer text-gray-700 bg-white border-2 border-gray-300 rounded-lg px-4 py-3 transition-all duration-200 hover:border-[#C09A5B]"
           on:click={toggleDatePicker}
         >
           <CalendarDays class="w-5 h-5 md:w-6 md:h-6 text-[#C09A5B] shrink-0" />
@@ -208,13 +220,14 @@
               <span class="text-gray-900">Check In</span> – <span class="text-gray-900">Check Out</span>
             {/if}
           </span>
-        </div>
+        </button>
       </DatePicker>
     </div>
-
+  
     <!-- Guest Input -->
     <div class="w-full relative">
       <button 
+      id="flashGuestsInput"
         data-dropdown-toggle={dropdownID}
         class="w-full flex items-center justify-between cursor-pointer bg-white border-2 border-gray-300 rounded-lg px-4 py-3 transition-all duration-200 hover:border-[#C09A5B]"
       >
@@ -289,7 +302,7 @@
               <h4 class="text-sm font-medium text-gray-700">Children's Ages</h4>
               {#each Array(children) as _, index}
                 <select
-                  on:change={(e) => updateAge(index, e.target.value)}
+                bind:value={childrenAges[index]}
                   class="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#C09A5B] focus:border-[#C09A5B]"
                 >
                   <option value="-1" selected={childrenAges[index] === -1}>Select Age</option>
@@ -314,8 +327,4 @@
       --datepicker-calendar-day-color-disabled: #23344161;
 
     }
-
-
-
-    
 </style>

@@ -1,5 +1,7 @@
 import { fontFamily } from 'tailwindcss/defaultTheme';
 import flowbitePlugin from 'flowbite/plugin'
+const plugin = require('tailwindcss/plugin');
+
 
 
 
@@ -31,6 +33,8 @@ const config = {
 				shine: "shine 4s linear infinite",
 				"border-beam": "border-beam calc(var(--duration)*1s) infinite linear",
 				'pulse-custom': 'pulse 1.5s infinite',
+				flash: 'flashBorder 0.5s ease-in-out 2', // Flash twice
+
 				
 			  },
 			  keyframes: {
@@ -39,6 +43,10 @@ const config = {
 					'50%': { transform: 'scale(1.2)', opacity: '0.5' },
 					'100%': { transform: 'scale(1)', opacity: '1' },
 				  },
+				flashBorder: {
+					'0%, 100%': { borderColor: 'transparent' },
+					'50%': { borderColor: '#C09A5B' }, // Use your accent color
+                },
 				'wave-animation': {
 					'0%': { transform: 'rotate(0deg)' },
 					'10%': { transform: 'rotate(14deg)' },
@@ -117,6 +125,13 @@ const config = {
 		flowbitePlugin,
 		require('flowbite/plugin'),
 		require('preline/plugin.js'),
+		plugin(function({ addUtilities }) {
+            addUtilities({
+                '.flash': {
+                    animation: 'flashBorder 0.5s ease-in-out 2',
+                },
+            });
+        }),
 		// require('@preline/carousel'),
 		// require('@tailwindcss/forms'),
 	]

@@ -54,8 +54,7 @@
     {scrolled ? 'backdrop-blur-lg border-b shadow-xl' : 'backdrop-filter-none'}"> -->
 
 
-<header class="{fixed ? 'fixed' : ''}  pt-2 bg-gray-800/0 left-0 top-0 z-50 w-full -translate-y-4 animate-fade-in opacity-100
-    {scrolled ? 'backdrop-blur-lg border-b shadow-xl' : 'backdrop-filter-none'}">
+<header class="{fixed ? 'fixed' : ''}  bg-gray-800/0 left-0 top-0 z-50 w-full animate-fade-in opacity-100 backdrop-blur-lg border-b shadow-xl">
   <div class="container flex h-20 items-center justify-between">
     <!-- Logo -->
     
