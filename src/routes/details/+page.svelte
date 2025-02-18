@@ -113,48 +113,59 @@
     <Navbar fixed/>
     
     <!-- Centered Payment Section -->
-    <div class="min-h-screen flex flex-col items-center justify-center pt-20 pb-8 px-4 md:pt-24"> <!-- Added padding and responsive top spacing -->
+    <div class="h-screen flex flex-col items-center justify-center pt-60 pb-9 px-4 md:pt-24"> <!-- Added padding and responsive top spacing -->
         {#if !showBookingDetails && !showErrorDetails}
-            <Section sectionClass="flex flex-col items-center w-full max-w-4xl"> <!-- Added max-width -->
-                <div class="flex flex-wrap w-full justify-center">
-                    <div class="w-full">
-                        <div class="text-[#C09A5B] tracking-[0.5em] font-light text-center" style="font-family: 'Merriweather', serif;">
-                            <h1 class="pt-8 md:pt-12 text-3xl md:text-[70px]">ROSEDENE</h1> <!-- Adjusted top padding -->
-                            <div class="inline-block">
-                                <h2 class="pt-4 md:pt-6 text-xl md:text-[25px]">HIGHLAND HOUSE</h2> <!-- Responsive text size -->
-                                <hr class="mt-2 mx-auto border-[#C09A5B] border-t-[2px]" style="width: auto; height: 1px;" />
-                            </div>
-                            <p class="pt-2 pb-4 text-sm md:text-[17.5px] tracking-[0.2em]">Ness Islands Inverness</p>
-                        </div>
-                    </div>
+        <Section sectionClass="flex flex-col items-center w-full max-w-4xl px-4">
+            <img src="/Logo.svg" class="max-w-lg w-full" alt="">
+        
+            <div class="bg-white rounded-xl p-6 md:p-8 mt-6 w-full max-w-lg shadow-lg border border-gray-100">
+                <div class="text-center mb-6">
+                    <h1 class="text-2xl md:text-3xl font-medium text-gray-800 mb-2">
+                        Booking Information
+                    </h1>
+                    <p class="text-sm md:text-base text-gray-500">
+                        Enter your booking reference number to view your booking details
+                    </p>
                 </div>
-                
-                <div class="bg-white rounded-lg p-4 md:p-6 mt-6 w-full max-w-md mx-4"> <!-- Added max-width and horizontal margin -->
-                    <h1 class="text-xl md:text-2xl text-gray-700">Booking Information</h1>
-                    <p class="text-xs md:text-sm text-gray-500 pt-1">Enter your booking reference number to view your booking details</p>
-
-                    {#if coundNotFind}
-                        <div class="text-xs md:text-sm text-gray-500 text-center flex items-center justify-center ml-1 mt-3">
-                            <Info color="red" class="mr-1 w-4 h-4" /> Booking Not Found
-                        </div> 
-                    {/if}
-
-                    <div class="w-full pt-4">
-                        <div class="relative flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="absolute w-5 h-5 top-2.5 left-2.5 text-slate-600">
-                            <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" />
-                        </svg>
-                        
-                        
-                        <input on:focus={() => (coundNotFind = false) } bind:value={bookingReferenceinput} class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md pl-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="Your Booking Reference Number" />
-                        
-                        <button on:click={searchButton} disabled={bookingReferenceinput === ""} class="disabled rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2 " type="button">
+        
+                {#if coundNotFind}
+                    <div class="flex items-center justify-center mb-4 p-3 bg-amber-50 rounded-lg border border-amber-100">
+                        <Info class="w-5 h-5 text-amber-600 mr-2" />
+                        <span class="text-sm text-amber-700">Booking reference not found</span>
+                    </div>
+                {/if}
+        
+                <div class="space-y-4">
+                    <div class="relative flex gap-2">
+                        <div class="flex-1 relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
+                                 class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400">
+                                <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" />
+                            </svg>
+                            
+                            <input 
+                                on:focus={() => (coundNotFind = false)}
+                                bind:value={bookingReferenceinput}
+                                class="w-full pl-10 pr-4 py-3 text-gray-700 placeholder-gray-400 bg-white rounded-lg border-2 border-gray-200 focus:border-[#C09A5B]  focus:outline-none transition-all shadow-sm"
+                                placeholder="Booking Reference Number"
+                            />
+                        </div>
+        
+                        <button 
+                            on:click={searchButton} 
+                            disabled={bookingReferenceinput === ""}
+                            class="px-6 py-3 bg-[#C09A5B] text-white font-medium rounded-lg border-2 border-transparent hover:bg-[#B08A4F] hover:border-[#A07A3F] focus:ring-2 focus:ring-[#C09A5B]/40 focus:border-[#C09A5B] transition-all shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
+                        >
                             Search
-                        </button> 
-                        </div>
+                        </button>
                     </div>
+        
+                    <p class="text-xs text-gray-400 text-center mt-2">
+                        Your booking reference can be found in your confirmation email
+                    </p>
                 </div>
-            </Section>   
+            </div>
+        </Section>  
         {/if}
 
         <div class="bg-white rounded-lg shadow-lg text-black relative w-full max-w-4xl mx-4 mt-6 mb-8"> <!-- Added constraints -->

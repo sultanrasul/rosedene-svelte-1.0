@@ -9,6 +9,7 @@
 	setMode('dark');
 
 	export const prerender = true;
+	export const ssr = false;
 </script>
 
 <ModeWatcher />
