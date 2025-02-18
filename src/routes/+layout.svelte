@@ -8,7 +8,7 @@
 	import { ModeWatcher, setMode } from 'mode-watcher';
 	setMode('dark');
 
-	export const prerender = true;
+	// export const prerender = true;
 	export const ssr = false;
 </script>
 
