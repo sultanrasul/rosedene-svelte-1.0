@@ -64,7 +64,7 @@
     </div>
 
     <!-- Right Section - Buttons -->
-    <div class="flex items-center gap-2">
+    <div class="flex flex-row max-[420px]:flex-col items-end gap-2 max-[420px]:gap-1">
       <button 
           on:click={scrollToGuestDetails}
           class="py-2 px-2 text-xs font-medium text-gray-300 bg-gray-700 rounded-md hover:bg-gray-600 transition-colors dark:text-gray-700 dark:bg-gray-100 dark:hover:bg-gray-200 whitespace-nowrap"

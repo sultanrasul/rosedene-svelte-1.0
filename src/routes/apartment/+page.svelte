@@ -398,6 +398,7 @@
 
 </script>
     
+
   <!-- Main Menu -->
     
     <div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen " id="Home">
@@ -510,7 +511,6 @@
       </div>
     </div>
 
-  
 
   <!-- Full Gallary -->
   {#if isModalOpen}
