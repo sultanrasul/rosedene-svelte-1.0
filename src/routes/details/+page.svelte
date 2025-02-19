@@ -116,7 +116,7 @@
     <div class="h-screen flex flex-col items-center justify-center pt-60 pb-9 px-4 md:pt-24"> <!-- Added padding and responsive top spacing -->
         {#if !showBookingDetails && !showErrorDetails}
         <Section sectionClass="flex flex-col items-center w-full max-w-4xl px-4">
-            <img src="/Logo.svg" class="max-w-lg w-full" alt="">
+            <!-- <img src="/Logo.svg" class="max-w-lg w-full" alt=""> -->
         
             <div class="bg-white rounded-xl p-6 md:p-8 mt-6 w-full max-w-lg shadow-lg border border-gray-100">
                 <div class="text-center mb-6">

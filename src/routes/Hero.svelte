@@ -7,6 +7,9 @@
     import Contact from './Contact.svelte';
     import Calendar from './Calendar.svelte';
 
+    import BlurFade from '$lib/components/BlurFade.svelte';
+
+
 
 
 </script>
@@ -15,7 +18,9 @@
 
   <div class="flex flex-wrap ">
     <div class="p-4 md:p-0">
-      <img src="/Logo.svg" class="max-w-lg w-full" alt="">
+      <BlurFade>
+        <img src="/Logo.svg" class="max-w-lg w-full" alt="">
+      </BlurFade>
 
       <!-- <div class="text-[#C09A5B] tracking-[0.5em] font-light text-center w-full max-sm:text-center" style="font-family: 'Merriweather', serif;">
         <h1 class="pt-32 text-4xl md:text-[70px]">ROSEDENE</h1>
@@ -29,8 +34,9 @@
 
       <!-- <MobileDatePicker/> -->
        <div class=" pl-5 pr-5 md:p-0">
-         <DatePicker/>
-
+        <BlurFade delay={0.3}>
+          <DatePicker/>
+        </BlurFade>
        </div>
       </div>
     </div>

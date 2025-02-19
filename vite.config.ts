@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	server: {
 		// host: '192.168.178.79', 
-		host: '192.168.178.66', 
+		// host: '192.168.178.66', 
 	  },
 	plugins: [sveltekit()],
 	optimizeDeps: {
