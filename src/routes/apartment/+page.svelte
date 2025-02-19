@@ -36,6 +36,7 @@
     import Slide from "flowbite-svelte/Slide.svelte";
     import TitleAndFeatures from "./components/information/TitleAndFeatures.svelte";
     import Overview from "./components/information/Overview.svelte";
+    import BlurFade from "@/components/BlurFade.svelte";
   
   
   
@@ -405,36 +406,30 @@
 
   </script>
   
-  {#if loading}
-    <div class="loading-screen">
-      <!-- Add your loading spinner or animation here -->
-      <p>Loading apartment details...</p>
-    </div>
-  {:else if error}
-    <div class="error-message">
-      <h2>Error occurred</h2>
-      <p>{error}</p>
-      <p>Please try again later or contact support.</p>
-    </div>
-  {/if}
 
         <!-- Main Menu -->
       
         <div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen " id="Home">
-          <Navbar/>
+          <Navbar/> 
           <div class="{!loading && !error ? '' : 'hidden'} relative z-10 pt-0 mt-0 pb-20 sm:pl-0 sm:pr-0 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40">
+
             
-    
-            <!-- Breadcrumb -->
-              <div class="pt-8 hidden md:block">
-                <Breadcrumb apartmentName={apartmentDetails.name}/>
-              </div>
+            
+          <!-- Breadcrumb -->
+          <div class="pt-8 hidden md:block">
+            <BlurFade>
+              <Breadcrumb apartmentName={apartmentDetails.name}/>
+            </BlurFade>
+          </div>
     
           
     
     
-            {#if screenWidth < 768 }
-              <MobileSlideshow images={apartmentDetails.amountOfPictures} apartmentNumber = {number}/>
+          {#if screenWidth < 768 }
+              <BlurFade >
+
+                <MobileSlideshow images={apartmentDetails.amountOfPictures} apartmentNumber = {number}/>
+              </BlurFade>
               <PriceFooter 
                 bind:displayPrice={displayPrice}
                 bind:initialPrice={initialPrice}
@@ -447,89 +442,121 @@
               />
               
               
-              {:else}
+            {:else}
+            <BlurFade delay={0.2}>
               <ImageDisplay apartmentNumber={number} openModel={openModel}/>
+            </BlurFade>
+            
+          {/if}
               
-              {/if}
               
               
-              
-              <!-- info -->
-              <!-- Information Section -->
+            <!-- info -->
+            <!-- Information Section -->
+            <BlurFade delay={0.4}>
               <div class="flex flex-wrap mt-0 justify-between">
                 <div class="bg-white rounded-b-lg md:rounded-lg shadow-lg p-6 pt-6  w-full md:w-[66.4%]">
-    
-                <div class="p-0 block md:hidden">
-                  <Breadcrumb apartmentName={number}/>
-                </div>
-    
-                <!-- Property Title & Key Points -->
-                  <TitleAndFeatures
-                  apartmentName={apartmentDetails.name}
-                  maxGuests={apartmentDetails.maxGuests}
-                  bedrooms={apartmentDetails.bedrooms}
-                  bathrooms={apartmentDetails.bathrooms}
-                  />
-                
-                <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
-                
-                <!-- Overview Section -->
-                <Overview parsedDescription={parsedDescription}/>
-    
-                <div class="text-black">
-                  <div class="block md:hidden" >
-                    <hr class="h-px my-8 bg-[#C09A5B] border-0">
-                      <GuestDetails 
-                        bind:disabledDates={disabledDates} 
-                        bind:childrenAges={childrenAges} 
-                        bind:startDate={startDate} 
-                        bind:endDate={endDate} 
-                        bind:children={children} 
-                        bind:adults={adults}
-                        dropdownID={"mobile"}
-                      />              
+      
+                  <div class="p-0 block md:hidden">
+                    <Breadcrumb apartmentName={number}/>
                   </div>
+      
+                  <!-- Property Title & Key Points -->
+                    <TitleAndFeatures
+                    apartmentName={apartmentDetails.name}
+                    maxGuests={apartmentDetails.maxGuests}
+                    bedrooms={apartmentDetails.bedrooms}
+                    bathrooms={apartmentDetails.bathrooms}
+                    />
+                  
+                  <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
+                  
+                  <!-- Overview Section -->
+                  <Overview parsedDescription={parsedDescription}/>
+      
+                  <div class="text-black">
+                    <div class="block md:hidden" >
+                      <hr class="h-px my-8 bg-[#C09A5B] border-0">
+                        <GuestDetails 
+                          bind:disabledDates={disabledDates} 
+                          bind:childrenAges={childrenAges} 
+                          bind:startDate={startDate} 
+                          bind:endDate={endDate} 
+                          bind:children={children} 
+                          bind:adults={adults}
+                          dropdownID={"mobile"}
+                        />              
+                    </div>
+                  </div>
+      
+      
+                  <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
+                  
+                  
+                  <!-- Amenities Section -->
+                  <Amenities/>
+      
+                  <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
+      
+      
+                  <!-- House Rules -->
+                    <HouseRules/>
+      
+                  
+                  
                 </div>
-    
-    
-                <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
-                
-                
-                <!-- Amenities Section -->
-                <Amenities/>
-    
-                <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
-    
-    
-                <!-- House Rules -->
-                  <HouseRules/>
-    
-                
-                
-              </div>
-    
+  
               
               <!-- Price Card -->
-              {#if screenWidth >= 768 }
-                <PriceCard
-                  bind:displayPrice={displayPrice}
-                  bind:initialPrice={initialPrice}
-                  bind:nights={nights}
-                  bind:childrenAges={childrenAges}
-                  bind:startDate={startDate}
-                  bind:endDate={endDate}
-                  bind:children={children}
-                  bind:adults={adults}
-                  bind:disabledDates={disabledDates}
-                  bookNow={bookNow}
-                />
-              {/if}
+                {#if screenWidth >= 768 }
+                  
+                  <PriceCard
+                    bind:displayPrice={displayPrice}
+                    bind:initialPrice={initialPrice}
+                    bind:nights={nights}
+                    bind:childrenAges={childrenAges}
+                    bind:startDate={startDate}
+                    bind:endDate={endDate}
+                    bind:children={children}
+                    bind:adults={adults}
+                    bind:disabledDates={disabledDates}
+                    bookNow={bookNow}
+                  />
+                {/if}
     
-            </div>
-    
+              </div>
+            </BlurFade>
+
           </div>
+
+          {#if loading}
+          <div class=" fixed inset-0 flex items-center justify-center ">
+            <div class="relative flex items-center justify-center">
+              <div class="relative h-40 w-40">
+                <!-- Home Icon with pulse animation -->
+                <Home size="100px" class="text-[#BF9A5B] absolute inset-0 m-auto animate-pulse" />
+                
+                <!-- Enhanced Spinner Elements -->
+                
+                
+                <div class="absolute inset-0 rounded-full animate-rotate-glow-reverse">
+                  <div class="w-full h-full border-[6px] 
+                              border-b-[#d4b583] border-l-[#d4b583] border-t-[#d4b583]
+                              rounded-full [border-end-cap:round]">
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+          {:else if error}
+            <div class="error-message">
+              <h2>Error occurred</h2>
+              <p>{error}</p>
+              <p>Please try again later or contact support.</p>
+            </div>
+          {/if}
         </div>
-      
+        
       
       
       
@@ -552,23 +579,29 @@
     
   
     <style>
-  
-      ::-webkit-scrollbar {
-        width: 8px; /* Width of the scrollbar */
+    
+      @keyframes rotate-glow-reverse {
+        from { transform: rotate(-360deg); }
+        to { transform: rotate(0deg); }
       }
     
-      ::-webkit-scrollbar-thumb {
-        background-color: #C09A5B; /* Color of the scrollbar thumb */
-        border-radius: 4px; /* Rounded corners */
+      .animate-rotate-glow-reverse {
+        animation: rotate-glow-reverse 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
       }
-      
-      ::-webkit-scrollbar-track {
-        background-color: #c0995b7c; /* Color of the scrollbar track */
-        border-radius: 4px; /* Rounded corners */
+    
+
+    
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.04); opacity: 0.9; }
       }
-  
-  
-      
+    
+      .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+      }
+    
+      /* Keep original scrollbar styles */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-thumb { background-color: #C09A5B; border-radius: 4px; }
+      ::-webkit-scrollbar-track { background-color: #c0995b7c; border-radius: 4px; }
     </style>
-    
-    

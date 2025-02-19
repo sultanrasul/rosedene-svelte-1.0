@@ -133,6 +133,7 @@
                 <!-- Show loading cards while fetching data -->
                 {#each [1, 2, 3] as _}
                     <div>
+
                         <CardLoading />
                     </div>
                 {/each}

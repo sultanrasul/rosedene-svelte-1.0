@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
     // @ts-ignore
     import { BedDouble, Wifi, UtensilsCrossed, Ruler, TvMinimal, User } from "lucide-svelte";
     import { apartments } from '../apartments.js';

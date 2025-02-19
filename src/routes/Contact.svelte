@@ -70,7 +70,7 @@
 </script>
       <!-- #28FFF8 -->
 
-<Section name="contact" >
+<Section sectionClass="py-0" name="contact" >
     <Contact>
         <BlurFade>
             <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white"> Contact Me </h2>
@@ -136,4 +136,3 @@
           <div class="ps-4 text-sm font-normal">You have sent too many messages <br>Please Try again Later</div>
     </Toast>
 </div>
-

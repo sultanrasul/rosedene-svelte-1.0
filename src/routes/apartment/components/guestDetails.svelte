@@ -300,17 +300,19 @@
           {#if children > 0}
             <div class="pt-4 space-y-3">
               <h4 class="text-sm font-medium text-gray-700">Children's Ages</h4>
-              {#each Array(children) as _, index}
-                <select
-                bind:value={childrenAges[index]}
-                  class="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#C09A5B] focus:border-[#C09A5B]"
-                >
-                  <option value="-1" selected={childrenAges[index] === -1}>Select Age</option>
-                  {#each Array.from({ length: 18 }, (_, i) => i) as age}
-                    <option value={age}>{age} years old</option>
-                  {/each}
-                </select>
-              {/each}
+              {#key children}
+                {#each Array(children) as _, index}
+                  <select
+                  bind:value={childrenAges[index]}
+                    class="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#C09A5B] focus:border-[#C09A5B]"
+                  >
+                  <option value={-1} disabled>Select Age</option>
+                    {#each Array.from({ length: 18 }, (_, i) => i) as age}
+                      <option value={age}>{age} years old</option>
+                    {/each}
+                  </select>
+                {/each}
+              {/key}
             </div>
           {/if}
         </div>
