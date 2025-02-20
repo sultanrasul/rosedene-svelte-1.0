@@ -1,1 +1,1 @@
-export const BACKEND_URL = "http://192.168.178.66:5000";
+export const BACKEND_URL = "https://rosedeneapi.funkypanda.dev";

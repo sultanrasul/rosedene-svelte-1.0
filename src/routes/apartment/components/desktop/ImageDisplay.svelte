@@ -20,7 +20,7 @@
               <div class="group relative inline-block cursor-pointer" on:click={openModel}>
 
                 <img
-                  class="rounded-lg transition-all h-full object-cover"
+                  class="rounded-lg transition-all h-auto object-cover"
                   src="{apartmentNumber}/0.jpg"
                   alt=""
                 />

@@ -124,7 +124,7 @@ const config = {
 		require('@tailwindcss/typography'),
 		flowbitePlugin,
 		require('flowbite/plugin'),
-		require('preline/plugin.js'),
+		require('preline/plugin'),
 		plugin(function({ addUtilities }) {
             addUtilities({
                 '.flash': {
