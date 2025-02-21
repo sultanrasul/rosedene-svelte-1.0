@@ -25,6 +25,7 @@
     let apartmentDetails;
 
 
+
     async function getBookingDetails(bookingReference){
         try  {
             const response = await fetch(`${BACKEND_URL}/get_booking`, {
@@ -113,7 +114,7 @@
     <Navbar fixed/>
     
     <!-- Centered Payment Section -->
-    <div class="h-screen flex flex-col items-center justify-center pt-60 pb-9 px-4 md:pt-24"> <!-- Added padding and responsive top spacing -->
+    <div class="min-h-screen flex flex-col items-center justify-center  pb-9 px-4 pt-20"> <!-- Added padding and responsive top spacing -->
         {#if !showBookingDetails && !showErrorDetails}
         <Section sectionClass="flex flex-col items-center w-full max-w-4xl px-4">
             <!-- <img src="/Logo.svg" class="max-w-lg w-full" alt=""> -->
@@ -168,14 +169,13 @@
         </Section>  
         {/if}
 
-        <div class="bg-white rounded-lg shadow-lg text-black relative w-full max-w-4xl mx-4 mt-6 mb-8"> <!-- Added constraints -->
-            <!-- ... keep booking details code the same ... -->
+        <div class=" rounded-lg shadow-lg relative max-w-[80%] "> <!-- Added constraints -->
             {#if showBookingDetails}
-                <BookingDetails bookingData={bookingData} success={true}/>
+                <BookingDetails bookingData={bookingData} apartmentDetails={apartmentDetails} success={true}/>
             {/if}
 
             {#if showErrorDetails}
-                <BookingDetails bookingData={bookingData} success={false}/>
+                <BookingDetails bookingData={bookingData} apartmentDetails={apartmentDetails} success={false}/>
             {/if}        
         </div>
     </div>
