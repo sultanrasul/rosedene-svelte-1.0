@@ -36,7 +36,7 @@
     import Slide from "flowbite-svelte/Slide.svelte";
     import TitleAndFeatures from "./components/information/TitleAndFeatures.svelte";
     import Overview from "./components/information/Overview.svelte";
-    import BlurFade from "@/components/BlurFade.svelte";
+    // import BlurFade from "@/components/BlurFade.svelte";
   
   
   
@@ -417,19 +417,19 @@
             
           <!-- Breadcrumb -->
           <div class="pt-8 hidden md:block">
-            <BlurFade>
+            <!-- <BlurFade> -->
               <Breadcrumb apartmentName={apartmentDetails.name}/>
-            </BlurFade>
+            <!-- </BlurFade> -->
           </div>
     
           
     
     
           {#if screenWidth < 768 }
-              <BlurFade >
+              <!-- <BlurFade > -->
 
                 <MobileSlideshow images={apartmentDetails.amountOfPictures} apartmentNumber = {number}/>
-              </BlurFade>
+              <!-- </BlurFade> -->
               <PriceFooter 
                 bind:displayPrice={displayPrice}
                 bind:initialPrice={initialPrice}
@@ -443,9 +443,9 @@
               
               
             {:else}
-            <BlurFade delay={0.2}>
+            <!-- <BlurFade delay={0.2}> -->
               <ImageDisplay apartmentNumber={number} openModel={openModel}/>
-            </BlurFade>
+            <!-- </BlurFade> -->
             
           {/if}
               
@@ -453,7 +453,7 @@
               
             <!-- info -->
             <!-- Information Section -->
-            <BlurFade delay={0.4}>
+            <!-- <BlurFade delay={0.4}> -->
               <div class="flex flex-wrap mt-0 justify-between">
                 <div class="bg-white rounded-b-lg md:rounded-lg shadow-lg p-6 pt-6  w-full md:w-[66.4%]">
       
@@ -525,7 +525,7 @@
                 {/if}
     
               </div>
-            </BlurFade>
+            <!-- </BlurFade> -->
 
           </div>
 

@@ -54,7 +54,7 @@
 </script>
 
 
-<footer class="fixed bottom-0 left-0 z-20 w-full p-3 rounded-t-3xl bg-gray-800 border-t border-t-4 border-l-4 border-r-4 border-[#C09A5B] shadow-2xl flex flex-col gap-2 dark:bg-white transition-all duration-200">
+<footer class="fixed bottom-0 left-0 z-20 w-full pl-3 pr-3 pb-3 rounded-t-3xl bg-gray-800 border-t border-t-4 border-l-4 border-r-4 border-[#C09A5B] shadow-2xl flex flex-col gap-2 dark:bg-white transition-all duration-200">
     
     <!-- Error Messages Container -->
     <div class="w-full space-y-2">
