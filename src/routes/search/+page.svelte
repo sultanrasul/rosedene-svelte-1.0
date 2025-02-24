@@ -1,6 +1,6 @@
 <script lang="ts">
     // @ts-nocheck
-    import { Home, Building, House } from "lucide-svelte";
+    import { Home, Building, House, InfoIcon } from "lucide-svelte";
     import { onMount } from 'svelte';
     import Navbar from '../Navbar.svelte';
     import Card from './Card.svelte';
@@ -11,6 +11,7 @@
 
     let apartments;
     let startDate, endDate, nights, loading = true;
+    let error = null;
     let formattedStartDateDMY, formattedEndDateDMY;
     let adults, children, guests, childrenAges = [];
 
@@ -51,8 +52,9 @@
                 apartments = await response.json();
                 console.log(apartments); // Check if data is correct
                 loading = false;
-            } catch (error) {
-                console.error('Failed to fetch apartments:', error);
+            } catch (err) {
+                console.error('Failed to fetch apartments:', err);
+                error = err.message
                 loading = false;
             }
         } else {
@@ -127,7 +129,6 @@
 
     <div class="relative z-10 pb-20 pl-5 pr-5">
         <DatePicker isSearch startDate={startDate} endDate={endDate} children={children} adults={adults} childrenAges={childrenAges}/>
-        
         <div class="flex flex-wrap justify-center gap-4 pt-10">
             {#if loading}
                 <!-- Show loading cards while fetching data -->
@@ -137,7 +138,15 @@
                         <CardLoading />
                     </div>
                 {/each}
-            {:else}
+
+            {:else if error}
+                <!-- If no apartments are available -->
+                <div class="flex flex-col items-center text-center max-w-xl mx-auto">
+                    <InfoIcon size="100px" class="text-[#ff4747]"/>
+                    <h1 class="text-2xl font-bold mb-4 mt-4">An Error has occurred</h1>
+                    <p class="text-base-content/70 mb-8">{error}</p>                            
+                </div>
+            {:else if !error && !loading}
                 <!-- Once loading is false, show apartments -->
                 {#if apartments && apartments["properties"]["available"].length > 0}
                     {#each apartments["properties"]["available"] as apartment}

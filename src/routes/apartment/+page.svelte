@@ -75,6 +75,7 @@
     let isModalOpen = false;
     let isOpen;
     let loading = true;
+    let bookNowLoading = false;
     let error = null;
     const formatDate = (dateString) =>
         dateString && format(new Date(dateString), dateFormat) || '';
@@ -240,6 +241,7 @@
     async function bookNow (){
       console.log("testing")
       try {
+        bookNowLoading = true;
         const response = await fetch(`${BACKEND_URL}/create-checkout-session`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -279,10 +281,14 @@
             callToastError("This apartment is not available for these dates! Please Refresh the page or select other dates.")
             startDate = null;
             endDate = null;
-          }
+          } else {
+            callToastError(`An error has occured, ${error.message}`)
+            }
   
   
           // Optionally, handle specific errors (e.g., show alert to the user)
+      } finally {
+        bookNowLoading = false;
       }
   
     }
@@ -520,6 +526,7 @@
                     bind:children={children}
                     bind:adults={adults}
                     bind:disabledDates={disabledDates}
+                    bind:bookNowLoading={bookNowLoading}
                     bookNow={bookNow}
                   />
                 {/if}
@@ -549,11 +556,12 @@
             </div>
           </div>
           {:else if error}
-            <div class="error-message">
-              <h2>Error occurred</h2>
-              <p>{error}</p>
-              <p>Please try again later or contact support.</p>
-            </div>
+          <div class="flex flex-col items-center text-center justify-center max-w-xl mx-auto pt-20">
+            <Info size="100px" class="text-[#ff4747]"/>
+            <h1 class="text-2xl font-bold mb-4 mt-4">Error occurred</h1>
+            <p class="text-base-content/70 mb-2">{error}</p>                            
+            <p class="text-base-content/70">Please try again later or contact support.</p>                            
+          </div>
           {/if}
         </div>
         
