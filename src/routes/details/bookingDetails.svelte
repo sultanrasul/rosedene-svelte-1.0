@@ -33,9 +33,9 @@
 
 </script>
 
-<div class="flex flex-col lg:flex-row items-stretch ">
+<div class="flex flex-col lg:flex-row items-stretch gap-2">
     <!-- Image Section - Wider on large screens -->
-    <div class="h-full flex-1 lg:flex-[3_1_0%] shadow-xl rounded-xl overflow-hidden lg:h-auto relative">
+    <div class="h-full flex-1 md:flex-[3_1_0%] shadow-xl rounded-xl overflow-hidden md:h-auto relative">
         <!-- svelte-ignore a11y_img_redundant_alt -->
          <Slideshow apartmentNumber={apartmentNumber} images={images}/>
         <!-- <img src="/{apartmentNumber}/0.jpg" alt="Apartment photo" class="w-full h-full object-cover lg:h-full lg:min-h-full"/> -->
@@ -44,9 +44,10 @@
     <!-- Card Section - Slightly narrower -->
     <div class="flex-1 lg:flex-[2_1_0%] bg-white rounded-xl shadow-xl pt-12 px-6 pb-6 relative lg:h-auto">
         <!-- Status Icon (slightly larger on desktop) -->
+
         <div class="z-[10] absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <div class={`flex items-center justify-center p-2 rounded-full shadow-2xl ${success ? 'bg-green-100' : 'bg-red-100'} animate-[pulse_1.5s_ease-out]`}>
-                <div class={`w-16 h-16 lg:w-20 lg:h-20 flex items-center justify-center rounded-full ${success ? 'bg-green-500' : 'bg-red-500'} shadow-lg`}>
+                <div class={`w-16 h-16 flex items-center justify-center rounded-full ${success ? 'bg-green-500' : 'bg-red-500'} shadow-lg`}>
                     {#if success}
                         <Check class="w-8 h-8 lg:w-10 lg:h-10" color="white" />
                     {:else}

@@ -3,6 +3,7 @@
     import { Banknote, Info } from "lucide-svelte";
     import GuestDetails from "../guestDetails.svelte";
     import NumberTicker from "@/components/NumberTicker.svelte";
+    import { Spinner } from "flowbite-svelte";
 
 
     export let displayPrice;
@@ -15,6 +16,7 @@
     export let adults;
     export let bookNow;
     export let disabledDates;
+    export let bookNowLoading;
 </script>
 
 <div class="w-[28%] text-black self-start sticky top-6 hidden md:block">
@@ -70,16 +72,27 @@
       </div>
   
       <!-- Book Now Button -->
-      <button 
-        class={`w-full py-3 rounded-xl font-semibold transition-all duration-200
-          ${(childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate) ?
-            'bg-[#C09A5B]/30 text-gray-400 cursor-not-allowed' :
-            'bg-[#C09A5B] hover:bg-[#B08A4F] text-white shadow-md hover:shadow-lg'
-          }`}
-        disabled={(childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate)}
-        on:click={bookNow}
-      >
-        Book Now
-      </button>
+      {#if bookNowLoading}
+        <button
+          class={`w-full py-3 rounded-xl font-semibold transition-all duration-200 bg-[#C09A5B]/30 text-gray-400 cursor-not-allowed`}
+          disabled
+          on:click={bookNow}
+        >
+          <Spinner class="me-3" size="8" color="white" />
+          Book Now 
+        </button>
+        {:else}
+          <button 
+            class={`w-full py-3 rounded-xl font-semibold transition-all duration-200
+              ${(childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate) ?
+                'bg-[#C09A5B]/30 text-gray-400 cursor-not-allowed' :
+                'bg-[#C09A5B] hover:bg-[#B08A4F] text-white shadow-md hover:shadow-lg'
+              }`}
+            disabled={(childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate)}
+            on:click={bookNow}
+          >
+            Book Now 
+          </button>
+      {/if}
     </div>
   </div>

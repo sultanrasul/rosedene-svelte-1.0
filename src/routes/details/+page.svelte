@@ -114,7 +114,7 @@
     <Navbar fixed/>
     
     <!-- Centered Payment Section -->
-    <div class="min-h-screen flex flex-col items-center justify-center  pb-9 px-4 pt-20"> <!-- Added padding and responsive top spacing -->
+    <div class="min-h-screen flex flex-col items-center justify-center  pb-9  pt-20"> <!-- Added padding and responsive top spacing -->
         {#if !showBookingDetails && !showErrorDetails}
         <Section sectionClass="flex flex-col items-center w-full max-w-4xl px-4">
             <!-- <img src="/Logo.svg" class="max-w-lg w-full" alt=""> -->
@@ -169,7 +169,7 @@
         </Section>  
         {/if}
 
-        <div class=" rounded-lg shadow-lg relative max-w-[80%] "> <!-- Added constraints -->
+        <div class="rounded-lg shadow-lg relative max-w-[100%] sm:max-w-[95%] md:max-w-[90%] lg:max-w-[80%] p-0"> <!-- Added constraints -->
             {#if showBookingDetails}
                 <BookingDetails bookingData={bookingData} apartmentDetails={apartmentDetails} success={true}/>
             {/if}
