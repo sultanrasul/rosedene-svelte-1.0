@@ -444,6 +444,7 @@
                 bind:children={children}
                 bind:startDate={startDate}
                 bind:endDate={endDate}
+                bind:bookNowLoading={bookNowLoading}
                 bookNow={bookNow}
               />
               

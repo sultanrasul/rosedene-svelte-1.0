@@ -73,11 +73,13 @@
 <Section sectionClass="py-0" name="contact" >
     <Contact>
         <BlurFade>
-            <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white"> Contact Me </h2>
+            <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-[#C09A5B]"> Contact Us </h2>
         </BlurFade>
 
         <BlurFade delay={0.25/2}>
-            <p class="mb-8 lg:mb-16 font-light text-center text-gray-500 dark:text-gray-400 sm:text-xl">If you have any ideas or spot any mistakes on my website, please feel free to send me a message!</p>
+            <p class="mb-8 lg:mb-16 font-light text-center text-white sm:text-xl">
+                Have questions about your upcoming stay or need personalized assistance? We’re just a message away to make your experience unforgettable.
+            </p>
         </BlurFade>
 
         <form class="space-y-8" on:submit={sendMessage} id="Contact">
@@ -103,9 +105,20 @@
 
             <BlurFade delay={1.25/2}>
                 {#if disableButton}
-                <Button type="submit" disabled>Send message</Button>
+                <button 
+                    class={`w-[200px] py-3 rounded-xl font-semibold transition-all duration-200 bg-[#C09A5B]/30 text-gray-400 cursor-not-allowed`}
+                    disabled
+                    type="submit"
+                >
+                    Send Message
+                </button>
                 {:else}
-                <Button type="submit">Send message</Button>
+                <button 
+                    class={`w-[200px] py-3 rounded-xl font-semibold transition-all duration-200 bg-[#C09A5B] hover:bg-[#B08A4F] text-white shadow-md hover:shadow-lg`}
+                    type="submit"
+                >
+                    Send Message
+                </button>
                 {/if}
             </BlurFade>
         </form>

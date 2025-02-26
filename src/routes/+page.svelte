@@ -36,9 +36,9 @@
         style="background-image: url('background.png'); background-size: cover; background-position: center;">
     </div>
 
-    <div class="relative z-10 h-screen flex flex-col items-center">
+    <div class="relative z-10 min-h-screen flex flex-col items-center">
         <Navbar fixed/>
-
+        
         <Hero/>
     </div>
 </div>
