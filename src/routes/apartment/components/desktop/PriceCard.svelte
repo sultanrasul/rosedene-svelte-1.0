@@ -74,12 +74,22 @@
       <!-- Book Now Button -->
       {#if bookNowLoading}
         <button
-          class={`w-full py-3 rounded-xl font-semibold transition-all duration-200 bg-[#C09A5B]/30 text-gray-400 cursor-not-allowed`}
+          class={`w-full py-2 rounded-xl font-semibold transition-all duration-200 bg-[#C09A5B]/30 text-gray-400 cursor-not-allowed flex items-center justify-center gap-2`}
           disabled
           on:click={bookNow}
         >
-          <Spinner class="me-3" size="8" color="white" />
-          Book Now 
+        <svg width="50" height="12" fill="#C09A5B" viewBox="0 9 24 6" style="display: inline-block; overflow: visible" xmlns="http://www.w3.org/2000/svg">
+          <style>
+            .spinner_b2T7{animation:spinner_xe7Q .8s linear infinite}
+            .spinner_YRVV{animation-delay:-.65s}
+            .spinner_c9oY{animation-delay:-.5s}
+            @keyframes spinner_xe7Q{93.75%,100%{r:3px}46.875%{r:.2px}}
+          </style>
+          <circle class="spinner_b2T7" cx="4" cy="12" r="3"/>
+          <circle class="spinner_b2T7 spinner_YRVV" cx="12" cy="12" r="3"/>
+          <circle class="spinner_b2T7 spinner_c9oY" cx="20" cy="12" r="3"/>
+        </svg>
+          Loading
         </button>
         {:else}
           <button 

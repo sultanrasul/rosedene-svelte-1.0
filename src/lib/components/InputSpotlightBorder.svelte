@@ -46,15 +46,17 @@
       type="text"
       name="name"
       bind:value
-      class="h-12 w-full cursor-default rounded-md border border-gray-800 bg-primary-100 dark:bg-gray-700 p-3.5 text-gray-100 transition-colors duration-500 placeholder:select-none placeholder:text-gray-400 focus:border-[#28FFF8] focus:outline-none"
+      class="h-12 w-full cursor-default rounded-md border border-gray-400 bg-white p-3.5 text-black transition-colors duration-500 placeholder:select-none placeholder:text-gray-400 focus:border-[#C09A5B] focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
+      style="outline: none !important; box-shadow: none !important;"
     />
-
+  
+    <!-- Disabled input (unchanged) -->
     <input
       type="text"
       disabled
-      style="border: 2px solid #28FFF8; opacity:{opacity}; mask-image: {$shineBorder};"
+      style="border: 3px solid #C09A5B; opacity:{opacity}; mask-image: {$shineBorder}; outline: none !important; box-shadow: none !important;"
       aria-hidden="true"
-      class="pointer-events-none absolute left-0 top-0 z-10 h-12 w-full cursor-default rounded-md border border-[#28FFF8] dark:border-[#28FFF8] bg-transparent p-3.5 opacity-0 transition-opacity duration-500 placeholder:select-none"
+      class="pointer-events-none absolute left-0 top-0 z-10 h-12 w-full cursor-default rounded-md border border-[#C09A5B] bg-transparent p-3.5 opacity-0 transition-opacity duration-500 placeholder:select-none"
     />
   </div>
 {:else}
@@ -68,14 +70,16 @@
       on:mouseleave={handleMouseLeave}
       placeholder={placeholder}
       bind:value
-      class="h-24 w-full cursor-default rounded-md border border-gray-800 bg-primary-100 dark:bg-gray-700 p-3.5 text-gray-100 transition-colors duration-500 placeholder:select-none placeholder:text-gray-400 focus:border-[#28FFF8] focus:outline-none resize-none"
+      style="outline: none !important; box-shadow: none !important;"
+      class="h-24 w-full cursor-default rounded-md border border-gray-800 bg-white p-3.5 text-black transition-colors duration-500 placeholder:select-none placeholder:text-gray-400 focus:border-[#C09A5B] focus:outline-none resize-none"
     ></textarea>
 
     <textarea
       disabled
-      style="border: 2px solid #28FFF8; opacity:{opacity}; mask-image: {$shineBorder};"
+      style="border: 3px solid #C09A5B; opacity:{opacity}; mask-image: {$shineBorder};"
       aria-hidden="true"
-      class="pointer-events-none absolute left-0 top-0 z-10 h-24 w-full cursor-default rounded-md border border-[#28FFF8] bg-transparent p-3.5 opacity-0 transition-opacity duration-500 placeholder:select-none resize-none"
+      class="pointer-events-none absolute left-0 top-0 z-10 h-24 w-full cursor-default rounded-md border border-[#C09A5B
+      ] bg-transparent p-3.5 opacity-0 transition-opacity duration-500 placeholder:select-none resize-none"
     ></textarea>
   </div>
 {/if}

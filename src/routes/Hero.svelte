@@ -14,7 +14,7 @@
 
 </script>
   
-<div class=" flex flex-col items-center pt-40">
+<div class=" flex flex-col items-center justify-center pt-20">
 
   <div class="flex flex-wrap ">
     <div class="p-4 md:p-0">

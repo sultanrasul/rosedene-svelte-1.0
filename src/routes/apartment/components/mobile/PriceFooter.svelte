@@ -12,6 +12,7 @@
     export let startDate;
     export let endDate;
     export let bookNow;
+    export let bookNowLoading;
 
       // Scroll and flash logic
     function scrollToGuestDetails() {
@@ -93,17 +94,37 @@
             >
                 Booking Details
             </button>
-            <button 
-                class={`w-full py-2 px-2 rounded-xl font-semibold transition-all duration-200
-                    ${childrenAges.filter(age => age !== -1).length != children || !(startDate && endDate) ?
-                        'bg-[#C09A5B]/30 text-gray-400 cursor-not-allowed' :
-                        'bg-[#C09A5B] hover:bg-[#B08A4F] text-white shadow-md hover:shadow-lg'
-                    }`}
-                disabled={(childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate)}
-                on:click={bookNow}
-            >
-                Book Now
-            </button>
+            {#if bookNowLoading}
+                <button 
+                    class='w-full p-[6px] rounded-xl font-semibold transition-all duration-200 bg-[#C09A5B]/30 text-gray-400 cursor-not-allowed'
+                    disabled={(childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate)}
+                    on:click={bookNow}
+                >
+                <svg width="80" height="12" fill="#C09A5B" viewBox="0 9 24 6" style="display: inline-block; overflow: visible" xmlns="http://www.w3.org/2000/svg">
+                    <style>
+                      .spinner_b2T7{animation:spinner_xe7Q .8s linear infinite}
+                      .spinner_YRVV{animation-delay:-.65s}
+                      .spinner_c9oY{animation-delay:-.5s}
+                      @keyframes spinner_xe7Q{93.75%,100%{r:3px}46.875%{r:.2px}}
+                    </style>
+                    <circle class="spinner_b2T7" cx="4" cy="12" r="3"/>
+                    <circle class="spinner_b2T7 spinner_YRVV" cx="12" cy="12" r="3"/>
+                    <circle class="spinner_b2T7 spinner_c9oY" cx="20" cy="12" r="3"/>
+                  </svg> 
+                </button>
+                {:else}
+                    <button 
+                        class={`w-full p-[6px] rounded-xl font-semibold transition-all duration-200
+                            ${childrenAges.filter(age => age !== -1).length != children || !(startDate && endDate) ?
+                                'bg-[#C09A5B]/30 text-gray-400 cursor-not-allowed' :
+                                'bg-[#C09A5B] hover:bg-[#B08A4F] text-white shadow-md hover:shadow-lg'
+                            }`}
+                        disabled={(childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate)}
+                        on:click={bookNow}
+                    >
+                        Book Now
+                    </button>
+            {/if}
         </div>
     </div>
 </footer>
