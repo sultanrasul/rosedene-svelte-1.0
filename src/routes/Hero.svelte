@@ -18,9 +18,9 @@
 
   <div class="flex flex-wrap ">
     <div class="p-4 md:p-0">
-      <!-- <BlurFade> -->
+      <BlurFade>
         <img src="/Logo.svg" class="max-w-lg w-full" alt="">
-      <!-- </BlurFade> -->
+      </BlurFade>
 
       <!-- <div class="text-[#C09A5B] tracking-[0.5em] font-light text-center w-full max-sm:text-center" style="font-family: 'Merriweather', serif;">
         <h1 class="pt-32 text-4xl md:text-[70px]">ROSEDENE</h1>
@@ -32,11 +32,10 @@
       </div> -->
 
 
-      <!-- <MobileDatePicker/> -->
        <div class=" pl-5 pr-5 md:p-0">
-        <!-- <BlurFade delay={0.3}> -->
+        <BlurFade delay={0.3}>
           <DatePicker/>
-        <!-- </BlurFade> -->
+        </BlurFade>
        </div>
        
       </div>

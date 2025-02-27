@@ -7,6 +7,9 @@ export default defineConfig({
 		// host: '192.168.178.63', 
 	  },
 	plugins: [sveltekit()],
+	ssr: {
+		noExternal: ['svelte-sonner']
+	},
 	optimizeDeps: {
 		include: ['lodash.get', 'lodash.isequal', 'lodash.clonedeep','flowbite', 'preline']
 	}
