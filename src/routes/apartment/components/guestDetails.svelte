@@ -326,7 +326,7 @@
   :global(.datepicker[data-picker-theme="custom-datepicker"]) {
       --datepicker-container-border: 2px solid #C09A5B;
       --datepicker-calendar-range-selected-background: #C09A5B;
-      --datepicker-calendar-day-color-disabled: #23344161;
+      --datepicker-calendar-day-color-disabled: rgba(255, 0, 43, 0.5);
 
     }
 </style>

@@ -5,7 +5,8 @@
     import { format, startOfHour } from 'date-fns';
     import { Search, UserCircle, CalendarDays, LucideMinus, Plus, Baby, UserRound, UserRoundIcon } from 'lucide-svelte';
     import FormInputs from '../lib/components/formInputs.svelte';
-      import { onMount } from 'svelte';
+    import { onMount } from 'svelte';
+    import { toast } from 'svelte-sonner';
   
     const today = new Date();
     const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
@@ -70,30 +71,7 @@
     }
     
     function callToast(){
-      const toastMarkup2 = `
-      <!-- Toast -->
-        <div class="bg-white max-w-xs border border-[2px] text-sm  rounded-lg border-[#C09A5B] text-[#C09A5B]" role="alert" tabindex="-1" aria-labelledby="hs-toast-soft-color-red-label">
-          <div id="hs-toast-soft-color-red-label" class="flex p-3">
-            
-            <p class="text-sm inline-flex">         
-              <svg class="lucide lucide-calendar-days inline-flex" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
-              <span class="mt-[4px] ml-1">Minimum 2 Night Stay</span>
-            </p>
-  
-  
-            </div>
-          </div>
-        </div>
-      <!-- End Toast -->
-      `;
-  
-      Toastify({
-        text: toastMarkup2,
-        className: "border-neutral-700 text-neutral-400 max-w-[210px] hs-toastify-on:opacity-100 opacity-0 fixed -top-[150px] right-[20px] z-[90] transition-all duration-300 w-[320px] text-sm border rounded-xl shadow-lg [&>.toast-close]:hidden ",
-        duration: 3000,
-        close: false,
-        escapeMarkup: false
-      }).showToast();
+      toast.warning('Minimum 2 Night Stay');
     }  
   
     $: {
@@ -293,7 +271,11 @@
   :global(.datepicker[data-picker-theme="custom-datepicker"]) {
         --datepicker-container-border: 2px solid #C09A5B;
         --datepicker-calendar-range-selected-background: #C09A5B;
-        --datepicker-calendar-day-color-disabled: #23344161;
+
+        --datepicker-calendar-day-color-disabled: rgba(255, 0, 43, 0.5);
   
+  
+        
       }
+      
   </style>

@@ -1,6 +1,7 @@
 
 <script lang="ts">
     // @ts-nocheck
+
     import { currentPageIndex } from "./store";
     import { parse } from "date-fns";
     import { DateRangePicker } from "bits-ui";
@@ -11,6 +12,7 @@
     import { format, isWithinInterval } from 'date-fns';
     import { innerWidth, innerHeight } from 'svelte/reactivity/window';
     import { page } from '$app/stores'; // Import the page store to access URL data
+    import { Toaster, toast } from 'svelte-sonner'
 
 
     import { apartments } from '../apartments';
@@ -36,7 +38,7 @@
     import Slide from "flowbite-svelte/Slide.svelte";
     import TitleAndFeatures from "./components/information/TitleAndFeatures.svelte";
     import Overview from "./components/information/Overview.svelte";
-    // import BlurFade from "@/components/BlurFade.svelte";
+    import BlurFade from "@/components/BlurFade.svelte";
   
   
   
@@ -297,57 +299,13 @@
   
   
     function callToastMinNights(){
-      const toastMarkup2 = `
-      <!-- Toast -->
-        <div class="bg-white max-w-xs border border-[2px] text-sm  rounded-lg border-[#C09A5B] text-[#C09A5B]" role="alert" tabindex="-1" aria-labelledby="hs-toast-soft-color-red-label">
-          <div id="hs-toast-soft-color-red-label" class="flex p-3">
-            
-            <p class="text-sm inline-flex">         
-              <svg class="lucide lucide-calendar-days inline-flex" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
-              <span class="mt-[4px] ml-1">Minimum 2 Night Stay</span>
-            </p>
-  
-  
-            </div>
-          </div>
-        </div>
-      <!-- End Toast -->
-      `;
-  
-      Toastify({
-        text: toastMarkup2,
-        className: "border-neutral-700 text-neutral-400 max-w-[210px] hs-toastify-on:opacity-100 opacity-0 fixed -top-[150px] right-[20px] z-[90] transition-all duration-300 w-[320px] text-sm border rounded-xl shadow-lg [&>.toast-close]:hidden ",
-        duration: 3000,
-        close: false,
-        escapeMarkup: false
-      }).showToast();
+      toast.warning('Minimum 2 Night Stay');
+      
     }  
     
     function callToastError(message){
-      const toastMarkup2 = `
-      <!-- Toast -->
-        <div class="bg-white max-w-xs border border-[4px] text-sm  rounded-lg border-red-700 text-[#C09A5B]" role="alert" tabindex="-1" aria-labelledby="hs-toast-soft-color-red-label">
-          <div id="hs-toast-soft-color-red-label" class="flex p-3">
-            
-            <p class="text-sm inline-flex">         
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-flex lucide lucide-circle-x"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
-              <span class="mt-[4px] ml-1">${message}</span>
-            </p>
-  
-  
-            </div>
-          </div>
-        </div>
-      <!-- End Toast -->
-      `;
-  
-      Toastify({
-        text: toastMarkup2,
-        className: "border-neutral-700 text-neutral-400  hs-toastify-on:opacity-100 opacity-0 fixed -top-[150px] right-[20px] z-[90] transition-all duration-300 w-[320px] text-sm border rounded-xl shadow-lg [&>.toast-close]:hidden ",
-        duration: 3000,
-        close: false,
-        escapeMarkup: false
-      }).showToast();
+      toast.error(message);
+
     }  
   
     $: formattedStartDate = formatDate(startDate);
@@ -414,7 +372,6 @@
   
 
         <!-- Main Menu -->
-      
         <div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen " id="Home">
           <Navbar/> 
           <div class="{!loading && !error ? '' : 'hidden'} relative z-10 pt-0 mt-0 pb-20 sm:pl-0 sm:pr-0 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40">
@@ -423,19 +380,19 @@
             
           <!-- Breadcrumb -->
           <div class="pt-8 hidden md:block">
-            <!-- <BlurFade> -->
+            <BlurFade>
               <Breadcrumb apartmentName={apartmentDetails.name}/>
-            <!-- </BlurFade> -->
+            </BlurFade>
           </div>
     
           
     
     
           {#if screenWidth < 768 }
-              <!-- <BlurFade > -->
+              <BlurFade >
 
                 <MobileSlideshow images={apartmentDetails.amountOfPictures} apartmentNumber = {number}/>
-              <!-- </BlurFade> -->
+              </BlurFade>
               <PriceFooter 
                 bind:displayPrice={displayPrice}
                 bind:initialPrice={initialPrice}
@@ -450,9 +407,9 @@
               
               
             {:else}
-            <!-- <BlurFade delay={0.2}> -->
+            <BlurFade delay={0.2}>
               <ImageDisplay apartmentNumber={number} openModel={openModel}/>
-            <!-- </BlurFade> -->
+            </BlurFade>
             
           {/if}
               
@@ -460,7 +417,7 @@
               
             <!-- info -->
             <!-- Information Section -->
-            <!-- <BlurFade delay={0.4}> -->
+            <BlurFade delay={0.4}>
               <div class="flex flex-wrap mt-0 justify-between">
                 <div class="bg-white rounded-b-lg md:rounded-lg shadow-lg p-6 pt-6  w-full md:w-[66.4%]">
       
@@ -533,7 +490,7 @@
                 {/if}
     
               </div>
-            <!-- </BlurFade> -->
+            </BlurFade>
 
           </div>
 
