@@ -143,7 +143,40 @@
 
         if (!response.ok) throw new Error('Calendar check failed');
         const data = await response.json();
-        return data.filter(item => item.IsBlocked === "true").map(item => item["@Date"]);
+
+        // Sort dates chronologically
+        const sortedData = data.sort((a, b) => a["@Date"].localeCompare(b["@Date"]));
+
+        // Extract original blocked dates
+        const originalBlocked = sortedData
+          .filter(item => item.IsBlocked === "true")
+          .map(item => item["@Date"]);
+
+        // Track sequences of available dates
+        let currentSequence = [];
+        const availableSequences = [];
+        
+        for (const item of sortedData) {
+          if (item.IsBlocked === "false") {
+            currentSequence.push(item["@Date"]);
+          } else {
+            if (currentSequence.length) {
+              availableSequences.push(currentSequence);
+              currentSequence = [];
+            }
+          }
+        }
+        if (currentSequence.length) availableSequences.push(currentSequence);
+
+        // Block short sequences (length < 3)
+        const additionalBlocked = availableSequences
+          .filter(seq => seq.length < 3)
+          .flat();
+
+        // Combine and dedupe
+        const finalBlocked = [...new Set([...originalBlocked, ...additionalBlocked])];
+        
+        return finalBlocked;
       } catch (err) {
         console.error('Failed to fetch blocked apartments:', err);
         throw err;

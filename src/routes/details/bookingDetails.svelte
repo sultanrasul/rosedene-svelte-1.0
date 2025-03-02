@@ -69,7 +69,7 @@
         </div>
 
         <!-- Details Card -->
-        <div class="bg-gray-50 rounded-xl p-6 lg:p-8 space-y-8 border border-gray-200">
+        <div class=" rounded-xl p-6 lg:p-8 space-y-8 border border-gray-200">
             <!-- Amount Section -->
             <div class="flex justify-between items-center pb-4 border-b border-gray-200">
                 <span class="text-gray-600 font-medium lg:text-lg">Total Amount</span>
@@ -153,25 +153,25 @@
                 <!-- Guest Details -->
                 {#if bookingData?.GuestDetailsInfo}
                 <div class="grid grid-cols-3 gap-4 pt-4 border-t border-gray-200">
-                    <div class="space-y-1">
+                    <div class="space-y-1 text-left">
                         <span class="text-gray-600 block">Adults</span>
                         <span class="text-gray-800 font-medium">{bookingData.GuestDetailsInfo.NumberOfAdults}</span>
                     </div>
-                    <div class="space-y-1">
+                    <div class="space-y-1 text-center">
                         <span class="text-gray-600 block">Children</span>
                         <span class="text-gray-800 font-medium">{bookingData.GuestDetailsInfo.NumberOfChildren}</span>
                     </div>
-                    <div class="space-y-1">
+                    <div class="space-y-1 text-right">
                         <span class="text-gray-600 block">Nights</span>
                         <span class="text-gray-800 font-medium">{nights}</span>
                     </div>
                 </div>
                 <div>
                     {#if parseInt(bookingData.GuestDetailsInfo?.NumberOfChildren, 10) > 0}
-                        <span class="text-gray-600 block">Children Ages</span>
-                        <span class="text-gray-800 font-medium">
-                            {bookingData.GuestDetailsInfo.ChildrenAges.Age}
-                        </span>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Children Ages</span>
+                        <span class="text-gray-800 break-all">{bookingData.GuestDetailsInfo.ChildrenAges.Age}</span>
+                    </div>
                     {/if}
                 </div>
                 {/if}
