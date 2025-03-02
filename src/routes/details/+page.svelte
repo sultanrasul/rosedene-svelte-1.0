@@ -10,6 +10,7 @@
     import { ColumnSolid } from "flowbite-svelte-icons";
     import { apartments } from '../apartments';
     import { BACKEND_URL } from "../conf";
+  import { toast } from "svelte-sonner";
 
 
     let bookingData = {};
