@@ -10,7 +10,8 @@
     import { ColumnSolid } from "flowbite-svelte-icons";
     import { apartments } from '../apartments';
     import { BACKEND_URL } from "../conf";
-  import { toast } from "svelte-sonner";
+    import { toast } from "svelte-sonner";
+    import BlurFade from "@/components/BlurFade.svelte";
 
 
     let bookingData = {};
@@ -61,8 +62,9 @@
         } catch (error) {
             console.error(error)
 
-            if(error.statusText === 'NOT FOUND'){
-                coundNotFind = true;
+            if(error.status === 420){
+                toast.error("Booking reference not found");
+                // coundNotFind = true;
                 bookingReferenceinput = "";
 
             }
@@ -109,77 +111,117 @@
     });
 </script>
 
-<div class="relative">
-    <!-- Background overlay -->
+
+
+
+<div class="relative min-h-screen">
+    <!-- Full-screen background overlay -->
     <div class="absolute inset-0 bg-black opacity-[0.4] z-[-1]" style="background-image: url('background.png'); background-size: cover; background-position: center;"></div>
-    <Navbar fixed/>
+
+    <Navbar fixed />
     
-    <!-- Centered Payment Section -->
-    <div class="min-h-screen flex flex-col items-center justify-center  pb-9  pt-20"> <!-- Added padding and responsive top spacing -->
+    <!-- Main content container -->
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {#if !showBookingDetails && !showErrorDetails}
-        <Section sectionClass="flex flex-col items-center w-full max-w-4xl px-4">
-            <!-- <img src="/Logo.svg" class="max-w-lg w-full" alt=""> -->
-        
-            <div class="bg-white rounded-xl p-6 md:p-8 mt-6 w-full max-w-lg shadow-lg border border-gray-100">
-                <div class="text-center mb-6">
-                    <h1 class="text-2xl md:text-3xl font-medium text-gray-800 mb-2">
-                        Booking Information
-                    </h1>
-                    <p class="text-sm md:text-base text-gray-500">
-                        Enter your booking reference number to view your booking details
-                    </p>
-                </div>
-        
-                {#if coundNotFind}
-                    <div class="flex items-center justify-center mb-4 p-3 bg-amber-50 rounded-lg border border-amber-100">
-                        <Info class="w-5 h-5 text-amber-600 mr-2" />
-                        <span class="text-sm text-amber-700">Booking reference not found</span>
+        <BlurFade delay={0.1/4}>
+            <div class="flex flex-col items-center justify-center min-h-[70vh]">
+                <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-8 w-full max-w-2xl shadow-xl border border-gray-200 transition-all duration-300 hover:shadow-2xl">
+                    <div class="text-center space-y-4 mb-8">
+                        <BlurFade delay={0.2/2}>
+                            <h1 class="text-3xl font-bold text-[#C09A5B] mb-2">
+                                Retrieve Your Booking Details
+                            </h1>
+                        </BlurFade>
+                        <BlurFade delay={0.3/2}>
+                            <p class="text-lg text-gray-600">
+                                Enter your unique booking reference below to access your stay information
+                            </p>
+                        </BlurFade>
                     </div>
-                {/if}
-        
-                <div class="space-y-4">
-                    <div class="relative flex gap-2">
-                        <div class="flex-1 relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
-                                 class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400">
-                                <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" />
-                            </svg>
-                            
-                            <input 
+
+                    <div class="space-y-6">
+                        <div class="flex flex-col sm:flex-row gap-4 items-stretch">
+                            <BlurFade delay={0.4/2} class="flex-1 relative">
+                                <input 
+                                type="number"
                                 on:focus={() => (coundNotFind = false)}
                                 bind:value={bookingReferenceinput}
-                                class="w-full pl-10 pr-4 py-3 text-gray-700 placeholder-gray-400 bg-white rounded-lg border-2 border-gray-200 focus:border-[#C09A5B]  focus:outline-none transition-all shadow-sm"
+                                class="w-full pl-10 pr-4 py-3 text-gray-700 placeholder-gray-400 bg-white rounded-lg border-2 border-gray-200 focus:border-[#C09A5B] focus:outline-none transition-all shadow-sm"
                                 placeholder="Booking Reference Number"
+                                inputmode="numeric"
+                                pattern="[0-9]*"
+                                maxlength="10"
+                                on:input={e => {
+                                    const value = e.target.value;
+                                    const maxInt32 = 2147483647;
+                                    
+                                    // Validate numeric input
+                                    const numericValue = value.replace(/\D/g, '');
+                                    if (numericValue !== value) {
+                                        e.target.value = numericValue;
+                                        bookingReferenceinput = numericValue;
+                                    }
+                                    
+                                    // Validate against Int32 limits
+                                    if (numericValue > maxInt32) {
+                                        e.target.value = numericValue.slice(0, 9);
+                                        bookingReferenceinput = e.target.value;
+                                    }
+                                }}
                             />
+                            </BlurFade>
+
+                            <BlurFade delay={0.5/2} class="w-full sm:w-auto">
+                                <button 
+                                    on:click={searchButton} 
+                                    disabled={bookingReferenceinput === ""}
+                                    class="w-full px-8 py-3 text-lg bg-[#C09A5B] hover:bg-[#B08A4F] text-white font-semibold rounded-xl 
+                                           transition-all transform hover:scale-105 active:scale-95 
+                                           shadow-lg disabled:opacity-70 disabled:hover:scale-100 disabled:hover:bg-[#C09A5B]"
+                                >
+                                    Find My Booking
+                                </button>
+                            </BlurFade>
                         </div>
-        
-                        <button 
-                            on:click={searchButton} 
-                            disabled={bookingReferenceinput === ""}
-                            class="px-6 py-3 bg-[#C09A5B] text-white font-medium rounded-lg border-2 border-transparent hover:bg-[#B08A4F] hover:border-[#A07A3F] focus:ring-2 focus:ring-[#C09A5B]/40 focus:border-[#C09A5B] transition-all shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
-                        >
-                            Search
-                        </button>
+
+                        <BlurFade delay={0.6/2}>
+                            <p class="text-sm text-gray-500 text-center">
+                                Check your confirmation email for the reference number
+                            </p>
+                        </BlurFade>
                     </div>
-        
-                    <p class="text-xs text-gray-400 text-center mt-2">
-                        Your booking reference can be found in your confirmation email
-                    </p>
                 </div>
             </div>
-        </Section>  
+        </BlurFade>
         {/if}
 
-        <div class="rounded-lg shadow-lg relative max-w-[100%] sm:max-w-[95%] md:max-w-[90%] lg:max-w-[80%] p-0"> <!-- Added constraints -->
-            {#if showBookingDetails}
-                <BookingDetails bookingData={bookingData} apartmentDetails={apartmentDetails} success={true}/>
-            {/if}
-
-            {#if showErrorDetails}
-                <BookingDetails bookingData={bookingData} apartmentDetails={apartmentDetails} success={false}/>
-            {/if}        
-        </div>
+        <!-- Expanded details section -->
+        {#if showBookingDetails || showErrorDetails}
+        <BlurFade delay={0.2/2}>
+            <div class="mx-auto w-full max-w-7xl backdrop-blur-sm rounded-2xl shadow-2xl  ">
+                <BookingDetails 
+                    bookingData={bookingData} 
+                    apartmentDetails={apartmentDetails} 
+                    success={showBookingDetails}
+                />
+            </div>
+        </BlurFade>
+        {/if}
     </div>
 </div>
 
 
+<style>
+
+    /* Hide number input arrows for Chrome, Safari, Edge */
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Hide number input arrows for Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>

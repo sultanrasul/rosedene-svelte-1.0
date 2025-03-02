@@ -9,17 +9,25 @@
 	import { Toaster} from 'svelte-sonner'
 
 
-
 	import { ModeWatcher, setMode } from 'mode-watcher';
+
+	let lastPath = '';
+
 	setMode('dark');
-	afterNavigate(() => {
+	afterNavigate(({ to }) => {
+		// Only execute if the route actually changed
+		if (to?.url.pathname !== lastPath) {
+		window.scrollTo(0, 0);
+		initFlowbite();
 		window.HSStaticMethods.autoInit();
+		lastPath = to?.url.pathname || '';
+		}
 	});
 
 	export const prerender = true;
-	export const ssr = false;
 
 	import { initFlowbite } from 'flowbite'
+  import Navbar from './Navbar.svelte';
 
 	onMount(() => {
 
@@ -31,9 +39,9 @@
 </script>
 
 <Toaster position="top-right" richColors={true}/>
-
 <ModeWatcher />
-<!-- <div class="relative mx-auto min-h-screen max-w-2xl bg-background px-6 py-12 font-sans antialiased sm:py-24"> -->
+<!-- <div class="rrlative mx-auto min-h-screen max-w-2xl bg-background px-6 py-12 font-sans antialiased sm:py-24"> -->
 <div class="">
+
 	<slot></slot>
 </div>

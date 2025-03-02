@@ -16,22 +16,18 @@
         window.scrollTo({ top: y, behavior: 'smooth' });
     }
 
-  function navbarButtonClicked(id: string){
-    if (mainPage) {
-      scrollToElementWithOffset(id);
-    } else {
-      window.location.href=`/?scrollToo=${id}`;
-    }
-
+  function navbarButtonClicked(id: string, event){
+    event.preventDefault();
+    window.location.href = window.location.origin + id;
   }
 
 
 
   //  List Items
   let items = [
-    { icon: House, name: "Home" },
-    { icon: LayoutGridIcon, name: "Projects" },
-    { icon: Contact, name: "Contact" },
+    { icon: House, link: "/", name: "Home" },
+    { icon: Contact, link: "/details", name: "Manage Booking" },
+    { icon: LayoutGridIcon, link: "/contact",name: "Contact" },
     // {
     //   icon: TrashIcon,
     //   name: "Remove account",
@@ -79,7 +75,7 @@
   };
 </script>
 <!-- ml-auto flex h-full items-center space-x-6 -->
-<nav class={cn("max-w-[120px] w-full ml-auto space-y-2 z-50")}>
+<nav class={cn("max-w-[120px] w-full ml-auto space-y-2 z-[100]")}>
   <Motion
     whileTap={{
       scale: 0.97,
@@ -124,7 +120,7 @@
               <!-- svelte-ignore a11y_click_events_have_key_events -->
               <!-- svelte-ignore a11y_missing_attribute -->
               <a
-              on:click={() => navbarButtonClicked(item.name)}
+              on:click={() => navbarButtonClicked(item.link,event)}
 
                 class={cn(
                   "group flex items-center gap-2 rounded-md border border-transparent text-neutral-400 hover:text-neutral-300 focus-visible:text-neutral-300 focus-visible:border-neutral-800 focus-visible:outline-none",
@@ -155,8 +151,6 @@
             let:motion
           >
             <!-- svelte-ignore a11y_no_static_element_interactions -->
-            <li use:motion>
-              <DarkMode btnClass="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-1.5" size="lg"/>
 
           </Motion>
       </ul>
