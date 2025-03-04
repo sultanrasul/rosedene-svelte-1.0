@@ -4,7 +4,7 @@
     import { onMount } from 'svelte';
     import Navbar from '../Navbar.svelte';
     import Card from './Card.svelte';
-    import DatePicker from '../DatePicker.svelte';
+    import DatePicker from '../components/DatePicker.svelte';
     import CardLoading from "./cardLoading.svelte";
     import { PricingBodyHead } from "flowbite-svelte-blocks";
     import { BACKEND_URL } from '../conf';
