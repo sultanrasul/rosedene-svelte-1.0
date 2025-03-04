@@ -171,8 +171,8 @@
             </div>
         </div>
 
-
-        <div class="flex flex-wrap gap-4 mb-12 items-center justify-between bg-white/10 backdrop-blur-sm p-5 rounded-2xl border border-white/20">
+        <!-- Sorting buttons -->
+        <!-- <div class="flex flex-wrap gap-4 mb-12 items-center justify-between bg-white/10 backdrop-blur-sm p-5 rounded-2xl border border-white/20">
             <div class="flex items-center gap-4">
                 <span class="text-[#D1E0EB] font-medium">Sort by:</span>
                 <div class="flex gap-2">
@@ -216,7 +216,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
                 </svg>
             </button>
-        </div>
+        </div> -->
 
 
         <!-- Review Cards -->
