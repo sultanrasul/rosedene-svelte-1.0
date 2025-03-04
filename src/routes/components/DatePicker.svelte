@@ -4,7 +4,7 @@
     import { DatePicker } from '@svelte-plugins/datepicker';
     import { format, startOfHour } from 'date-fns';
     import { Search, UserCircle, CalendarDays, LucideMinus, Plus, Baby, UserRound, UserRoundIcon } from 'lucide-svelte';
-    import FormInputs from '../lib/components/formInputs.svelte';
+    import FormInputs from '../../lib/components/formInputs.svelte';
     import { onMount } from 'svelte';
     import { toast } from 'svelte-sonner';
   
@@ -120,7 +120,7 @@
   </script>
   
   <div class="flex items-center justify-center py-6 relative z-[10]">
-    <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4 px-5 py-4 md:px-6 bg-white rounded-2xl md:rounded-full shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100 relative w-full md:w-auto">
+    <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4 px-5 py-3 md:px-6 bg-white rounded-2xl md:rounded-full shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100 relative w-full md:w-auto">
       <!-- Date Input -->
       <div class="w-full md:w-auto group">
         <DatePicker theme={"custom-datepicker"} class="w-full" bind:isOpen bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}>

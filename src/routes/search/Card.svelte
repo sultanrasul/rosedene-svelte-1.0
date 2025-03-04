@@ -23,7 +23,7 @@
     <!-- Content Section -->
     <div class="flex-1 flex flex-col p-6">
         <!-- Apartment Name -->
-        <h3 class="mb-3 text-2xl font-bold text-[#C09A5B] ">{apartmentName}</h3>
+        <h3 class="mb-3  font-bold text-[#C09A5B] ">{apartmentName}</h3>
 
         <!-- Apartment Description -->
         <p class="mb-4 text-gray-300 dark:text-gray-600 text-base leading-relaxed">

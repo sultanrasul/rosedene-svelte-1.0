@@ -4,8 +4,12 @@
     import { onMount } from 'svelte';
     import { scale } from 'svelte/transition';
     import { Button } from 'flowbite-svelte';
-    import Hero from './Hero.svelte'
+    import Hero from './components/Hero.svelte'
     import Navbar from './Navbar.svelte'
+    import Drawer from './Drawer.svelte';
+    import DatePicker from './components/DatePicker.svelte';
+    import Apartments from './components/apartments/Main.svelte';
+  import Location from './components/Location.svelte';
 
 
     
@@ -31,14 +35,30 @@
 
 <!-- Main Menu -->
 <div class="relative" id="Home">
+    <!-- Background Container -->
+    <div class="absolute inset-x-0 top-0 h-[100vh] -z-10 opacity-[0.4]"
+        style="background-image: url('background.png'); 
+               background-size: cover; 
+               background-position: center;
+               background-repeat: no-repeat;
+               "
+               >
+                       <!-- Gradient Transition Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-t from-[#496275]/80 via-[#496275]/80 to-transparent"
+        style="top: 70%"></div>
 
-    <div class="absolute inset-0 bg-black opacity-[0.4] z-[-1]"
-        style="background-image: url('background.png'); background-size: cover; background-position: center;">
+   <!-- Edge Blur Effect -->
+   <!-- <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-red-800 via-red-800 to-transparent backdrop-blur-[2px]"></div> -->
     </div>
 
-    <div class="relative z-10 min-h-screen flex flex-col items-center">
+
+    
+    <!-- Content Container -->
+    <div class="relative ">
         <Navbar fixed/>
-        
         <Hero/>
+        <Apartments/>
+        <Location/>
+        
     </div>
 </div>

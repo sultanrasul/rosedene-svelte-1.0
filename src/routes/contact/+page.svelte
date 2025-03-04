@@ -1,6 +1,6 @@
 <script>
-    import Contact from "../Contact.svelte";
-    import Hero from "../Hero.svelte";
+    import Contact from "../components/Contact.svelte";
+    import Hero from "../components/Hero.svelte";
 
 
     import Navbar from "../Navbar.svelte";

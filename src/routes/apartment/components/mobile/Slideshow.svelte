@@ -19,10 +19,7 @@
   let swiper;
   export let images = 0;
   export let apartmentNumber;
-  let navigationData = {
-    nextEl: ".button-next",
-    prevEl: ".button-prev",
-  }
+
 
   </script>
 

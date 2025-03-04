@@ -34,7 +34,7 @@
     
     import { onMount, tick } from 'svelte';
     import Navbar from '../Navbar.svelte';
-    import DatePicker from '../DatePicker.svelte';
+    import DatePicker from '../components/DatePicker.svelte';
     import Slide from "flowbite-svelte/Slide.svelte";
     import TitleAndFeatures from "./components/information/TitleAndFeatures.svelte";
     import Overview from "./components/information/Overview.svelte";

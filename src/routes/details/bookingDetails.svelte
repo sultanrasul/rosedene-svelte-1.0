@@ -69,7 +69,7 @@
         </div>
 
         <!-- Details Card -->
-        <div class=" rounded-xl p-6 lg:p-8 space-y-8 border border-gray-200">
+        <div class="bg-gray-50 rounded-xl p-6 lg:p-8 space-y-8 border border-gray-200">
             <!-- Amount Section -->
             <div class="flex justify-between items-center pb-4 border-b border-gray-200">
                 <span class="text-gray-600 font-medium lg:text-lg">Total Amount</span>
