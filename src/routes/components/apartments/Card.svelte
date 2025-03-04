@@ -37,10 +37,14 @@
             <h3 class="text-2xl font-bold leading-tight">{apartmentName}</h3>
             <div class="flex items-center gap-2 text-sm">
                 <User size="20" class="text-[#C09A5B]" />
-                <span>6 Guests</span>
+                <span>{apartmentDetails.maxGuests} Guests</span>
                 <span class="text-[#C09A5B]">•</span>
                 <BedDouble size="20" class="text-[#C09A5B]" />
-                <span>2 bedrooms</span>
+                {#if apartmentDetails.bedrooms == 0}
+                    <span>Studio</span>
+                    {:else}
+                        <span>{apartmentDetails.bedrooms} Bedroom{apartmentDetails.bedrooms > 1 ? "s": ""}</span>
+                {/if}
             </div>
         </div>
 

@@ -119,10 +119,10 @@
   
   </script>
   
-  <div class="flex items-center justify-center py-6 relative z-[10]">
+  <div class="flex items-center justify-center py-6 relative z-50">
     <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4 px-5 py-3 md:px-6 bg-white rounded-2xl md:rounded-full shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100 relative w-full md:w-auto">
       <!-- Date Input -->
-      <div class="w-full md:w-auto group">
+      <div class=" w-full md:w-auto group">
         <DatePicker theme={"custom-datepicker"} class="w-full" bind:isOpen bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}>
           <!-- svelte-ignore a11y_click_events_have_key_events -->
           <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -163,7 +163,7 @@
   
         <!-- Enhanced Dropdown Menu -->
         <div id="dropdownDefaultCheckbox"
-        class={`text-black min-w-[240px] hidden z-20 absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white border-2 border-gray-200 rounded-lg shadow-xl`}
+        class={`text-black min-w-[240px] hidden z-50 absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white border-2 border-gray-200 rounded-lg shadow-xl`}
       >
         <div class="p-4 space-y-4">
           <!-- Adults -->

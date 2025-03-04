@@ -23,7 +23,7 @@
       </BlurFade>
       
 
-       <div class=" pl-5 pr-5 pb-[200px]">
+       <div class=" pl-5 pr-5 pb-[20vh] md:pb-[40vh]">
         <BlurFade delay={0.3}>
           <DatePicker/>
         </BlurFade>
