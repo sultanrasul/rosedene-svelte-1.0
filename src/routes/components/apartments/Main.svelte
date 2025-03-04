@@ -32,18 +32,34 @@
   </script>
 
     <!-- Gradient transition to gray -->
-    <!-- <div class="inset-x-0 top-[80vh] -z-10 h-20"
+    <div class="inset-x-0 top-[80vh] -z-10 h-8"
          style="background: linear-gradient(to bottom, transparent 0%, #233441 100%);">
-    </div> -->
+    </div>
 
 {#if browser}
 
-<div class="px-4 md:px-40 w-full overflow-x-hidden bg-[#233441] pt-10">
-  
+<div class="relative px-4 md:px-40 w-full overflow-x-hidden bg-[#233441] pt-10">
+      <!-- Background Layers -->
+      <div class="absolute inset-0 z-0">
+        <!-- Primary Background -->
+        <img 
+            src={"/clouds.png"}
+            alt="Scenic background"
+            class="w-full h-full object-cover opacity-30 transition-opacity duration-1000"
+            style="mask-image: linear-gradient(to top, transparent 0%, black 15%, black 85%, transparent 100%);"
+        />
+
+        <!-- Gradient Transition Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-t from-[#233441] via-[#233441]/40 to-transparent"
+             style="top: 55%"></div>
+
+        <!-- Edge Blur Effect -->
+        <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#233441] via-[#233441]/70 to-transparent backdrop-blur-[2px]"></div>
+    </div>
   
   <!-- Gradient Overlay (Smooth Transition Effect) -->
 
-  <div class="flex justify-between items-center mb-4">
+  <div class="relative flex justify-between items-center mb-4 z-50">
     <h2 class="text-4xl max-[489px]:text-2xl font-bold text-[#C09A5B]">View All 10 Apartments</h2>
     
 

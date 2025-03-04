@@ -14,14 +14,9 @@
 	let lastPath = '';
 
 	setMode('dark');
-	afterNavigate(({ to }) => {
-		initFlowbite();
+	afterNavigate(() => {
 		window.HSStaticMethods.autoInit();
-		// Only execute if the route actually changed
-		if (to?.url.pathname !== lastPath) {
-		window.scrollTo(0, 0);
-		lastPath = to?.url.pathname || '';
-		}
+
 	});
 
 	export const prerender = true;
@@ -31,8 +26,9 @@
   import Drawer from './Drawer.svelte';
 
 	onMount(() => {
-
 		initFlowbite();
+		window.HSStaticMethods.autoInit();
+
 		
 	})
 

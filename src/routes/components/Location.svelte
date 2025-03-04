@@ -1,7 +1,6 @@
 <script>
     export let city = "Inverness";
     export let tagline = "Gateway to the Scottish Highlands";
-    export let backgroundImage = "/lochness.png";
 </script>
 
 
@@ -11,7 +10,7 @@
     <div class="absolute inset-0 z-0">
         <!-- Primary Background -->
         <img 
-            src={backgroundImage}
+            src="/lochness.png"
             alt="Scenic background"
             class="w-full h-full object-cover opacity-40 transition-opacity duration-1000"
             style="mask-image: linear-gradient(to top, transparent 0%, black 15%, black 85%, transparent 100%);"
@@ -62,19 +61,30 @@
             </div>
 
         <!-- Right Column - Location Map -->
-        <div class="bg-[#233441]/50 backdrop-blur-sm rounded-2xl p-4 border border-[#C09A5B]/20 h-[600px] relative">
-            <div class="flex justify-between items-start mb-4">
-                <h3 class="text-3xl font-semibold text-white">Our Location</h3>
+        <div class="bg-[#233441]/50 backdrop-blur-sm rounded-2xl p-4 border border-[#C09A5B]/20  relative">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4">
                 
-                <!-- Location Badge - Moved to top-right -->
-                <div class="bg-[#C09A5B]/90 backdrop-blur-sm px-4 py-2 rounded-lg">
+                <div class="text-3xl font-semibold text-white inline-flex">
+                    <span>                      
+                        <svg class="w-10 h-10 pr-2 text-[#C09A5B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </span>
+                    <h3 class="pt-1">Our Location</h3> 
+
+                </div>
+                
+                <!-- Location Badge - Moves to its own line on small screens -->
+                <div class="bg-[#C09A5B]/90 backdrop-blur-sm px-4 py-2 rounded-lg mt-2 sm:mt-0">
                     <p class="text-sm font-medium text-white">Rosedene Highland House</p>
                     <p class="text-xs text-white">IV2 4QW • 18 min walk to City Centre</p>
                 </div>
             </div>
+            
 
             <!-- Map Container -->
-            <div class="relative h-full rounded-xl overflow-hidden">
+            <div class="relative h-[500px] rounded-xl overflow-hidden ">
                 <div class="absolute inset-0 bg-[#C09A5B]/10 animate-pulse"></div>
                 
                 <!-- Interactive Map -->

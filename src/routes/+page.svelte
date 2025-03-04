@@ -10,6 +10,8 @@
     import DatePicker from './components/DatePicker.svelte';
     import Apartments from './components/apartments/Main.svelte';
   import Location from './components/Location.svelte';
+  import ApartmentShowcase from './components/ApartmentShowcase.svelte';
+  import Reviews from './components/Reviews.svelte';
 
 
     
@@ -43,9 +45,7 @@
                background-repeat: no-repeat;
                "
                >
-                       <!-- Gradient Transition Overlay -->
-        <div class="absolute inset-0 bg-gradient-to-t from-[#496275]/80 via-[#496275]/80 to-transparent"
-        style="top: 70%"></div>
+
 
    <!-- Edge Blur Effect -->
    <!-- <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-red-800 via-red-800 to-transparent backdrop-blur-[2px]"></div> -->
@@ -59,6 +59,7 @@
         <Hero/>
         <Apartments/>
         <Location/>
+        <Reviews/>
         
     </div>
 </div>
