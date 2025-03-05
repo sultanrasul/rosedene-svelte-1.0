@@ -24,6 +24,7 @@
 	import { initFlowbite } from 'flowbite'
   import Navbar from './Navbar.svelte';
   import Drawer from './Drawer.svelte';
+  import Footer from './Footer.svelte';
 
 	onMount(() => {
 		initFlowbite();
@@ -43,7 +44,6 @@
 
 	<slot></slot>
 </div>
-
 
 <style>
     :global(.swiper-pagination-bullet) {
