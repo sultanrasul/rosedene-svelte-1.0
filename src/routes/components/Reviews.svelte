@@ -154,7 +154,7 @@
                     <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-[#d19c47] rounded-full"></div>
                 </h2>
                 <!-- Rating Badge -->
-                <div class="rating-badge pt-2 inline-flex  flex-row items-center bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full gap-4 border border-white/20 w-full sm:w-auto">
+                <div class="rating-badge pt-2 inline-flex  flex-row items-center bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full gap-4 border border-white/20 ">
                     <div class="flex items-center gap-2">
                         <span class="text-2xl font-bold text-[#d19c47]">4.9</span>
                         <div class="flex text-[#d19c47]">
@@ -165,7 +165,7 @@
                             {/each}
                         </div>
                     </div>
-                    <span class="text-[#D1E0EB] text-sm whitespace-nowrap">Based on 284 reviews</span>
+                    <span class="text-[#D1E0EB] text-sm">Based on 284 reviews</span>
                 </div>
 
             </div>
@@ -284,7 +284,7 @@
         </div>
         <div class="justify-end flex mt-8 ">
 
-            <button class="min-w-[100%] sm:min-w-[35%] group flex items-center gap-3 px-6 py-4 bg-[#C09A5B]/10 backdrop-blur-sm rounded-xl border border-[#C09A5B]/20 hover:bg-[#C09A5B]/20 transition-all justify-end text-right">
+            <button on:click={() => { window.location.href = "/reviews"; }} class="min-w-[100%] sm:min-w-[35%] group flex items-center gap-3 px-6 py-4 bg-[#C09A5B]/10 backdrop-blur-sm rounded-xl border border-[#C09A5B]/20 hover:bg-[#C09A5B]/20 transition-all justify-end text-right">
                 <svg class="w-6 h-6 text-[#C09A5B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -299,7 +299,7 @@
 
 <style>
     /* Responsive adjustments */
-    @media (max-width: 768px) {
+    @media (max-width: 345px) {
         /* Make rating badge stack vertically */
         .rating-badge {
             flex-direction: column;
@@ -307,19 +307,5 @@
             text-align: center;
         }
 
-        /* Ensure cards use full width */
-        .review-card {
-            min-width: 100%;
-            width: 100%;
-        }
-
-        /* Adjust text sizes */
-        .review-date {
-            font-size: 0.875rem;
-        }
-        
-        .helpful-count {
-            font-size: 0.75rem;
-        }
     }
 </style>

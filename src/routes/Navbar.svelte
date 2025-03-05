@@ -48,7 +48,7 @@
 
 
 <svelte:window on:scroll={handleScroll} />
-
+<!-- {fixed ? 'fixed' : ''} -->
 <!-- <svelte:window bind:innerWidth /> -->
 
 <!-- <header class="fixed top-0 left-0 z-50 w-full bg-gray-800/0 transition-transform
