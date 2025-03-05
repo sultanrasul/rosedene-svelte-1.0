@@ -34,7 +34,7 @@
     <div class="absolute bottom-0 left-0 right-0 p-6 space-y-3 text-white z-20">
         <!-- Apartment Info -->
         <div class="space-y-2">
-            <h3 class="text-2xl font-bold leading-tight">{apartmentName}</h3>
+            <h3 class="text-2xl font-bold leading-tight">{apartmentName.replace('Apartment','')}</h3>
             <div class="flex items-center gap-2 text-sm">
                 <User size="20" class="text-[#C09A5B]" />
                 <span>{apartmentDetails.maxGuests} Guests</span>

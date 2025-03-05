@@ -9,9 +9,10 @@
     import Drawer from './Drawer.svelte';
     import DatePicker from './components/DatePicker.svelte';
     import Apartments from './components/apartments/Main.svelte';
-  import Location from './components/Location.svelte';
-  import ApartmentShowcase from './components/ApartmentShowcase.svelte';
-  import Reviews from './components/Reviews.svelte';
+    import Location from './components/Location.svelte';
+    import ApartmentShowcase from './components/ApartmentShowcase.svelte';
+    import Reviews from './components/Reviews.svelte';
+    import Footer from './Footer.svelte';
 
 
     
@@ -36,30 +37,26 @@
 </script>
 
 <!-- Main Menu -->
-<div class="relative" id="Home">
-    <!-- Background Container -->
-    <div class="absolute inset-x-0 top-0 h-[100vh] -z-10 opacity-[0.4]"
+<div class="relative bg-[#233441]" id="Home">
+    <!-- Background Color is now on the parent container -->
+    
+    <!-- Image Container -->
+    <div class="absolute inset-0 h-[100vh] filter brightness-50"
         style="background-image: url('background.png'); 
                background-size: cover; 
                background-position: center;
-               background-repeat: no-repeat;
-               "
-               >
-
-
-   <!-- Edge Blur Effect -->
-   <!-- <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-red-800 via-red-800 to-transparent backdrop-blur-[2px]"></div> -->
+               background-repeat: no-repeat;">
     </div>
 
-
-    
-    <!-- Content Container -->
-    <div class="relative ">
+    <!-- Content Container (now with transparent background) -->
+    <div class="relative">
         <Navbar fixed/>
         <Hero/>
         <Apartments/>
         <Location/>
         <Reviews/>
-        
+        <div class="bg-[#2c485d]">
+            <Footer/>
+        </div>
     </div>
 </div>

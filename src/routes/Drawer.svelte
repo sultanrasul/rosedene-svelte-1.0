@@ -47,7 +47,7 @@
      <h3 class="text-sm font-semibold text-gray-500 uppercase">Customer Support</h3>
      <ul class="space-y-1 cursor-pointer">
         <li><a on:click={() => { window.location.href = "/details"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Manage Booking</a></li>
-        <li><a href="#" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Terms and Conditions</a></li>
+        <li><a on:click={() => { window.location.href = "/terms"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Terms and Conditions</a></li>
      </ul>
    </div>
 
