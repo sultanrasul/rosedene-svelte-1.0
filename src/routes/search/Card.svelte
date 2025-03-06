@@ -21,7 +21,7 @@
     </div>
 
     <!-- Content Section -->
-    <div class="flex-1 flex flex-col p-6">
+    <div class="flex-1 text-2xl flex flex-col p-6">
         <!-- Apartment Name -->
         <h3 class="mb-3  font-bold text-[#C09A5B] ">{apartmentName}</h3>
 

@@ -6,6 +6,7 @@
     import { PaperPlaneOutline, CheckCircleSolid,ExclamationCircleSolid   } from 'flowbite-svelte-icons';
     import BlurFade from '$lib/components/BlurFade.svelte';
     import InputSpotlightBorder from '$lib/components/InputSpotlightBorder.svelte';
+  import { Send } from 'lucide-svelte';
 
     let name = '';
     let contact = '';
@@ -74,7 +75,7 @@
     
     <Section sectionClass="" name="contact">
         <Contact>
-            <div class="max-w-2xl mx-auto p-4 bg-gray-500/50 rounded-xl border border-[#C09A5B]/20 shadow-2xl">
+            <div class="max-w-2xl mx-auto p-4 bg-gray-500/80 rounded-xl border border-[#C09A5B]/20 shadow-2xl">
                 <BlurFade>
                     <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-[#C09A5B]">
                         Contact Us
@@ -143,7 +144,7 @@
                                            flex items-center gap-2 justify-center"
                                     type="submit"
                                 >
-                                    <PaperPlaneOutline class="w-5 h-5"/>
+                                    <Send class="w-5 h-5"/>
                                     <span>Send Message</span>
                                 </button>
                             {/if}
@@ -157,9 +158,9 @@
 <!-- Success Toast -->
 <div class="fixed mt-5 top-20 right-5 z-50 ">
     <Toast bind:open={openSuccess} transition={slide} divClass="w-full max-w p-4 text-gray-500 bg-white shadow dark:text-gray-400 dark:bg-gray-800 gap-1" dismissable={true} contentClass="flex space-x-4 rtl:space-x-reverse divide-x rtl:divide-x-reverse divide-gray-200 dark:divide-gray-700">
-        <PaperPlaneOutline class="w-0 h-0 hidden" />
+        <rotate-45 class="w-0 h-0 hidden" />
         <svelte:fragment slot="icon">
-            <PaperPlaneOutline class="w-5 h-5 rotate-45" />
+            <Send class="w-5 h-5" />
             <span class="sr-only">Warning icon</span>
           </svelte:fragment>        
           <div class="ps-4 text-sm font-normal">Message sent successfully</div>

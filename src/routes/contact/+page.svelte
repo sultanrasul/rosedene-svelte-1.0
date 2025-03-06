@@ -1,6 +1,7 @@
 <script>
     import Contact from "../components/Contact.svelte";
     import Hero from "../components/Hero.svelte";
+  import Footer from "../Footer.svelte";
 
 
     import Navbar from "../Navbar.svelte";
@@ -12,9 +13,10 @@
         style="background-image: url('background.png'); background-size: cover; background-position: center;">
     </div>
 
-    <div class="relative z-10 h-screen flex flex-col items-center">
+    <div class="relative z-10 min-h-screen flex flex-col items-center">
         <Navbar />
 
         <Contact/>
     </div>
 </div>
+<Footer/>
