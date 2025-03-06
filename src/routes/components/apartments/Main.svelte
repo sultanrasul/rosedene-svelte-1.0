@@ -38,7 +38,7 @@
 
 {#if browser}
 
-<div class="relative px-4 md:px-40 w-full overflow-x-hidden bg-[#233441] pt-10">
+<div class="relative px-4 sm:px-8 md:px-20 lg:px-40 w-full overflow-x-hidden bg-[#233441] pt-10">
       <!-- Background Layers -->
       <div class="absolute inset-0 z-0">
         <!-- Primary Background -->

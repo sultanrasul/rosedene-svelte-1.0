@@ -55,8 +55,6 @@
         <Apartments/>
         <Location/>
         <Reviews/>
-        <div class="bg-[#2c485d]">
-            <Footer/>
-        </div>
+        <Footer/>
     </div>
 </div>

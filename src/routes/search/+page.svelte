@@ -8,6 +8,7 @@
     import CardLoading from "./cardLoading.svelte";
     import { PricingBodyHead } from "flowbite-svelte-blocks";
     import { BACKEND_URL } from '../conf';
+  import Footer from "../Footer.svelte";
 
     let apartments;
     let startDate, endDate, nights, loading = true;
@@ -120,14 +121,14 @@
 
     
 <!-- Main Menu -->
-<div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen" id="Home">
+<div class="relative bg-primary-100 dark:bg-[#233441]" id="Home">
     <Navbar/>   
     <div 
         class="absolute inset-0 opacity-[0.4] z-[-1]"
         style="background-image: url('background.png'); background-size: cover; background-position: center;">
     </div>
 
-    <div class="relative z-10 pb-20 pl-5 pr-5">
+    <div class="min-h-screen relative z-10 pb-20 pl-5 pr-5">
         <DatePicker isSearch startDate={startDate} endDate={endDate} children={children} adults={adults} childrenAges={childrenAges}/>
         <div class="flex flex-wrap justify-center gap-4 pt-10">
             {#if loading}
@@ -175,4 +176,5 @@
         </div>
 
     </div>
+    <Footer/>
 </div>
