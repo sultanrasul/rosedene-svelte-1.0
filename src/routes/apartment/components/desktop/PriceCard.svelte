@@ -22,6 +22,7 @@
 <div class="w-[28%] text-black self-start sticky top-6 hidden md:block">
     <div class="bg-white border-2 border-gray-100 rounded-xl shadow-xl p-6">
       <!-- Price Display -->
+      
       <div class="mb-6">
         <div class="flex items-baseline gap-2">
           <!-- <NumberTicker value={100} /> -->

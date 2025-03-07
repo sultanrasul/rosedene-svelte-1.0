@@ -12,6 +12,7 @@
     import { BACKEND_URL } from "../conf";
     import { toast } from "svelte-sonner";
     import BlurFade from "@/components/BlurFade.svelte";
+  import Footer from "../Footer.svelte";
 
 
     let bookingData = {};
@@ -209,6 +210,7 @@
         {/if}
     </div>
 </div>
+<Footer/>
 
 
 <style>
