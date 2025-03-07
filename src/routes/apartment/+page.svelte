@@ -39,12 +39,16 @@
     import TitleAndFeatures from "./components/information/TitleAndFeatures.svelte";
     import Overview from "./components/information/Overview.svelte";
     import BlurFade from "@/components/BlurFade.svelte";
+  import Footer from "../Footer.svelte";
   
   
   
     const parseDate = (dateStr) => {
-      const [day, month, year] = dateStr.split('/').map(Number);
-      return new Date(year, month - 1, day); // Month is 0-indexed
+      if (dateStr) {
+        const [day, month, year] = dateStr.split('/').map(Number);
+        return new Date(year, month - 1, day); // Month is 0-indexed
+      }
+      return ""
     };
     
     function parseDescription(description) {
@@ -193,8 +197,11 @@
       
       try {
         // Validate required parameters
-        if (!number || !check_in || !check_out) {
-          throw new Error('Missing required URL parameters');
+        if (!adults || !children) {
+            adults = 1;
+            children = 0;
+            displayPrice = 100;
+          // throw new Error('Missing required URL parameters');
         }
         // Get apartment details
         if (!apartmentDetails) throw new Error('Invalid apartment number');
@@ -224,7 +231,7 @@
     });
 
   
-    function calculateApartmentPrice(prices) {
+    function calculateApartmentPrice(prices) { 
       console.log(prices)
       let totalPrice = 0;
   
@@ -524,6 +531,7 @@
     
               </div>
             </BlurFade>
+            <Footer/>
 
           </div>
 

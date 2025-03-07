@@ -13,7 +13,8 @@
 
 <div class="flex flex-col cursor-pointer w-[320px] h-[420px] rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden snap-center group relative">
     <!-- Full-bleed Background Image -->
-    <img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+     <!-- removed group-hover:scale-105 from image element -->
+    <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-300" 
          src={`/${apartmentNumber}.jpg`} 
          alt={apartmentName}
          loading="lazy"/>
@@ -50,7 +51,9 @@
 
         <!-- Location & Button -->
         <div class="pt-3 space-y-4">
-            <button class="w-full py-3 text-sm font-semibold text-center text-white bg-[#C09A5B] rounded-lg 
+            <button 
+            on:click={() => { window.location.href = `/apartment?number=${apartmentNumber}`; }}
+            class="w-full py-3 text-sm font-semibold text-center text-white bg-[#C09A5B] rounded-lg 
                         hover:bg-[#B08A4F] transition-colors duration-200 transform group-hover:scale-[1.02]">
                 Explore Apartment
             </button>

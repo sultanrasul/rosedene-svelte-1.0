@@ -24,6 +24,11 @@
     )}
     {...$$restProps}
   >
-    £{$num.toFixed(0)}
+    {#if value == 0}
+      <span class="mr-20">£</span>
+      {:else}
+      £{$num.toFixed(0)}
+      
+    {/if}
   </div>
   
