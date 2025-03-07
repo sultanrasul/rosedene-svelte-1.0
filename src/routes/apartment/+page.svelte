@@ -531,9 +531,13 @@
     
               </div>
             </BlurFade>
-            <Footer/>
-
+            {#if screenWidth < 768}
+              <Footer/>
+            {/if}
           </div>
+          {#if screenWidth >= 768 && (!loading && !error)}
+            <Footer/>
+          {/if}
 
           {#if loading}
           <div class=" fixed inset-0 flex items-center justify-center ">
