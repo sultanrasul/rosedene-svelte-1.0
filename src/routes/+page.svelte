@@ -3,7 +3,6 @@
 
     import { onMount } from 'svelte';
     import { scale } from 'svelte/transition';
-    import { Button } from 'flowbite-svelte';
     import Hero from './components/Hero.svelte'
     import Navbar from './Navbar.svelte'
     import Drawer from './Drawer.svelte';
@@ -13,6 +12,7 @@
     import ApartmentShowcase from './components/ApartmentShowcase.svelte';
     import Reviews from './components/Reviews.svelte';
     import Footer from './Footer.svelte';
+    import Amenities from './components/Amenities.svelte';
 
 
     
@@ -53,6 +53,7 @@
         <Navbar fixed/>
         <Hero/>
         <Apartments/>
+        <Amenities/>
         <Location/>
         <Reviews/>
         <Footer/>

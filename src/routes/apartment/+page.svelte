@@ -35,7 +35,6 @@
     import { onMount, tick } from 'svelte';
     import Navbar from '../Navbar.svelte';
     import DatePicker from '../components/DatePicker.svelte';
-    import Slide from "flowbite-svelte/Slide.svelte";
     import TitleAndFeatures from "./components/information/TitleAndFeatures.svelte";
     import Overview from "./components/information/Overview.svelte";
     import BlurFade from "@/components/BlurFade.svelte";
@@ -413,7 +412,9 @@
 
         <!-- Main Menu -->
         <div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen " id="Home">
-          <Navbar/> 
+          <div class="z-[50]">
+            <Navbar/> 
+          </div>
           <div class="{!loading && !error ? '' : 'hidden'} relative z-10 pt-0 mt-0 pb-20 sm:pl-0 sm:pr-0 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40">
 
             
@@ -531,16 +532,16 @@
     
               </div>
             </BlurFade>
-            {#if screenWidth < 768}
+            <div class="{screenWidth < 768 ? '' : 'hidden'}">
               <Footer/>
-            {/if}
+            </div>
           </div>
-          {#if screenWidth >= 768 && (!loading && !error)}
+          <div class="{screenWidth >= 768 ? '' : 'hidden'}">
             <Footer/>
-          {/if}
+          </div>
 
           {#if loading}
-          <div class=" fixed inset-0 flex items-center justify-center ">
+          <div class=" fixed inset-0 flex items-center justify-center z-[1]">
             <div class="relative flex items-center justify-center">
               <div class="relative h-40 w-40">
                 <!-- Home Icon with pulse animation -->

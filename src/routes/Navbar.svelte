@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { Button } from 'flowbite-svelte';
 	import { cn } from '$lib/utils';
 	import { AlignJustify, Menu, XIcon } from 'lucide-svelte';
 	import { fly } from 'svelte/transition';
   import BorderBeam from '$lib/components/BorderBeam.svelte';
-  import {DarkMode} from 'flowbite-svelte';
   import DropdownMenu from '$lib/components/DropdownMenu.svelte';
   import { onMount } from 'svelte';
   import Drawer from './Drawer.svelte';

@@ -1,6 +1,5 @@
 <!-- Create a new component: ApartmentShowcase.svelte -->
 <script>
-  import { Button } from "flowbite-svelte";
 
     export let apartment = {
       title: "Luxury Studio Apartment",
@@ -89,9 +88,9 @@
             <div class="text-2xl font-bold">
               ${apartment.price} <span class="text-lg font-normal">/ night</span>
             </div>
-            <Button size="xl" class="w-full">
+            <button size="xl" class="w-full">
               Book Now
-            </Button>
+            </button>
             <p class="text-sm text-gray-500 text-center">
               Includes all taxes and fees
             </p>
