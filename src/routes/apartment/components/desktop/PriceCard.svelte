@@ -3,7 +3,6 @@
     import { Banknote, Info } from "lucide-svelte";
     import GuestDetails from "../guestDetails.svelte";
     import NumberTicker from "@/components/NumberTicker.svelte";
-    import { Spinner } from "flowbite-svelte";
 
 
     export let displayPrice;

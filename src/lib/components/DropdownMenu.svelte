@@ -3,7 +3,6 @@
   import { LayoutGridIcon, ChevronRightIcon, House, Contact, LucideMenu} from "lucide-svelte";
   import { cn } from "$lib/utils";
   import { onMount } from "svelte";
-	import { DarkMode } from "flowbite-svelte";
 
   export let mainPage = false;
 

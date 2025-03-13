@@ -18,8 +18,8 @@
   
   <div class="flex flex-wrap ">
     <div class="p-4 md:p-0">
-      <BlurFade>
-        <img src="/Logo.svg" class="max-w-lg w-full" alt="">
+      <BlurFade class="text-center justify-center">
+        <img src="/Logo.svg" class="max-w-lg w-full text-center justify-center" alt="">
       </BlurFade>
       
 
