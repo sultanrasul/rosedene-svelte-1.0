@@ -12,6 +12,8 @@
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
+		"@internationalized/date": "^3.7.0",
+		"@lucide/svelte": "^0.483.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/enhanced-img": "^0.3.1",
 		"@sveltejs/kit": "^2.0.0",
@@ -20,6 +22,7 @@
 		"@tailwindcss/typography": "^0.5.13",
 		"@types/eslint": "^9.6.0",
 		"autoprefixer": "^10.4.19",
+		"bits-ui": "^1.3.13",
 		"embla-carousel-svelte": "^8.5.2",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
@@ -44,12 +47,10 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource/merriweather": "^5.1.1",
-		"@internationalized/date": "^3.7.0",
 		"@preline/carousel": "^2.5.2",
 		"@svelte-plugins/datepicker": "^1.0.9",
 		"@sveltejs/adapter-static": "^3.0.8",
 		"add": "^2.0.6",
-		"bits-ui": "^0.21.16",
 		"carousel": "^0.0.3",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",

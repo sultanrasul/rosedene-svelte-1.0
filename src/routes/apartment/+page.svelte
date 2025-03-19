@@ -38,7 +38,7 @@
     import TitleAndFeatures from "./components/information/TitleAndFeatures.svelte";
     import Overview from "./components/information/Overview.svelte";
     import BlurFade from "@/components/BlurFade.svelte";
-  import Footer from "../Footer.svelte";
+    import Footer from "../Footer.svelte";
   
   
   
@@ -409,168 +409,121 @@
 
   </script>
   
-
-        <!-- Main Menu -->
-        <div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen " id="Home">
-          <div class="z-[50]">
-            <Navbar/> 
-          </div>
-          <div class="{!loading && !error ? '' : 'hidden'} relative z-10 pt-0 mt-0 pb-20 sm:pl-0 sm:pr-0 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40">
-
-            
-            
-          <!-- Breadcrumb -->
-          <div class="pt-8 hidden md:block">
-            <BlurFade>
-              <Breadcrumb apartmentName={apartmentDetails.name}/>
-            </BlurFade>
-          </div>
-    
-          
-    
-    
-          {#if screenWidth < 768 }
-              <BlurFade >
-
-                <MobileSlideshow images={apartmentDetails.amountOfPictures} apartmentNumber = {number}/>
-              </BlurFade>
-              <PriceFooter 
-                bind:displayPrice={displayPrice}
-                bind:initialPrice={initialPrice}
-                bind:nights={nights}
-                bind:childrenAges={childrenAges}
-                bind:children={children}
-                bind:startDate={startDate}
-                bind:endDate={endDate}
-                bind:bookNowLoading={bookNowLoading}
-                bookNow={bookNow}
-              />
-              
-              
-            {:else}
-            <BlurFade delay={0.2}>
-              <ImageDisplay apartmentNumber={number} openModel={openModel}/>
-            </BlurFade>
-            
-          {/if}
-              
-              
-              
-            <!-- info -->
-            <!-- Information Section -->
-            <BlurFade delay={0.4}>
-              <div class="flex flex-wrap mt-0 justify-between">
-                <div class="bg-white rounded-b-lg md:rounded-lg shadow-lg p-6 pt-6  w-full md:w-[66.4%]">
-      
-                  <div class="p-0 block md:hidden">
-                    <Breadcrumb apartmentName={number}/>
-                  </div>
-      
-                  <!-- Property Title & Key Points -->
-                    <TitleAndFeatures
-                    apartmentName={apartmentDetails.name}
-                    maxGuests={apartmentDetails.maxGuests}
-                    bedrooms={apartmentDetails.bedrooms}
-                    bathrooms={apartmentDetails.bathrooms}
-                    />
-                  
-                  <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
-                  
-                  <!-- Overview Section -->
-                  <Overview parsedDescription={parsedDescription}/>
-      
-                  <div class="text-black">
-                    <div class="block md:hidden" >
-                      <hr class="h-px my-8 bg-[#C09A5B] border-0">
-                        <GuestDetails 
-                          bind:disabledDates={disabledDates} 
-                          bind:childrenAges={childrenAges} 
-                          bind:startDate={startDate} 
-                          bind:endDate={endDate} 
-                          bind:children={children} 
-                          bind:adults={adults}
-                          dropdownID={"mobile"}
-                        />              
-                    </div>
-                  </div>
-      
-      
-                  <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
-                  
-                  
-                  <!-- Amenities Section -->
-                  <Amenities/>
-      
-                  <hr class="h-px my-8 bg-[#C09A5B] border-0 ">
-      
-      
-                  <!-- House Rules -->
-                    <HouseRules/>
-      
-                  
-                  
-                </div>
+  <!-- This is the main container that now always shows, regardless of loading/error state -->
+<div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen" id="Home">
+  <div class="z-[50]">
+    <Navbar/> 
+  </div>
   
-              
-              <!-- Price Card -->
-                {#if screenWidth >= 768 }
-                  
-                  <PriceCard
-                    bind:displayPrice={displayPrice}
-                    bind:initialPrice={initialPrice}
-                    bind:nights={nights}
-                    bind:childrenAges={childrenAges}
-                    bind:startDate={startDate}
-                    bind:endDate={endDate}
-                    bind:children={children}
-                    bind:adults={adults}
-                    bind:disabledDates={disabledDates}
-                    bind:bookNowLoading={bookNowLoading}
-                    bookNow={bookNow}
-                  />
-                {/if}
-    
-              </div>
-            </BlurFade>
-            <div class="{screenWidth < 768 ? '' : 'hidden'}">
-              <Footer/>
-            </div>
-          </div>
-          <div class="{screenWidth >= 768 ? '' : 'hidden'}">
-            <Footer/>
+  <div class="relative z-10 pt-0 mt-0 pb-20 sm:pl-0 sm:pr-0 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40">
+    <!-- Breadcrumb -->
+    <div class="pt-8 hidden md:block">
+      <BlurFade>
+        <Breadcrumb apartmentName={apartmentDetails?.name}/>
+      </BlurFade>
+    </div>
+
+    {#if screenWidth < 768 }
+      <BlurFade>
+        <MobileSlideshow images={apartmentDetails?.amountOfPictures} apartmentNumber={number}/>
+      </BlurFade>
+      <PriceFooter 
+        bind:displayPrice={displayPrice}
+        bind:initialPrice={initialPrice}
+        bind:nights={nights}
+        bind:childrenAges={childrenAges}
+        bind:children={children}
+        bind:startDate={startDate}
+        bind:endDate={endDate}
+        bind:bookNowLoading={bookNowLoading}
+        bind:loading={loading}
+        bind:error={error}
+        bookNow={bookNow}
+      />
+    {:else}
+      <BlurFade delay={0.2}>
+        <ImageDisplay apartmentNumber={number} openModel={openModel}/>
+      </BlurFade>
+    {/if}
+          
+    <!-- Information Section -->
+    <BlurFade delay={0.4}>
+      <div class="flex flex-wrap mt-0 justify-between">
+        <div class="bg-white rounded-b-lg md:rounded-lg shadow-lg p-6 pt-6 w-full md:w-[66.4%]">
+          <div class="p-0 block md:hidden">
+            <Breadcrumb apartmentName={apartmentDetails?.name}/>
           </div>
 
-          {#if loading}
-          <div class=" fixed inset-0 flex items-center justify-center z-[1]">
-            <div class="relative flex items-center justify-center">
-              <div class="relative h-40 w-40">
-                <!-- Home Icon with pulse animation -->
-                <Home size="100px" class="text-[#BF9A5B] absolute inset-0 m-auto animate-pulse" />
-                
-                <!-- Enhanced Spinner Elements -->
-                
-                
-                <div class="absolute inset-0 rounded-full animate-rotate-glow-reverse">
-                  <div class="w-full h-full border-[6px] 
-                              border-b-[#d4b583] border-l-[#d4b583] border-t-[#d4b583]
-                              rounded-full [border-end-cap:round]">
-                  </div>
-              </div>
-              </div>
+          <!-- Property Title & Key Points -->
+          <TitleAndFeatures
+            apartmentName={apartmentDetails?.name}
+            maxGuests={apartmentDetails?.maxGuests}
+            bedrooms={apartmentDetails?.bedrooms}
+            bathrooms={apartmentDetails?.bathrooms}
+          />
+          
+          <hr class="h-px my-8 bg-[#C09A5B] border-0">
+          
+          <!-- Overview Section -->
+          <Overview parsedDescription={parsedDescription}/>
+
+          <div class="text-black">
+            <div class="block md:hidden">
+              <hr class="h-px my-8 bg-[#C09A5B] border-0">
+              <GuestDetails 
+                bind:disabledDates={disabledDates} 
+                bind:childrenAges={childrenAges} 
+                bind:startDate={startDate} 
+                bind:endDate={endDate} 
+                bind:children={children} 
+                bind:adults={adults}
+                dropdownID={"mobile"}
+              />              
             </div>
           </div>
-          {:else if error}
-          <div class="flex flex-col items-center text-center justify-center max-w-xl mx-auto pt-20">
-            <Info size="100px" class="text-[#ff4747]"/>
-            <h1 class="text-2xl font-bold mb-4 mt-4">Error occurred</h1>
-            <p class="text-base-content/70 mb-2">{error}</p>                            
-            <p class="text-base-content/70">Please try again later or contact support.</p>                            
-          </div>
-          {/if}
+
+          <hr class="h-px my-8 bg-[#C09A5B] border-0">
+          
+          <!-- Amenities Section -->
+          <Amenities/>
+
+          <hr class="h-px my-8 bg-[#C09A5B] border-0">
+
+          <!-- House Rules -->
+          <HouseRules/>
         </div>
+      
+        <!-- Price Card -->
+        {#if screenWidth >= 768}
+          <PriceCard
+            bind:displayPrice={displayPrice}
+            bind:initialPrice={initialPrice}
+            bind:nights={nights}
+            bind:childrenAges={childrenAges}
+            bind:startDate={startDate}
+            bind:endDate={endDate}
+            bind:children={children}
+            bind:adults={adults}
+            bind:disabledDates={disabledDates}
+            bind:bookNowLoading={bookNowLoading}
+            bind:loading={loading}
+            bind:error={error}
+            bookNow={bookNow}
+          />
+        {/if}
+      </div>
+    </BlurFade>
+    
+    <div class="{screenWidth < 768 ? '' : 'hidden'}">
+      <Footer/>
+    </div>
+  </div>
+  
+  <div class="{screenWidth >= 768 ? '' : 'hidden'}">
+    <Footer/>
+  </div>
+</div>
         
-      
-      
       
           
         <!-- Full Gallary -->
