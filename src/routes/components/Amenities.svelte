@@ -5,32 +5,26 @@
     
     const amenities = [
         {
-            icon: '🛌',
             title: 'Luxury Bedding',
             description: 'Premium emperor beds with high-thread-count linens'
         },
         {
-            icon: '🍳',
             title: 'Full Kitchen',
             description: 'Fully equipped kitchens with modern appliances'
         },
         {
-            icon: '📶',
             title: 'High-Speed WiFi',
             description: 'Enterprise-grade connectivity throughout'
         },
         {
-            icon: '🧺',
             title: 'Free Parking',
             description: 'Parking on site'
         },
         {
-            icon: '🏋️',
             title: 'Washing Machine',
             description: 'Stay fresh with our washing machines. Super handy for longer stays!'
         },
         {
-            icon: '🚿',
             title: 'living spaces',
             description: "Curl up on the couch with a book or enjoy a movie night from bed. There's plenty of space to roll out a yoga mat or get some work done."
         }
@@ -90,6 +84,7 @@
             {/each}
         </div>
 
+        
         <!-- Enhanced CTA Button -->
         <div class="text-center relative">
             <button on:click={() => { window.location.href = "/aparthotel"; }}
