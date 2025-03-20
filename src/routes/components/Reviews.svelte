@@ -1,109 +1,346 @@
 <script>
+// @ts-nocheck
+
     import { fade } from 'svelte/transition';
     
     let sortBy = 'date';
     let sortDirection = 'desc';
     
-    const reviews = [
-        {
-            id: 1,
-            author: "Ibrahim",
-            country: "Saudi Arabia",
-            date: "2022-08-03",
-            apartment: "Superior Apartment",
-            nights: 5,
-            stayPeriod: "August 2022",
-            groupType: "Couple",
-            reviewDate: "3 August 2022",
-            stars: 4,
-            comment: "One of the best, will back again. Everything location is perfect, Staff professional, the owner of the property one of the best people I deal with. the property very clean, a fully equipped kitchen and all things you need such as vacuum, iron smart TV.",
-            negativeComment: "Nothing",
-            helpfulCount: 1,
-            stayType: "Family Stay"
-        },
-        {
-            id: 2,
-            author: "Ibrahim",
-            country: "Saudi Arabia",
-            date: "2022-08-03",
-            apartment: "Superior Apartment",
-            nights: 5,
-            stayPeriod: "August 2022",
-            groupType: "Couple",
-            reviewDate: "3 August 2022",
-            stars: 4,
-            comment: "One of the best, will back again. Everything location is perfect, Staff professional, the owner of the property one of the best people I deal with. the property very clean, a fully equipped kitchen and all things you need such as vacuum, iron smart TV.",
-            negativeComment: "Nothing",
-            helpfulCount: 1,
-            stayType: "Family Stay"
-        },
-        {
-            id: 3,
-            author: "Ibrahim",
-            country: "Saudi Arabia",
-            date: "2022-08-03",
-            apartment: "Superior Apartment",
-            nights: 5,
-            stayPeriod: "August 2022",
-            groupType: "Couple",
-            reviewDate: "3 August 2022",
-            stars: 4,
-            comment: "One of the best, will back again. Everything location is perfect, Staff professional, the owner of the property one of the best people I deal with. the property very clean, a fully equipped kitchen and all things you need such as vacuum, iron smart TV.",
-            negativeComment: "Nothing",
-            helpfulCount: 1,
-            stayType: "Family Stay"
-        },
-        // {
-        //     id: 4,
-        //     author: "Ibrahim",
-        //     country: "Saudi Arabia",
-        //     date: "2022-08-03",
-        //     apartment: "Superior Apartment",
-        //     nights: 5,
-        //     stayPeriod: "August 2022",
-        //     groupType: "Couple",
-        //     reviewDate: "3 August 2022",
-        //     stars: 4,
-        //     comment: "One of the best, will back again. Everything location is perfect, Staff professional, the owner of the property one of the best people I deal with. the property very clean, a fully equipped kitchen and all things you need such as vacuum, iron smart TV.",
-        //     negativeComment: "Nothing",
-        //     helpfulCount: 1,
-        //     stayType: "Family Stay"
-        // },
-        // {
-        //     id: 5,
-        //     author: "Ibrahim",
-        //     country: "Saudi Arabia",
-        //     date: "2022-08-03",
-        //     apartment: "Superior Apartment",
-        //     nights: 5,
-        //     stayPeriod: "August 2022",
-        //     groupType: "Couple",
-        //     reviewDate: "3 August 2022",
-        //     stars: 4,
-        //     comment: "One of the best, will back again. Everything location is perfect, Staff professional, the owner of the property one of the best people I deal with. the property very clean, a fully equipped kitchen and all things you need such as vacuum, iron smart TV.",
-        //     negativeComment: "Nothing",
-        //     helpfulCount: 1,
-        //     stayType: "Family Stay"
-        // },
-        // {
-        //     id: 6,
-        //     author: "Ibrahim",
-        //     country: "Saudi Arabia",
-        //     date: "2022-08-03",
-        //     apartment: "Superior Apartment",
-        //     nights: 5,
-        //     stayPeriod: "August 2022",
-        //     groupType: "Couple",
-        //     reviewDate: "3 August 2022",
-        //     stars: 4,
-        //     comment: "One of the best, will back again. Everything location is perfect, Staff professional, the owner of the property one of the best people I deal with. the property very clean, a fully equipped kitchen and all things you need such as vacuum, iron smart TV.",
-        //     negativeComment: "Nothing",
-        //     helpfulCount: 1,
-        //     stayType: "Family Stay"
-        // },
-        // Add other review objects following same structure
-    ];
+    let reviews = [
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 10,
+    "Guest name": "Grant",
+    "Location": 10,
+    "Negative review": "",
+    "Positive review": "",
+    "Property reply": "",
+    "Reservation Number": "2487605521",
+    "Review date": "2022-03-06 0:25:02",
+    "Review score": 10,
+    "Review title": "",
+    "Staff": 10,
+    "Value for money": 10
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 10,
+    "Guest name": "Keith",
+    "Location": 10,
+    "Negative review": "Nothing",
+    "Positive review": "Amjed, the property manager, personally met us on arrival and enthusiastically showed us around and made us feel at home.  Very spacious and modern facilities.  Easy walking distance to river and restaurants in Inverness.  On site parking and good Wifi.",
+    "Property reply": "Dear Keith, thanks for your great feedback. It was a delight to see you both and we are really happy that everything was to your satisfaction. We are very proud of the achievements at Rosedene and what makes us even more proud is receiving and hosting wonderful guests like you! We look forward to seeing you again soon. All the very best from all at Rosedene Highland House.    ",
+    "Reservation Number": "2254010771",
+    "Review date": "2022-03-29 14:13:17",
+    "Review score": 10,
+    "Review title": "A great property with very welcoming host",
+    "Staff": 10,
+    "Value for money": 10
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 10,
+    "Guest name": "Jacqueline",
+    "Location": 10,
+    "Negative review": "",
+    "Positive review": "",
+    "Property reply": "",
+    "Reservation Number": "2683436060",
+    "Review date": "2022-03-30 15:09:07",
+    "Review score": 9,
+    "Review title": "",
+    "Staff": 10,
+    "Value for money": 10
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 10,
+    "Guest name": "Gaynor",
+    "Location": 10,
+    "Negative review": "The bed was a little too firm for my preference.",
+    "Positive review": "",
+    "Property reply": "Dear Gaynor, we hope you are well and enjoyed your tour of Inverness and the Highlands. We are just getting an opportunity to say a massive thanks to you both for staying at Rosedene and also for leaving us a wonderful review. It was great to meet you and although you had a short stay it was wonderful to see you both. We hope that you will return again soon. All the very best from all at Rosedene. ",
+    "Reservation Number": "2821951016",
+    "Review date": "2022-03-31 8:18:40",
+    "Review score": 9,
+    "Review title": "",
+    "Staff": 10,
+    "Value for money": 10
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 10,
+    "Guest name": "다은",
+    "Location": 10,
+    "Negative review": "nothing at all",
+    "Positive review": "nice staff, such a clean room, every facilities :)",
+    "Property reply": "",
+    "Reservation Number": "3643893777",
+    "Review date": "2022-04-03 7:01:16",
+    "Review score": 9,
+    "Review title": "awesome!",
+    "Staff": 10,
+    "Value for money": 7.5
+  },
+  {
+    "Cleanliness": 0,
+    "Comfort": 0,
+    "Facilities": 0,
+    "Guest name": "다은",
+    "Location": 0,
+    "Negative review": "",
+    "Positive review": "",
+    "Property reply": "",
+    "Reservation Number": "3794786333",
+    "Review date": "2022-04-03 21:06:38",
+    "Review score": 9,
+    "Review title": "",
+    "Staff": 0,
+    "Value for money": 0
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 10,
+    "Guest name": "Michelle",
+    "Location": 10,
+    "Negative review": "",
+    "Positive review": "Amazing service we upgraded the room and it was well worth it. Would definitely recommend to friends and will be booking again",
+    "Property reply": "Dear Michelle, thank you for your kind review. We are so glad that you enjoyed your stay and it was an absolute pleasure to see you both. We look forward to welcoming you back soon and will take care of your friends and family also. All the best from all at Rosedene Highland House. ",
+    "Reservation Number": "3324915730",
+    "Review date": "2022-04-03 22:30:07",
+    "Review score": 10,
+    "Review title": "",
+    "Staff": 10,
+    "Value for money": 10
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 7.5,
+    "Facilities": 10,
+    "Guest name": "JOSE LUIS",
+    "Location": 10,
+    "Negative review": "maybe, they were carrying out improvement works and the stairs were not clean",
+    "Positive review": "Localization (very close the center), kindness of the owner and room quality ",
+    "Property reply": "",
+    "Reservation Number": "3775128540",
+    "Review date": "2022-04-04 18:44:57",
+    "Review score": 9,
+    "Review title": "Great!",
+    "Staff": 10,
+    "Value for money": 7.5
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 10,
+    "Guest name": "Scott",
+    "Location": 10,
+    "Negative review": "",
+    "Positive review": "really well presented and owner was very friendly",
+    "Property reply": "",
+    "Reservation Number": "2336225926",
+    "Review date": "2022-04-09 14:50:41",
+    "Review score": 10,
+    "Review title": "",
+    "Staff": 10,
+    "Value for money": 10
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 10,
+    "Guest name": "Sarina Martina",
+    "Location": 7.5,
+    "Negative review": "",
+    "Positive review": "",
+    "Property reply": "",
+    "Reservation Number": "2192755199",
+    "Review date": "2022-04-11 15:51:05",
+    "Review score": 10,
+    "Review title": "",
+    "Staff": 10,
+    "Value for money": 10
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 10,
+    "Guest name": "Randy",
+    "Location": 10,
+    "Negative review": "N/A",
+    "Positive review": "Wonderful location and spacious, perfect room. Amjed was a gracious host and always available to help us navigate the area. Thanks Amjed!!",
+    "Property reply": "Dear Randy, we are just getting an opportunity to thank you for leaving us such a wonderful review. It was an absolute honour to host you at Rosedene, you were such great guests and the memory of your visit will always be here at Rosedene. We are so glad that you enjoyed our great location and facilities. You are welcome back anytime and we really hope to see you again soon. Take care and all the very best from all here at Rosedene Highland House.    ",
+    "Reservation Number": "3382092782",
+    "Review date": "2022-04-12 14:10:14",
+    "Review score": 10,
+    "Review title": "Wonderful accommodations that are located just a beautiful stroll along the water from town.",
+    "Staff": 10,
+    "Value for money": 10
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 10,
+    "Guest name": "Carla",
+    "Location": 10,
+    "Negative review": "Nada.",
+    "Positive review": "O alojamento está preparado para uma estadia ultra confortável, com um conjunto de pequenos luxos que nos n faz querer voltar. O atendimento foi muito simpático e sempre disponível em qualquer momento.",
+    "Property reply": "",
+    "Reservation Number": "3067297949",
+    "Review date": "2022-04-12 22:56:51",
+    "Review score": 10,
+    "Review title": "alojamento perfeito pelo serviço, condições do apartamento e localização.",
+    "Staff": 10,
+    "Value for money": 10
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 7.5,
+    "Guest name": "Eve",
+    "Location": 7.5,
+    "Negative review": "Just a few little things which didn't meet expectations when considering the star rating and the price - like providing a washing machine but no washing tablets or powder, there were no cleaning products like anti bac spray or wipes. There was also no bottle opener and some of the dishes were dirty that had been put away in the cupboards. The shower door bangs shut and might break eventually, it needs a soft close solution. It's new and I'm sure these things will get rectified. ",
+    "Positive review": "Lovely new apartment! Its very modern and comfortable, the staff member was extremely nice and helpful too. Lovely grounds, about a 15 minute flat walk to the city centre along the river ness which is beautiful. We really did enjoy our stay. ",
+    "Property reply": "",
+    "Reservation Number": "3570124550",
+    "Review date": "2022-04-15 12:15:22",
+    "Review score": 0,
+    "Review title": "Lovely modern apartment 15 minute walk to centre ",
+    "Staff": 10,
+    "Value for money": 7.5
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 10,
+    "Guest name": "Neil",
+    "Location": 10,
+    "Negative review": "",
+    "Positive review": "The Accommodation was comfortable, clean and spacious. Amjed was very attentive and was always available if needed. Would definitely recommend for couples, groups or families.\r\n",
+    "Property reply": "",
+    "Reservation Number": "2690485999",
+    "Review date": "2022-04-19 9:50:07",
+    "Review score": 10,
+    "Review title": "",
+    "Staff": 10,
+    "Value for money": 10
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 10,
+    "Guest name": "Carole",
+    "Location": 10,
+    "Negative review": "",
+    "Positive review": "Couldn’t fault this overnight stay. Amjed, the owner, was there to welcome us when we arrived and couldn’t have been more helpful. The accommodation was very well furnished and equipped - wish we could have made more use of it but we had to be up and out for the Etape Loch Ness! Would certainly return and recommend to others.",
+    "Property reply": "",
+    "Reservation Number": "2513736460",
+    "Review date": "2022-04-26 13:14:45",
+    "Review score": 10,
+    "Review title": "Excellent host, accommodation and location.",
+    "Staff": 10,
+    "Value for money": 10
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 7.5,
+    "Guest name": "Esther",
+    "Location": 10,
+    "Negative review": "Ik miste een bad",
+    "Positive review": "De locatie is top!",
+    "Property reply": "Dear Esther, we take this opportunity to thank you for choosing to stay at Rosedene, you were fabulous guests. We are delighted that you enjoyed your stay and our fabulous location. \r\n\r\nWe do recall on your final night stay you brought to our attention that you thought you had booked an apartment with a bath. We checked this and you had definitely not booked an apartment with a bath and your booking notes didn’t have any request for a bath either.\r\n \r\nWe would like to take this opportunity to mention that we are on the path towards accreditation for our sustainable tourism efforts, as a part of these efforts there was a reduction in the number of baths incorporated into the building design. Had we known that you would have liked an apartment with a bath we would have happily allocated one to you at the time of your booking. \r\n\r\nThank you so much again for being our special guests and we look forward to welcoming you back to Rosedene very soon. All the best from all at Rosedene Highland House. \r\n\r\n",
+    "Reservation Number": "2949262043",
+    "Review date": "2022-04-26 15:13:04",
+    "Review score": 8,
+    "Review title": "Heerlijk appartement, vriendelijke host op een geweldige plek ten opzichte van de stad!",
+    "Staff": 10,
+    "Value for money": 7.5
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 7.5,
+    "Facilities": 10,
+    "Guest name": "Stephen",
+    "Location": 10,
+    "Negative review": "",
+    "Positive review": "",
+    "Property reply": "",
+    "Reservation Number": "3162488185",
+    "Review date": "2022-04-28 12:29:36",
+    "Review score": 8,
+    "Review title": "",
+    "Staff": 7.5,
+    "Value for money": 7.5
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 10,
+    "Guest name": "Matthew",
+    "Location": 10,
+    "Negative review": "Hard to say! ",
+    "Positive review": "The building is stunning, the room was very spacious and the staff extremely welcoming and helpful!",
+    "Property reply": "Dear Matthew, we just wanted to say a big thank you for adding such a fabulous review for us, it really means so much to all our teams here who go out of their way to assist all Guests, its wonderful to get the great feedback. You were fabulous Guests and it was such a pleasure to have you at Rosedene, we would have you back again at Rosedene anytime. Take care and we hope to see you again soon. Best Regards from all at Rosedene Highland House. ",
+    "Reservation Number": "3825355743",
+    "Review date": "2022-04-28 22:33:05",
+    "Review score": 10,
+    "Review title": "We had great communication with easy instructions to gain access, met by our host who was great, friendly and informativ",
+    "Staff": 10,
+    "Value for money": 10
+  },
+  {
+    "Cleanliness": 7.5,
+    "Comfort": 10,
+    "Facilities": 7.5,
+    "Guest name": "Roland",
+    "Location": 10,
+    "Negative review": "",
+    "Positive review": "",
+    "Property reply": "",
+    "Reservation Number": "2687048159",
+    "Review date": "2022-04-29 21:40:25",
+    "Review score": 9,
+    "Review title": "",
+    "Staff": 10,
+    "Value for money": 7.5
+  },
+  {
+    "Cleanliness": 10,
+    "Comfort": 10,
+    "Facilities": 7.5,
+    "Guest name": "kim",
+    "Location": 7.5,
+    "Negative review": "TV too complicated",
+    "Positive review": "good facilities and location",
+    "Property reply": "Dear Kim,\r\n\r\nThank you so much for adding a lovely review for us, it is greatly appreciated and it was a pleasure to have you both at Rosedene. We are so pleased that you found everything to your satisfaction during your brief stay with us, it was a pleasure to get a chance to give you a small tour and to share some of the fascinating history of this great building. We note your comments regarding the Smart TV’s, we are sorry that you couldn’t operate them, certainly no one has found them difficult. they are so easy to operate and you had a personal demonstration during your check-in, it is a one button action on the remote to put the TV on and then another for all your selections, we were also available 24hrs to assist you if you needed further help and it would have been no problem to assist you anytime if you had asked. We do hope to see you again soon. Thank you from all at Rosedene Highland House. ",
+    "Reservation Number": "2554615623",
+    "Review date": "2022-05-09 9:53:55",
+    "Review score": 9,
+    "Review title": "good location,facilities and very clean",
+    "Staff": 7.5,
+    "Value for money": 7.5
+  }
+]
+    function formatScore(score) {
+        const num = Number(score);
+        if (num === 10) return '10';
+        return num % 1 === 0 ? num.toFixed(1) : num.toFixed(1);
+    }
 
+    function formatDateToMonthYear(dateString) {
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat('en-US', {
+            month: 'long',
+            year: 'numeric'
+        }).format(date);
+    }
     // Sorting functions
     const sortReviews = (reviews) => {
         return [...reviews].sort((a, b) => {
@@ -131,7 +368,7 @@
     };
 </script>
 
-<div class="bg-[#233441] py-24 px-6 relative overflow-hidden">
+<div class="bg-[#233441] py-24 px-6 relative overflow-hidden min-h-screen">
     <!-- Background Layers -->
     <div class="absolute inset-0 z-0">
         <img 
@@ -144,157 +381,107 @@
         <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#233441] via-[#233441]/80 to-transparent"></div>
     </div>
 
-    <div class="max-w-7xl mx-auto z-10 relative">
+    <div class="max-w-7xl mx-auto relative z-10">
         <!-- Header Section -->
-        <div class="text-center mb-16 space-y-6">
+        <div class="text-center mb-14 space-y-5">
             <div class="inline-flex flex-col items-center">
-                <span class="text-[#d19c47] font-semibold tracking-widest text-sm mb-4">TESTIMONIALS</span>
-                <h2 class="text-5xl font-bold text-[#F0F4F8] mb-6 relative">
-                    Guest Experiences
-                    <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-[#d19c47] rounded-full"></div>
+                <span class="text-[#D1A054] uppercase tracking-widest text-sm mb-3 font-medium">
+                    Guest Reviews
+                </span>
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-5 relative">
+                    Experiences That Speak Volumes
+                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-[#D1A054]"></div>
                 </h2>
-                <!-- Rating Badge -->
-                <div class="rating-badge pt-2 inline-flex  flex-row items-center bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full gap-4 border border-white/20 ">
-                    <div class="flex items-center gap-2">
-                        <span class="text-2xl font-bold text-[#d19c47]">4.9</span>
-                        <div class="flex text-[#d19c47]">
-                            {#each Array(5) as _, i}
-                                <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                </svg>
-                            {/each}
-                        </div>
+                
+                <!-- Rating Summary -->
+                <div class="mt-6 flex items-center gap-3 text-white/90">
+                    <div class="flex items-center gap-1 text-[#D1A054]">
+                        {#each Array(5) as _, i}
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                        {/each}
                     </div>
-                    <span class="text-[#D1E0EB] text-sm">Based on 284 reviews</span>
+                    <span class="text-lg font-medium">4.9/5</span>
+                    <span class="text-sm">(Based on 284 reviews)</span>
                 </div>
-
             </div>
         </div>
 
-        <!-- Sorting buttons -->
-        <!-- <div class="flex flex-wrap gap-4 mb-12 items-center justify-between bg-white/10 backdrop-blur-sm p-5 rounded-2xl border border-white/20">
-            <div class="flex items-center gap-4">
-                <span class="text-[#D1E0EB] font-medium">Sort by:</span>
-                <div class="flex gap-2">
-                    <button 
-                        class="px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all {sortBy === 'date' ? 'bg-amber-500 text-[#233441]' : 'bg-white/10 hover:bg-white/20 text-[#D1E0EB]'}"
-                        on:click={() => sortBy = 'date'}
+        <!-- Review Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
+            {#each Array(11) as _, i}
+                {#if reviews[i]["Positive review"] != ""}             
+                    <div 
+                        class="relative bg-white/10 rounded-xl p-6 transition-all hover:bg-white/20 border border-white/20 hover:border-white/30 group"
+                        transition:fade
                     >
-                        <svg class="w-4 h-4 {sortBy === 'date' ? 'fill-[#233441]' : 'fill-[#D1E0EB]'}" viewBox="0 0 24 24">
-                            <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5z"/>
-                        </svg>
-                        Date
-                    </button>
-                    <button 
-                        class="px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all {sortBy === 'stars' ? 'bg-amber-500 text-[#233441]' : 'bg-white/10 hover:bg-white/20 text-[#D1E0EB]'}"
-                        on:click={() => sortBy = 'stars'}
-                    >
-                        <svg class="w-4 h-4 {sortBy === 'stars' ? 'fill-[#233441]' : 'fill-amber-500'}" viewBox="0 0 24 24">
-                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                        </svg>
-                        Rating
-                    </button>
-                    <button 
-                        class="px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all {sortBy === 'apartment' ? 'bg-amber-500 text-[#233441]' : 'bg-white/10 hover:bg-white/20 text-[#D1E0EB]'}"
-                        on:click={() => sortBy = 'apartment'}
-                    >
-                        <svg class="w-4 h-4 {sortBy === 'apartment' ? 'fill-[#233441]' : 'fill-[#D1E0EB]'}" viewBox="0 0 24 24">
-                            <path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 18H6c-.55 0-1-.45-1-1V5c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v14c0 .55-.45 1-1 1z"/>
-                            <path d="M8 10h8v2H8zm0 4h5v2H8z"/>
-                        </svg>
-                        Apartment
-                    </button>
-                </div>
-            </div>
-            
-            <button 
-                class="flex items-center gap-2 text-[#D1E0EB] hover:text-amber-500 transition-colors group"
-                on:click={toggleSortDirection}
-            >
-                <span>{sortDirection === 'asc' ? 'Ascending' : 'Descending'}</span>
-                <svg class="w-5 h-5 transition-transform transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                </svg>
-            </button>
-        </div> -->
-
-
-        <!-- Review Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {#each sortReviews(reviews) as review (review.id)}
-                <div 
-                    class="review-card group relative bg-white/5 backdrop-blur-sm p-7 rounded-2xl border border-white/20 hover:border-[#d19c47]/30 transition-all duration-300 hover:-translate-y-1.5 shadow-xl min-w-0"
-                    transition:fade
-                >
-                    <!-- Decorative Corner -->
-                    <div class="absolute top-0 right-0 w-8 h-8 border-t border-r border-[#d19c47]/30 rounded-tr-2xl"></div>
-
-                    <div class="flex flex-col gap-4">
-                        <!-- Author Section -->
-                        <div class="flex items-center gap-4">
-                            <div class="relative">
-                                <div class="absolute -inset-0.5 bg-gradient-to-br from-[#d19c47] to-amber-600 rounded-full blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                                <div class="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center text-[#d19c47] font-medium text-lg relative">
-                                    {review.author.split(' ').map(n => n[0]).join('')}
+                        <!-- Header -->
+                        <div class="flex items-start justify-between mb-4">
+                            <!-- Author Info -->
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D1A054] to-amber-700 flex items-center justify-center text-white font-medium">
+                                    {reviews[i]["Guest name"].split(' ').map(n => n[0]).join('')}                                
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-semibold">{reviews[i]["Guest name"]}</h3>
+                                    <p class="text-sm text-white/60">United Kingdom</p>
                                 </div>
                             </div>
-                            <div>
-                                <p class="font-semibold text-[#F0F4F8]">{review.author}</p>
-                                <p class="text-[#D1E0EB] text-sm">{review.country}</p>
-                            </div>
+                            
+                            <!-- Date -->
+                            <span class="text-sm text-white/50">{formatDateToMonthYear(reviews[i]["Review date"])}</span>
                         </div>
 
-                        <!-- Stay Details -->
-                        <div class="space-y-2">
-                            <div class="flex flex-wrap gap-2 items-center text-sm">
-                                <span class="text-[#d19c47] font-medium">{review.apartment}</span>
-                                <span class="text-[#D1E0EB]">•</span>
-                                <span class="text-[#D1E0EB]">{review.nights} nights</span>
-                                <span class="text-[#D1E0EB]">•</span>
-                                <span class="text-[#D1E0EB]">{review.stayPeriod}</span>
+                        <!-- Rating & Details -->
+                        <div class="mb-4 flex items-center justify-between">
+
+                            <div class="flex items-center justify-center text-white bg-[#003B95] rounded font-bold rounded-bl-[0px] w-8 h-8">
+                                <p >{formatScore(reviews[i]["Review score"])}</p>
                             </div>
-                            <div class="flex items-center gap-2 text-sm text-[#d19c47]">
-                                <svg fill="#d19c47" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px"><path d="M6 6a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m1.5 0a3 3 0 1 0-6 0 3 3 0 0 0 6 0m-3 3A4.5 4.5 0 0 0 0 13.5v2.25c0 .414.336.75.75.75h1.5l-.744-.657.75 6A.75.75 0 0 0 3 22.5h3A.75.75 0 0 0 6 21H3l.744.657-.75-6A.75.75 0 0 0 2.25 15H.75l.75.75V13.5a3 3 0 0 1 3-3 .75.75 0 0 0 0-1.5M21 6a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m1.5 0a3 3 0 1 0-6 0 3 3 0 0 0 6 0m-3 4.5a3 3 0 0 1 3 3v2.25l.75-.75h-1.5a.75.75 0 0 0-.744.657l-.75 6L21 21h-3a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 .744-.657l.75-6-.744.657h1.5a.75.75 0 0 0 .75-.75V13.5A4.5 4.5 0 0 0 19.5 9a.75.75 0 0 0 0 1.5m-5.25-6.75a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0m1.5 0a3.75 3.75 0 1 0-7.5 0 3.75 3.75 0 0 0 7.5 0M18 13.5a6 6 0 0 0-12 0v2.25c0 .414.336.75.75.75H9l-.746-.675.75 7.5A.75.75 0 0 0 9.75 24h4.5a.75.75 0 0 0 .746-.675l.75-7.5L15 16.5h2.25a.75.75 0 0 0 .75-.75zm-1.5 0v2.25l.75-.75H15a.75.75 0 0 0-.746.675l-.75 7.5.746-.675h-4.5l.746.675-.75-7.5A.75.75 0 0 0 9 15H6.75l.75.75V13.5a4.5 4.5 0 1 1 9 0"></path></svg>
-                                <span>  {review.groupType}</span>
-                            </div>
+
+                            <span class="text-sm text-white/70 bg-white/10 px-3 py-1 rounded-full">
+                                Emperor 1
+                            </span>
                         </div>
 
                         <!-- Review Content -->
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-2 text-[#d19c47]">
-                                {#each Array(5) as _, i}
-                                    <svg class="w-5 h-5 {i < review.stars ? 'fill-current' : 'fill-white/20'}" 
-                                        viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        <p class="text-white/90 mb-5 line-clamp-4">
+                            {reviews[i]["Positive review"]}
+                        </p>
+
+                        <!-- Stay Details -->
+                        <div class="pt-4 border-t border-white/10">
+                            <div class="flex flex-wrap gap-3 text-sm text-white/60">
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                     </svg>
-                                {/each}
+                                    2 nights
+                                </span>
+                                <span>•</span>
+                                <span>Group Type</span>
                             </div>
-
-                            <p class="text-[#D1E0EB] italic">"{review.comment}"</p>
-                            
-
-                            <div class="flex flex-wrap justify-between items-center text-sm">
-                                <p class="review-date text-[#D1E0EB]">{review.reviewDate}</p>
-                            </div>
-
                         </div>
                     </div>
-                </div>
+                {/if}
             {/each}
         </div>
-        <div class="justify-end flex mt-8 ">
 
-            <button on:click={() => { window.location.href = "/reviews"; }} class="min-w-[100%] sm:min-w-[35%] group flex items-center gap-3 px-6 py-4 bg-[#C09A5B]/10 backdrop-blur-sm rounded-xl border border-[#C09A5B]/20 hover:bg-[#C09A5B]/20 transition-all justify-end text-right">
-                <svg class="w-6 h-6 text-[#C09A5B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        <!-- CTA Button -->
+        <div class="text-center">
+            <button 
+                on:click={() => { window.location.href = "/reviews"; }}
+                class="inline-flex items-center gap-2 px-8 py-3.5 bg-[#D1A054] hover:bg-amber-600 text-white rounded-lg transition-all font-medium group"
+            >
+                Read All Reviews
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                 </svg>
-                
-                <span class="text-white/90 font-medium">Read More</span>
-                <span class="ml-auto text-[#C09A5B] opacity-0 group-hover:opacity-100 transition-opacity">→</span>
             </button>
         </div>
     </div>
+
 </div>
 
 <style>

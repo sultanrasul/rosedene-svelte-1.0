@@ -52,7 +52,7 @@
 <!-- <header class="fixed top-0 left-0 z-50 w-full bg-gray-800/0 transition-transform
     {scrolled ? 'backdrop-blur-lg border-b shadow-xl' : 'backdrop-filter-none'}"> -->
 
-<header class="bg-gray-800/0 left-0 top-0 z-50 w-full animate-fade-in opacity-100 backdrop-blur-[3px] border-b shadow-xl">
+<header class=" left-0 top-0 z-50 w-full animate-fade-in opacity-100 backdrop-blur-[3px] border-b shadow-xl">
   <div class="pl-12 pr-12 flex h-[66px] lg:h-[80px] items-center justify-between m-auto">
     <!-- Logo -->
     <div class="flex-shrink-0">
