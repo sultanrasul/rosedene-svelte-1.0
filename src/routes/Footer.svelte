@@ -16,9 +16,10 @@
           <h4 class="text-xs font-semibold text-[#C09A5B] uppercase">Our Company</h4>
     
           <div class="mt-3 grid space-y-3 text-sm">
-            <p><a class="inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors" href="#">View Our Apartments</a></p>
-            <p><a class="inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors" href="#">What is an aparthotel?</a></p>
-            <p><a class="inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors" href="#">About us</a></p>
+            <p><a class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors" href="#">View Our Apartments</a></p>
+            <p><a on:click={() => { window.location.href = "/aparthotel"; }} class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">What is an aparthotel?</a></p>
+            <p><a on:click={() => { window.location.href = "/faq"; }} class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">FAQ</a></p>
+            <!-- <p><a class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">About us</a></p> -->
           </div>
         </div>
         <!-- End Col -->
@@ -27,9 +28,8 @@
           <h4 class="text-xs font-semibold text-[#C09A5B] uppercase">Customer Support</h4>
           
           <div class="mt-3 grid space-y-3 text-sm">
-            <p><a on:click={() => { window.location.href = "/contact"; }} class="inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors" href="#">Contact Us</a></p>
-            <p><a on:click={() => { window.location.href = "/details"; }} class="inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors" href="#">Manage Booking</a></p>
-            <p><a on:click={() => { window.location.href = "/faq"; }} class="inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors" href="#">Frequently asked questions</a></p>
+            <p><a on:click={() => { window.location.href = "/contact"; }} class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">Contact Us</a></p>
+            <p><a on:click={() => { window.location.href = "/details"; }} class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">Manage Booking</a></p>
           </div>
         </div>
         <!-- End Col -->

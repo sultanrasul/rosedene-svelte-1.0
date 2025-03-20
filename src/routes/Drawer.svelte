@@ -36,8 +36,9 @@
       <ul class="space-y-1 cursor-pointer">
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <li><a on:click={() => { window.location.href = "/"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">View Our Apartments</a></li>
-        <li><a on:click={() => { window.location.href = "/"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">What is an aparthotel?</a></li>
-        <li><a on:click={() => { window.location.href = "/"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">About Us</a></li>
+        <li><a on:click={() => { window.location.href = "/aparthotel"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">What is an aparthotel?</a></li>
+        <li><a on:click={() => { window.location.href = "/faq"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">FAQ</a></li>
+        <!-- <li><a on:click={() => { window.location.href = "/"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">About Us</a></li> -->
         <!-- <li><a href="#" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Press & Media</a></li> -->
         </ul>
       </div>
@@ -49,7 +50,6 @@
           <li><a on:click={() => { window.location.href = "/contact"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Contact Us</a></li>
           <li><a on:click={() => { window.location.href = "/details"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Manage Booking</a></li>
           <li><a on:click={() => { window.location.href = "/terms"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Terms and Conditions</a></li>
-          <li><a on:click={() => { window.location.href = "/faq"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Frequently asked questions</a></li>
       </ul>
     </div>
 
