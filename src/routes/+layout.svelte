@@ -57,4 +57,8 @@
       opacity: 1 !important;
       background: #C09A5B !important;
     }
+
+	:global(body) {
+        touch-action: manipulation;
+      }
   </style>
