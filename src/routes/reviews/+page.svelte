@@ -78,11 +78,14 @@
     onMount(() => fetchReviews());
 
     function formatDateToMonthYear(dateString) {
-        const date = new Date(dateString);
-        return new Intl.DateTimeFormat('en-US', {
-            month: 'long',
-            year: 'numeric'
-        }).format(date);
+        // Pad single-digit time components and format to ISO
+        const [datePart] = dateString.split(' ');
+        const date = new Date(`${datePart}`);
+        
+        if (isNaN(date.getTime())) return '';
+        
+        return date.toLocaleString('default', { month: 'long' }) + 
+            ' ' + date.getFullYear();
     }
 </script>
 

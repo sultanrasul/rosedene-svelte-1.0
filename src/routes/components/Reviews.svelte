@@ -8,10 +8,12 @@
 
     BACKEND_URL
     
+    // @ts-ignore
     let reviews;
 
     onMount(() => fetchReviews());
 
+    // @ts-ignore
     async function fetchReviews(page = 1) {
         try {
             const response = await fetch(`${BACKEND_URL}/get_reviews`, {
@@ -26,23 +28,30 @@
             reviews = data.reviews;
         } catch (err) {
             console.error('Failed to fetch reviews:', err);
+            // @ts-ignore
             toast.error(`Failed to fetch reviews: ${err}`);
         }
     }
 
+    // @ts-ignore
     function formatScore(score) {
         const num = Number(score);
         if (num === 10) return '10';
         return num % 1 === 0 ? num.toFixed(1) : num.toFixed(1);
     }
 
+    // @ts-ignore
     function formatDateToMonthYear(dateString) {
-        const date = new Date(dateString);
-        return new Intl.DateTimeFormat('en-US', {
-            month: 'long',
-            year: 'numeric'
-        }).format(date);
+        // Pad single-digit time components and format to ISO
+        const [datePart] = dateString.split(' ');
+        const date = new Date(`${datePart}`);
+        
+        if (isNaN(date.getTime())) return '';
+        
+        return date.toLocaleString('default', { month: 'long' }) + 
+            ' ' + date.getFullYear();
     }
+
 
 </script>
 
@@ -89,8 +98,9 @@
         <!-- Review Cards Grid -->
         {#if reviews}
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
-                {#each Array(10) as _, i}
-                    {#if reviews[i]["Positive review"] != ""}             
+                {#each reviews as review}
+                <!-- {#each Array(10) as _, i} -->
+                    {#if review["Positive review"] != ""}             
                         <div 
                             class="relative bg-white/10 rounded-xl p-6 transition-all hover:bg-white/20 border border-white/20 hover:border-white/30 group"
                             transition:fade
@@ -100,23 +110,23 @@
                                 <!-- Author Info -->
                                 <div class="flex items-center gap-4">
                                     <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D1A054] to-amber-700 flex items-center justify-center text-white font-medium">
-                                        {reviews[i]["Guest name"].split(' ').map(n => n[0]).join('')}                                
+                                        {review["Guest name"].split(' ').map(n => n[0]).join('')}                                
                                     </div>
                                     <div>
-                                        <h3 class="text-white font-semibold">{reviews[i]["Guest name"]}</h3>
+                                        <h3 class="text-white font-semibold">{review["Guest name"]}</h3>
                                         <p class="text-sm text-white/60">United Kingdom</p>
                                     </div>
                                 </div>
                                 
                                 <!-- Date -->
-                                <span class="text-sm text-white/50">{formatDateToMonthYear(reviews[i]["Review date"])}</span>
+                                <span class="text-sm text-white/50">{formatDateToMonthYear(review["Review date"])}</span>
                             </div>
 
                             <!-- Rating & Details -->
                             <div class="mb-4 flex items-center justify-between">
 
                                 <div class="flex items-center justify-center text-white bg-[#003B95] rounded font-bold rounded-bl-[0px] w-8 h-8">
-                                    <p >{formatScore(reviews[i]["Review score"])}</p>
+                                    <p >{formatScore(review["Review score"])}</p>
                                 </div>
 
                                 <span class="text-sm text-white/70 bg-white/10 px-3 py-1 rounded-full">
@@ -126,7 +136,7 @@
 
                             <!-- Review Content -->
                             <p class="text-white/90 mb-5 line-clamp-4">
-                                {reviews[i]["Positive review"]}
+                                {review["Positive review"]}
                             </p>
 
                             <!-- Stay Details -->
