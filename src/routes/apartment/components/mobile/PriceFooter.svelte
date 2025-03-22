@@ -2,7 +2,7 @@
     // @ts-nocheck
     
         import NumberTicker from "@/components/NumberTicker.svelte";
-        import { Info, Loader2 } from "lucide-svelte";
+        import { CalendarDays, Info, Loader2 } from "lucide-svelte";
     
         export let displayPrice;
         export let initialPrice;
@@ -81,15 +81,28 @@
         <!-- Content Container -->
         <div class="w-full flex items-center justify-between">
             <!-- Price Section -->
-            <div class="flex flex-col">
+            <div class="flex flex-col ">
                 {#if loading}
+
                     <div class="flex items-center h-10">
-                        <Loader2 class="w-6 h-6 text-[#C09A5B] animate-spin" />
+                        <span class="text-gray-700/80">Checking Availability</span>
+          
+                        <svg width="50" height="12" fill="#C09A5B" viewBox="0 9 24 6" style="display: inline-block; overflow: visible" xmlns="http://www.w3.org/2000/svg">
+                            <style>
+                            .spinner_b2T7{animation:spinner_xe7Q .8s linear infinite}
+                            .spinner_YRVV{animation-delay:-.65s}
+                            .spinner_c9oY{animation-delay:-.5s}
+                            @keyframes spinner_xe7Q{93.75%,100%{r:3px}46.875%{r:.2px}}
+                            </style>
+                            <circle class="spinner_b2T7" cx="4" cy="12" r="3"/>
+                            <circle class="spinner_b2T7 spinner_YRVV" cx="12" cy="12" r="3"/>
+                            <circle class="spinner_b2T7 spinner_c9oY" cx="20" cy="12" r="3"/>
+                        </svg>
                     </div>
                 {:else if error}
-                    <div class="flex items-center text-sm text-red-500">
+                    <div class="flex items-center text-lg text-red-500">
                         <Info class="w-4 h-4 mr-2" />
-                        <span>Price unavailable</span>
+                        <h1>Price unavailable</h1>
                     </div>
                 {:else}
                     <div class="flex items-baseline gap-1.5">
@@ -106,7 +119,6 @@
                 <button 
                     on:click={scrollToGuestDetails}
                     class="py-2 px-2 text-xs font-medium text-gray-300 bg-gray-700 rounded-md hover:bg-gray-600 transition-colors dark:text-gray-700 dark:bg-gray-100 dark:hover:bg-gray-200 whitespace-nowrap"
-                    disabled={loading || error}
                 >
                     Booking Details
                 </button>
@@ -115,7 +127,7 @@
                         class='w-full p-[6px] rounded-xl font-semibold transition-all duration-200 bg-[#C09A5B]/30 text-gray-400 cursor-not-allowed'
                         disabled
                     >
-                        <Loader2 class="w-6 h-6 inline-block animate-spin" />
+                        Book Now
                     </button>
                 {:else if error}
                     <button 

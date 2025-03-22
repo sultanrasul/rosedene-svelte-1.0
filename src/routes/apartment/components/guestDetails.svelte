@@ -7,6 +7,7 @@
   import FormInputs from '$lib/components/formInputs.svelte';
   import { onMount } from 'svelte';
   import { apartments } from '../../apartments';
+  import { load } from '../old';
   
 
   const today = new Date();
@@ -26,6 +27,8 @@
   export let startDate;
   export let endDate;
   export let isSearch = false;  
+  export let loading;
+  export let error;
   export let dropdownID = "dropdownDefaultCheckbox";
   let apartmentDetails;
 
@@ -206,18 +209,42 @@
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
         <button 
+          disabled = {loading || error}
           id="flashGuestsInput"
-          class="guest-control-btn w-full text-base md:text-[17px] flex items-center justify-center gap-2 cursor-pointer text-gray-700 bg-white border-2 border-gray-300 rounded-lg px-4 py-3 transition-all duration-200 hover:border-[#C09A5B]"
+          class="{error ? 'border-red-300 hover:border-red-600' : loading ? 'border-[#C09A5B] hover:border-[#C09A5B]' : 'border-gray-300 hover:border-[#C09A5B]'} 
+          disabled:cursor-default w-full text-base md:text-[17px] flex items-center justify-center gap-2 cursor-pointer text-gray-700 bg-white border-2 rounded-lg px-4 py-3 transition-all duration-200"
           on:click={toggleDatePicker}
         >
-          <CalendarDays class="w-5 h-5 md:w-6 md:h-6 text-[#C09A5B] shrink-0" />
-          <span class="font-medium truncate text-center">
-            {#if startDate && !endDate}
-              <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">Check Out</span>
-            {:else if startDate && endDate}
-              <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">{formattedEndDate}</span>
+        <CalendarDays class="{error ? 'text-red-400' : 'text-[#C09A5B]'}  w-5 h-5 md:w-6 md:h-6 shrink-0" />
+
+        <span class="font-medium truncate text-center">
+          
+          {#if loading}
+          <span class="text-gray-700/80">Checking Availability</span>
+          
+          <svg width="50" height="12" fill="#C09A5B" viewBox="0 9 24 6" style="display: inline-block; overflow: visible" xmlns="http://www.w3.org/2000/svg">
+            <style>
+              .spinner_b2T7{animation:spinner_xe7Q .8s linear infinite}
+              .spinner_YRVV{animation-delay:-.65s}
+              .spinner_c9oY{animation-delay:-.5s}
+              @keyframes spinner_xe7Q{93.75%,100%{r:3px}46.875%{r:.2px}}
+              </style>
+              <circle class="spinner_b2T7" cx="4" cy="12" r="3"/>
+              <circle class="spinner_b2T7 spinner_YRVV" cx="12" cy="12" r="3"/>
+              <circle class="spinner_b2T7 spinner_c9oY" cx="20" cy="12" r="3"/>
+            </svg>
             {:else}
-              <span class="text-gray-900">Check In</span> – <span class="text-gray-900">Check Out</span>
+              <span class="font-medium truncate text-center inline-flex gap-2">
+              {#if error}
+                <span class="text-gray-700">Unable to check availability</span>
+              {:else if startDate && !endDate}
+                <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">Check Out</span>
+              {:else if startDate && endDate}
+                <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">{formattedEndDate}</span>
+              {:else}
+                <span class="text-gray-900">Check In</span> – <span class="text-gray-900">Check Out</span>
+              {/if}
+            </span>
             {/if}
           </span>
         </button>

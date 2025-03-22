@@ -25,11 +25,7 @@
     <!-- Price Display -->
     
     <div class="mb-6">
-      {#if loading}
-        <div class="flex items-center justify-center py-4">
-          <Loader2 class="w-8 h-8 text-[#C09A5B] animate-spin" />
-        </div>
-      {:else if error}
+      {#if error}
         <div class="flex flex-col items-center justify-center py-2">
           <Info class="w-6 h-6 text-red-500 mb-2" />
           <p class="text-red-500 text-sm text-center">Unable to fetch pricing information</p>
@@ -59,7 +55,9 @@
         bind:children={children} 
         bind:adults={adults}
         dropdownID={"desktop"}
-        disabled={loading || error}
+        bind:loading={loading}
+        bind:error={error}
+
       />
     </div>
 
@@ -88,7 +86,7 @@
         class="w-full py-3 rounded-xl font-semibold transition-all duration-200 bg-[#C09A5B]/30 text-gray-400 cursor-not-allowed"
         disabled
       >
-        Loading Price Information
+        Book Now
       </button>
     {:else if error}
       <button

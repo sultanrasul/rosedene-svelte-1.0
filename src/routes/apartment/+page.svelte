@@ -478,6 +478,8 @@
                 bind:children={children} 
                 bind:adults={adults}
                 dropdownID={"mobile"}
+                bind:loading={loading}
+                bind:error={error}
               />              
             </div>
           </div>
