@@ -31,14 +31,11 @@
 
   </script>
 
-    <!-- Gradient transition to gray -->
-    <div class="inset-x-0 top-[80vh] -z-10 h-8"
-         style="background: linear-gradient(to bottom, transparent 0%, #233441 100%);">
-    </div>
+
 
 {#if browser}
 
-<div class="relative px-4 sm:px-8 md:px-20 lg:px-40 w-full overflow-x-hidden bg-[#233441] pt-10">
+<div class="relative px-4 sm:px-8 md:px-20 lg:px-40 w-full overflow-x-hidden bg-[#233441]">
       <!-- Background Layers -->
       <div class="absolute inset-0 z-0">
         <!-- Primary Background -->
