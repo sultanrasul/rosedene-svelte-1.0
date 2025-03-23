@@ -67,9 +67,13 @@
     
                         <!-- Carousel slides -->
                         {#each Array(images).fill().map((_, i) => i) as i}
-                            <div class="flex justify-center items-center duration-700 ease-in-out" data-carousel-item>
-                                <img src={`/${apartmentNumber}/${i}.jpg`} class="overflow-hidden rounded-xl object-contain w-full" alt="..."> <!-- Set w-full for full width -->
-                            </div>
+                        <div class="flex justify-center items-center duration-700 ease-in-out" data-carousel-item>
+                            <img 
+                              src={`/${apartmentNumber}/${i}.jpg`} 
+                              class="h-auto w-auto max-w-full max-h-[800px] rounded-xl object-contain" 
+                              alt="..." 
+                            />
+                          </div>                          
                         {/each}
     
                         <!-- Forward button -->
