@@ -25,6 +25,7 @@
     export let startDate;
     export let endDate;
     export let isSearch = false;  
+    let screenWidth = 800;
   
   
     export let children = 0;
@@ -32,12 +33,16 @@
     
     let dateFormatDMY = 'dd/MM/yyyy';
     let dateFormat = 'dd MMMM';
-    let isOpen = false;
+    let isOpenMobile = false;
+    let isOpenDesktop = false;
     export let childrenAges = [];
     console.log(childrenAges);
+    
+    function toggleDatePicker(){
+      isOpenMobile = !isOpenMobile;
+      isOpenDesktop = !isOpenDesktop
+    }
   
-  
-    const toggleDatePicker = () => (isOpen = !isOpen);
   
     const formatDate = (dateString) =>
         dateString && format(new Date(dateString), dateFormat) || '';
@@ -81,7 +86,7 @@
           callToast();
           startDate = null;
           endDate = null;
-          isOpen = true;
+          isOpenMobile = true;
           
         }
       }
@@ -93,7 +98,7 @@
           callToast();
           startDate = null;
           endDate = null;
-          isOpen = true;
+          isOpenMobile = true;
           
         }
       }
@@ -116,33 +121,43 @@
       }
     }
 
+    const updateWidth = () => {
+        screenWidth = window.innerWidth;
+        console.log(screenWidth)
+    };
+
+    onMount(() => {
+      updateWidth(); // Set initial width
+      window.addEventListener('resize', updateWidth);
+    })
   
   </script>
   
-  <div class="flex items-center justify-center py-6 relative z-50">
+  <div class="min-w-[350px] flex items-center justify-center py-6 relative z-50">
     <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4 px-5 py-3 md:px-6 bg-white rounded-2xl md:rounded-full shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100 relative w-full md:w-auto">
       <!-- Date Input -->
       <div class=" w-full md:w-auto group">
-        <DatePicker theme={"custom-datepicker"} class="w-full" bind:isOpen bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}>
           <!-- svelte-ignore a11y_click_events_have_key_events -->
           <!-- svelte-ignore a11y_no_static_element_interactions -->
           <div 
-            class="text-base md:text-[17px] w-full flex items-center justify-center gap-2 cursor-pointer text-gray-700 hover:bg-gray-50 rounded-full px-4 py-2 transition-colors duration-200"
-            on:click={toggleDatePicker}
+          class="text-base md:text-[17px] w-full flex items-center justify-center gap-2 cursor-pointer text-gray-700 hover:bg-gray-50 rounded-full px-4 py-2 transition-colors duration-200"
+          on:click={toggleDatePicker}
           >
-            <CalendarDays class="w-5 h-5  md:h-6 text-[#C09A5B] shrink-0" />
-            <span class="font-medium truncate text-center">
-              
-              {#if startDate && !endDate}
-                <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">Check Out</span>
-              {:else if startDate && endDate}
-                <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">{formattedEndDate}</span>
-              {:else}
-              <span class="text-gray-900">Check In</span> – <span class="text-gray-900">Check Out</span>
-              {/if}
-            </span>
-          </div>
-        </DatePicker>
+          <CalendarDays class="w-5 h-5  md:h-6 text-[#C09A5B] shrink-0" />
+          <span class="font-medium truncate text-center">
+            
+            {#if startDate && !endDate}
+            <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">Check Out</span>
+            {:else if startDate && endDate}
+            <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">{formattedEndDate}</span>
+            {:else}
+            <span class="text-gray-900">Check In</span> – <span class="text-gray-900">Check Out</span>
+            {/if}
+          </span>
+        </div>
+        {#if screenWidth <= 767}
+              <DatePicker theme={"homepage-datepicker"} class="w-full" bind:isOpen={isOpenMobile} bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}/>
+        {/if}
       </div>
   
       <div class="md:w-px md:h-8 w-full h-px bg-gray-200/60"></div>
@@ -260,7 +275,9 @@
       </div>
     </div>
   </div>
-  
+  {#if screenWidth > 767}
+    <DatePicker theme={"homepage-datepicker"} class="w-full" bind:isOpen={isOpenDesktop} bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}/>
+  {/if}
   <!-- DatePicker Component -->
   <style>
     select:focus {
@@ -268,11 +285,15 @@
       box-shadow: none;
   }
   
-  :global(.datepicker[data-picker-theme="custom-datepicker"]) {
-        --datepicker-container-border: 2px solid #C09A5B;
+  :global(.datepicker[data-picker-theme="homepage-datepicker"]) {
+        --datepicker-container-border: 1px solid #d5d5d534;
+        --datepicker-container-background: #fff;
+        --datepicker-container-box-shadow: 0 1px 20px rgba(0, 0, 0, 0.1);
         --datepicker-calendar-range-selected-background: #C09A5B;
+        --datepicker-container-position: relative;
 
         --datepicker-calendar-day-color-disabled: rgba(255, 0, 43, 0.5);
+        --datepicker-container-top: 125%;
   
   
         
