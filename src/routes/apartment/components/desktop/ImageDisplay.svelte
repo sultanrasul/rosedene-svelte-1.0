@@ -20,7 +20,7 @@
               <div class="group relative inline-block cursor-pointer" on:click={openModel}>
 
                 <img
-                  class="rounded-lg transition-all h-auto object-cover"
+                  class="rounded-lg transition-all max-h-[800px] object-cover"
                   src="{apartmentNumber}/0.jpg"
                   alt=""
                 />
@@ -38,7 +38,7 @@
                 <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <div class="group relative inline-block cursor-pointer" on:click={openModel}>
                   <img
-                    class="h-auto max-w-full rounded-lg transition-all"
+                    class="max-h-[400px] max-w-full rounded-lg transition-all"
                     src={`/${apartmentNumber}/${i}.jpg`}
                     alt=""
                   />
