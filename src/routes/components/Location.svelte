@@ -1,4 +1,6 @@
 <script>
+  import BoxReveal from "@/components/BoxReveal.svelte";
+
     export let city = "Inverness";
     export let tagline = "Gateway to the Scottish Highlands";
 </script>
@@ -9,7 +11,7 @@
     <!-- Background Layers -->
     <div class="absolute inset-0 z-0">
         <!-- Primary Background -->
-        <img 
+        <img
             src="/lochness.png"
             alt="Scenic background"
             class="w-full h-full object-cover opacity-40 transition-opacity duration-1000"
@@ -31,13 +33,17 @@
             <div class="max-w-3xl">
                 <!-- Header -->
                 <div class="mb-12 space-y-6">
-                    <span class="text-[#C09A5B] uppercase tracking-widest text-sm font-medium">
-                        Premium Highland Stays
-                    </span>
-                    <h1 class="text-5xl md:text-6xl font-bold text-white leading-tight">
-                        Discover {city}<br>
-                        <span class="text-[#C09A5B]">{tagline}</span>
-                    </h1>
+                    <BoxReveal boxColor={"#C09A5B"} duration={0.5}>
+                        <span class="text-[#C09A5B] uppercase tracking-widest text-sm font-medium">
+                            Premium Highland Stays
+                        </span>
+                    </BoxReveal>
+                    <BoxReveal boxColor={"#C09A5B"} duration={0.5}>
+                        <h1 class="text-5xl md:text-6xl font-bold text-white leading-tight">
+                            Discover {city}<br>
+                            <span class="text-[#C09A5B]">{tagline}</span>
+                        </h1>
+                    </BoxReveal>
                 </div>
 
                 <!-- Interactive Section -->
@@ -52,59 +58,63 @@
                     </button> -->
 
                     <!-- Description -->
-                    <p class="text-lg text-white/80 leading-relaxed max-w-2xl">
-                        Where misty lochs meet ancient castles. Cruise Loch Ness' mysterious waters, 
-                        wander through 14th-century ruins, and savor world-class whisky as the 
-                        Highland breeze whispers tales of Norse kings and mythical creatures.
-                    </p>
+                     <BoxReveal boxColor={"#C09A5B"} duration={0.5}>
+                         <p class="text-lg text-white/80 leading-relaxed max-w-2xl">
+                             Where misty lochs meet ancient castles. Cruise Loch Ness' mysterious waters, 
+                             wander through 14th-century ruins, and savor world-class whisky as the 
+                             Highland breeze whispers tales of Norse kings and mythical creatures.
+                         </p>
+                     </BoxReveal>
                 </div>
             </div>
 
         <!-- Right Column - Location Map -->
-        <div class="bg-[#233441]/50 backdrop-blur-sm rounded-2xl p-4 border border-[#C09A5B]/20  relative">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4">
-                
-                <div class="text-3xl font-semibold text-white inline-flex">
-                    <span>                      
-                        <svg class="w-10 h-10 pr-2 text-[#C09A5B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
-                    </span>
-                    <h3 class="pt-1">Our Location</h3> 
-
-                </div>
-                
-                <!-- Location Badge - Moves to its own line on small screens -->
-                <div class="bg-[#C09A5B]/90 backdrop-blur-sm px-4 py-2 rounded-lg mt-2 sm:mt-0">
-                    <p class="text-sm font-medium text-white">Rosedene Highland House</p>
-                    <p class="text-xs text-white">IV2 4QW • 18 min walk to City Centre</p>
-                </div>
-            </div>
-            
-
-            <!-- Map Container -->
-            <div class="relative h-[500px] rounded-xl overflow-hidden ">
-                <div class="absolute inset-0 bg-[#C09A5B]/10 animate-pulse"></div>
-                
-                <!-- Interactive Map -->
-                <!-- svelte-ignore a11y_missing_attribute -->
-                <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7372.50179950599!2d-4.2331814622549455!3d57.465740049978514!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x488f71faaed71d69%3A0xeca808584e8190e2!2sRosedene%20Highland%20House!5e0!3m2!1sen!2suk!4v1741047505489!5m2!1sen!2suk"
-                    class="absolute inset-0 w-full h-full border-0"
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                ></iframe>
-
-
-            </div>
-
-            <style>
-                .clip-marker {
-                    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-                }
-            </style>
-        </div>
+         <BoxReveal boxColor={"#C09A5B"} duration={0.5} width="full">
+             <div class="bg-[#233441]/50 backdrop-blur-sm rounded-2xl p-4 border border-[#C09A5B]/20 relative">
+                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4">
+                     
+                     <div class="text-3xl font-semibold text-white inline-flex">
+                         <span>                      
+                             <svg class="w-10 h-10 pr-2 text-[#C09A5B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                             </svg>
+                         </span>
+                         <h3 class="pt-1">Our Location</h3> 
+     
+                     </div>
+                     
+                     <!-- Location Badge - Moves to its own line on small screens -->
+                     <div class="bg-[#C09A5B]/90 backdrop-blur-sm px-4 py-2 rounded-lg mt-2 sm:mt-0">
+                         <p class="text-sm font-medium text-white">Rosedene Highland House</p>
+                         <p class="text-xs text-white">IV2 4QW • 18 min walk to City Centre</p>
+                     </div>
+                 </div>
+                 
+     
+                 <!-- Map Container -->
+                 <div class="relative h-[500px] rounded-xl overflow-hidden ">
+                     <div class="absolute inset-0 bg-[#C09A5B]/10 animate-pulse"></div>
+                     
+                     <!-- Interactive Map -->
+                     <!-- svelte-ignore a11y_missing_attribute -->
+                     <iframe 
+                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7372.50179950599!2d-4.2331814622549455!3d57.465740049978514!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x488f71faaed71d69%3A0xeca808584e8190e2!2sRosedene%20Highland%20House!5e0!3m2!1sen!2suk!4v1741047505489!5m2!1sen!2suk"
+                         class="absolute inset-0 w-full h-full border-0"
+                         loading="lazy"
+                         referrerpolicy="no-referrer-when-downgrade"
+                     ></iframe>
+     
+     
+                 </div>
+     
+                 <style>
+                     .clip-marker {
+                         clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+                     }
+                 </style>
+             </div>
+         </BoxReveal>
 
         </div>
     </div>

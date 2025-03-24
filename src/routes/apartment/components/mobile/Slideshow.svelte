@@ -24,7 +24,7 @@
   </script>
 
 
-<div class="w-full relative">
+<div class="w-full relative ">
 
   <swiper-container 
     slides-per-view={1}

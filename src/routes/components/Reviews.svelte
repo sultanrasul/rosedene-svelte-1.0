@@ -5,10 +5,16 @@
 
     import { fade } from 'svelte/transition';
     import { BACKEND_URL } from '../conf';
+  import WordPullUp from '@/components/WordPullUp.svelte';
+  import BlurFade from '@/components/BlurFade.svelte';
+  import BookingDetails from '../details/bookingDetails.svelte';
 
     BACKEND_URL
     
     // @ts-ignore
+    /**
+   * @type {any}
+   */
     let reviews;
 
     onMount(() => fetchReviews());
@@ -19,7 +25,7 @@
             const response = await fetch(`${BACKEND_URL}/get_reviews`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ page: 1, limit: 10 }),
+                body: JSON.stringify({ page: 1, limit: 7 }),
             });
 
             if (!response.ok) throw new Error(`Error: ${response.statusText}`);
@@ -72,45 +78,51 @@
         <!-- Header Section -->
         <div class="text-center mb-14 space-y-5">
             <div class="inline-flex flex-col items-center">
-                <span class="text-[#D1A054] uppercase tracking-widest text-sm mb-3 font-medium">
-                    Guest Reviews
-                </span>
-                <h2 class="text-4xl md:text-5xl font-bold text-white mb-5 relative">
+                <BlurFade delay={0.8}>
+                    <span class="text-[#D1A054] uppercase tracking-widest text-sm mb-3 font-medium">
+                        Guest Reviews
+                    </span>
+                </BlurFade>
+                <WordPullUp
+                    class="text-4xl md:text-5xl font-bold text-white mb-5 relative uppercase"
+                    words="Experiences That Speak Volumes"
+                />
+                <!-- <h2 class="text-4xl md:text-5xl font-bold text-white mb-5 relative">
                     Experiences That Speak Volumes
-                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-[#D1A054]"></div>
-                </h2>
-                
-                <!-- Rating Summary -->
-                <div class="mt-6 flex items-center gap-3 text-white/90">
-                    <div class="flex items-center gap-1 text-[#D1A054]">
-                        {#each Array(5) as _, i}
-                            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                        {/each}
+                </h2> -->
+                <BlurFade delay={0.9}>
+                    <!-- Rating Summary -->
+                    <div class="mt-6 flex items-center gap-3 text-white/90">
+                        <div class="flex items-center gap-1 text-[#D1A054]">
+                            {#each Array(5) as _, i}
+                                <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                            {/each}
+                        </div>
+                        <span class="text-lg font-medium">4.9/5</span>
+                        <span class="text-sm">(Based on 284 reviews)</span>
                     </div>
-                    <span class="text-lg font-medium">4.9/5</span>
-                    <span class="text-sm">(Based on 284 reviews)</span>
-                </div>
+                </BlurFade>
             </div>
         </div>
 
         <!-- Review Cards Grid -->
         {#if reviews}
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
-                {#each reviews as review}
+                {#each reviews as review, i}
                 <!-- {#each Array(10) as _, i} -->
-                    {#if review["Positive review"] != ""}             
+                    <BlurFade delay={(i)/7}>
                         <div 
                             class="relative bg-white/10 rounded-xl p-6 transition-all hover:bg-white/20 border border-white/20 hover:border-white/30 group"
-                            transition:fade
+
                         >
                             <!-- Header -->
                             <div class="flex items-start justify-between mb-4">
                                 <!-- Author Info -->
                                 <div class="flex items-center gap-4">
                                     <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D1A054] to-amber-700 flex items-center justify-center text-white font-medium">
-                                        {review["Guest name"].split(' ').map(n => n[0]).join('')}                                
+                                        {review["Guest name"].split(' ').map((/** @type {any[]} */ n) => n[0]).join('')}                                
                                     </div>
                                     <div>
                                         <h3 class="text-white font-semibold">{review["Guest name"]}</h3>
@@ -153,23 +165,25 @@
                                 </div>
                             </div>
                         </div>
-                    {/if}
+                    </BlurFade>          
                 {/each}
             </div>
         {/if}
 
-        <!-- CTA Button -->
-        <div class="text-center">
-            <button 
-                on:click={() => { window.location.href = "/reviews"; }}
-                class="inline-flex items-center gap-2 px-8 py-3.5 bg-[#D1A054] hover:bg-amber-600 text-white rounded-lg transition-all font-medium group"
-            >
-                Read All Reviews
-                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
-            </button>
-        </div>
+        <BlurFade>
+            <!-- CTA Button -->
+            <div class="text-center">
+                <button 
+                    on:click={() => { window.location.href = "/reviews"; }}
+                    class="inline-flex items-center gap-2 px-8 py-3.5 bg-[#D1A054] hover:bg-amber-600 text-white rounded-lg transition-all font-medium group"
+                >
+                    Read All Reviews
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </button>
+            </div>
+        </BlurFade>
     </div>
 
 </div>

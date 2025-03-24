@@ -2,6 +2,7 @@
 // @ts-nocheck
 
     import { Camera } from "lucide-svelte";
+    import BlurFade from "@/components/BlurFade.svelte";
 
 // @ts-nocheck
 
@@ -17,17 +18,18 @@
           <div class="col-span-2 flex justify-center items-center">
             <!-- svelte-ignore a11y_click_events_have_key_events -->
             <!-- svelte-ignore a11y_no_static_element_interactions -->
-              <div class="group relative inline-block cursor-pointer" on:click={openModel}>
-
-                <img
-                  class="rounded-lg transition-all max-h-[800px] object-cover"
-                  src="{apartmentNumber}/0.jpg"
-                  alt=""
-                />
-                <div 
-                class="absolute inset-0 bg-[#C09A5B] opacity-0 group-hover:opacity-20 rounded-lg transition-opacity duration-300"
-                  ></div>
-              </div>
+            <BlurFade>
+                <div class="group relative inline-block cursor-pointer" on:click={openModel}>
+                  <img
+                    class="rounded-lg transition-all max-h-[800px] object-cover"
+                    src="{apartmentNumber}/0.jpg"
+                    alt=""
+                  />
+                  <div 
+                  class="absolute inset-0 bg-[#C09A5B] opacity-0 group-hover:opacity-20 rounded-lg transition-opacity duration-300"
+                    ></div>
+                </div>
+            </BlurFade>
             
           </div>
   
@@ -36,16 +38,18 @@
               {#each Array(2).fill().map((_, i) => i + 1) as i}
                 <!-- svelte-ignore a11y_click_events_have_key_events -->
                 <!-- svelte-ignore a11y_no_static_element_interactions -->
-                <div class="group relative inline-block cursor-pointer" on:click={openModel}>
-                  <img
-                    class="max-h-[400px] max-w-full rounded-lg transition-all"
-                    src={`/${apartmentNumber}/${i}.jpg`}
-                    alt=""
-                  />
-                  <div 
-                      class="absolute inset-0 bg-[#C09A5B] opacity-0 group-hover:opacity-20 rounded-lg transition-opacity duration-300"
-                    ></div>
-                </div>
+                 <BlurFade delay={i*0.09}>
+                   <div class="group relative inline-block cursor-pointer" on:click={openModel}>
+                     <img
+                       class="max-h-[400px] max-w-full rounded-lg transition-all"
+                       src={`/${apartmentNumber}/${i}.jpg`}
+                       alt=""
+                     />
+                     <div 
+                         class="absolute inset-0 bg-[#C09A5B] opacity-0 group-hover:opacity-20 rounded-lg transition-opacity duration-300"
+                       ></div>
+                   </div>
+                 </BlurFade>
               {/each}
           </div>
         </div>
