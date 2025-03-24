@@ -9,6 +9,8 @@
   import { apartments } from '../../apartments';
   import Card from './Card.svelte';
   import BlurFade from '@/components/BlurFade.svelte';
+  import WordPullUp from '@/components/WordPullUp.svelte';
+  import GradualSpacing from '@/components/GradualSpacing.svelte';
 
   register();
 
@@ -57,7 +59,11 @@
   <!-- Gradient Overlay (Smooth Transition Effect) -->
 
   <div class="relative flex justify-between items-center mb-4 z-50">
-    <h2 class="text-4xl max-[489px]:text-2xl font-bold text-[#C09A5B]">View All 10 Apartments</h2>
+      <GradualSpacing
+        class="text-4xl max-[489px]:text-2xl font-bold text-[#C09A5B]"
+        words="View All 10 Apartments"
+      />
+    <!-- <h2 class="text-4xl max-[489px]:text-2xl font-bold text-[#C09A5B]">View All 10 Apartments</h2> -->
     
 
       <div class="flex gap-2">
@@ -100,20 +106,20 @@
       on:swiperslidechange={() => console.log('slide changed')}
       class="!overflow-visible"
   >
-      {#each apartmentsEntries as [key, apartment]}
-          <swiper-slide key={key}>
-              <div>
-                  <BlurFade>
-                    <Card 
+    {#each apartmentsEntries as [key, apartment], i}
+      <swiper-slide key={key}>
+          <div>
+              <BlurFade delay={i * 0.1} > 
+                  <Card 
                       apartmentName={apartment.name} 
                       price={159} 
                       nights={2} 
                       apartmentNumber={key}
-                    />
-                  </BlurFade>
-              </div>
-          </swiper-slide>
-      {/each}
+                  />
+              </BlurFade>
+          </div>
+      </swiper-slide>
+    {/each}
   </swiper-container>
 </div>
 {/if}

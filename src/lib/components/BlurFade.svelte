@@ -7,7 +7,9 @@
 	export let yOffset = 8;
 	export let inViewMargin = '-20px';
 	export let blur = '2px';
-	export let id = crypto.randomUUID().slice(0, 6);
+	// export let id = crypto.randomUUID().slice(0, 6);
+	export let id = (Date.now().toString(36) + Math.random().toString(36).substr(2, 3)).substr(-6);
+
 	export let once = true;
 	let defaultVariants = {
 		hidden: { opacity: 0, y: yOffset, filter: `blur(${blur})` },
