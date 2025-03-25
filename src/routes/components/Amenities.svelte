@@ -53,20 +53,21 @@
     <div class="max-w-7xl mx-auto relative z-10">
         <!-- Header -->
         <div class="text-center mb-12">
-            <WordPullUp
+            <WordPullUp duration={0.2} class="text-4xl max-[489px]:text-4xl font-bold text-[#C09A5B] tracking-wider uppercase" words={"Staying In Our Aparthotels"} />
+            <!-- <WordPullUp
                 class="text-4xl max-[489px]:text-4xl font-bold text-[#C09A5B] tracking-wider uppercase"
                 words="Staying In Our Aparthotels"
-            />
+            /> -->
             <!-- <h2 class="text-[#C09A5B] text-4xl font-bold mb-4 uppercase tracking-wider">
                 Staying In Our Aparthotels
             </h2> -->
-            <BlurFade delay={0.4}>
+            <BlurFade delay={0.3}>
                 <p class="text-white text-xl mb-8">
                     Half apartment, half hotel
                 </p>
             </BlurFade>
             <div class="border-t border-[#C09A5B] h-2  w-32 mx-auto mb-10"></div>
-            <BlurFade delay={0.8}>
+            <BlurFade delay={0.4}>
                 <p class="text-white italic max-w-2xl mx-auto text-lg">
                     Our individual services and amenities aren't new, but our combination is.
                 </p>
@@ -76,7 +77,7 @@
         <!-- Amenities Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             {#each amenities as amenity, i}
-                <BlurFade delay={0.7+ (i)/7}>
+                <BlurFade delay={0.1 * (i)}>
                     <div class=" hover:scale-[1.02] group relative p-8 bg-[#233441]/60 backdrop-blur-sm border border-[#C09A5B]/20 rounded-xl hover:border-[#C09A5B]/40 transition-all">
                         <div class="flex items-start gap-6">
                             <!-- <div class="text-4xl text-[#C09A5B] p-4 bg-[#C09A5B]/10 rounded-lg transition-transform group-hover:scale-110">
@@ -99,7 +100,7 @@
 
         
         <!-- Enhanced CTA Button -->
-        <BlurFade delay={1}>
+        <BlurFade delay={0.5}>
             <div class="text-center relative">
                 <button on:click={() => { window.location.href = "/aparthotel"; }}
                  class="bg-[#C09A5B] text-[#233441] px-8 py-4 rounded-lg font-semibold hover:bg-[#b08d52] transition-all 

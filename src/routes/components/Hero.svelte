@@ -14,10 +14,10 @@
 </script>
   
 
-<div class="relative min-h-screen pt-24 bg-[#233441] overflow-hidden">
+<div class="relative min-h-max pt-24 bg-[#233441] overflow-hidden">
 
       <!-- Image Container -->
-      <div class="absolute inset-0 h-[100vh] filter brightness-50"
+      <div class="absolute inset-0  filter brightness-50"
       style="background-image: url('background.png'); 
              background-size: cover; 
              background-position: center;
