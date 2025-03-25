@@ -1,7 +1,9 @@
 <!-- Amenities.svelte -->
 <script>
-  import Footer from "../Footer.svelte";
-import Navbar from "../Navbar.svelte";
+  import BlurFade from "@/components/BlurFade.svelte";
+    import Footer from "../Footer.svelte";
+    import Navbar from "../Navbar.svelte";
+  import WordPullUp from "@/components/WordPullUp.svelte";
 
     export let title = "Aparthotel Amenities";
     export let ctaText = "Tell Me More";
@@ -47,23 +49,39 @@ import Navbar from "../Navbar.svelte";
     <div class="max-w-6xl mx-auto relative z-10">
         <div class=" w-full md:1/2 block md:inline-flex pb-[100px] pl-10">
             <div class="w-full md:w-1/2">
-                <p class="mt-1 mb-5 text-white/90">APARTHOTEL?</p>
-                <h2 class="text-[#C09A5B] text-5xl md:leading-tight">what is an <br/> aparthotel?</h2>
+                <BlurFade delay={0.2}>
+                    <p class="mt-1 mb-5 text-white/90">APARTHOTEL?</p>
+                </BlurFade>
+
+                <!-- <h2 class="text-[#C09A5B] text-5xl md:leading-tight">what is an <br/> aparthotel?</h2> -->
+                <WordPullUp duration={0.05} class="text-[#C09A5B] text-5xl md:leading-tight font-normal text-left" words={"What is an"} />
+                <WordPullUp duration={0.05} delay={0.2} class="text-[#C09A5B] text-5xl md:leading-tight font-normal text-left" words={"aparthotel?"} />
             </div>
             <div class="w-full md:w-1/2 mt-1 text-sm text-white/90">
-                 <p class="mt-4">Half apartment, half hotel!</p>
-                 <p class="mt-4">Everything you love about hotel hospitality and apartment living, in one place, together.</p>
-                 <p class="mt-4">Whether you're staying solo, with family, colleagues, or friends, aparthotels offer you ultimate comfort and flexibility, with all the care and attention* you’d expect of a hotel.</p>
-                 <p class="mt-4">Aparthotels are perfect for both short and long stays. With Staycity, the longer you stay, the more you save. Enjoy 20% off stays for 7-21 nights and 30% off stays over 21 nights. That is good.</p>
-                 <p class="mt-4">*pancake machines, *workout spaces, *continental breakfast options, *in-room kettles</p>
+                <BlurFade delay={0.2}>
+                    <p class="mt-4">Half apartment, half hotel!</p>
+                </BlurFade>
+                <BlurFade delay={0.25}>
+                    <p class="mt-4">Everything you love about hotel hospitality and apartment living, in one place, together.</p>
+                </BlurFade>
+                <BlurFade delay={0.3}>
+                    <p class="mt-4">Whether you're staying solo, with family, colleagues, or friends, aparthotels offer you ultimate comfort and flexibility, with all the care and attention* you’d expect of a hotel.</p>
+                </BlurFade>
+                <BlurFade delay={0.35}>
+                    <p class="mt-4">Aparthotels are perfect for both short and long stays. With Rosedene Highland House, the longer you stay, the more you save. Enjoy 20% off stays for 7-21 nights and 30% off stays over 21 nights. That is good.</p>
+                </BlurFade>
+                <BlurFade delay={0.4}>
+                    <p class="mt-4">*pancake machines, *workout spaces, *continental breakfast options, *in-room kettles</p>
+                </BlurFade>
             </div>
             <!-- End Col -->
          </div>
         <!-- Enhanced Header -->
         <div class="text-center mb-16">
-            <h2 class="text-[#C09A5B] text-5xl font-bold mb-4 uppercase tracking-wider">
+            <WordPullUp duration={0.1} class="text-[#C09A5B] text-5xl font-bold mb-4 uppercase tracking-wider" words={"Premium Amenities"} />
+            <!-- <h2 class="text-[#C09A5B] text-5xl font-bold mb-4 uppercase tracking-wider">
                 Premium Amenities
-            </h2>
+            </h2> -->
             <div class="border-t border-[#C09A5B]/30 w-32 mx-auto mb-8"></div>
         </div>
 
@@ -73,27 +91,29 @@ import Navbar from "../Navbar.svelte";
                 <div class="group relative flex flex-col md:flex-row gap-8 items-stretch 
                            {i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} 
                            hover:transform hover:scale-[99.5%] transition-all duration-300">
-                    <!-- Image Container -->
-                    <div class="md:w-1/2 h-96 relative overflow-hidden rounded-2xl 
-                              border-2 border-[#C09A5B]/20 hover:border-[#C09A5B]/40">
-                        <img 
-                            src={amenity.image}
-                            alt={amenity.title}
-                            class="w-full h-full object-cover transform transition-all 
-                                   duration-500 group-hover:scale-105"
-                        />
-
-                    </div>
+                    <BlurFade inViewMargin={"-200px"} class="md:w-1/2 h-96 relative overflow-hidden rounded-2xl border-2 border-[#C09A5B]/20 hover:border-[#C09A5B]/40">
+                        <!-- Image Container -->
+                            <img 
+                                src={amenity.image}
+                                alt={amenity.title}
+                                class="w-full h-full object-cover transform transition-all 
+                                       duration-500 group-hover:scale-105"
+                            />
+                    </BlurFade>
 
                     <!-- Content Container -->
                     <div class="md:w-1/2 flex items-center p-8 md:p-12">
                         <div class="space-y-6 relative z-10">
-                            <h3 class="text-4xl font-bold text-[#C09A5B]">
-                                {amenity.title}
-                            </h3>
-                            <p class="text-lg text-[#C09A5B]/90 leading-relaxed">
-                                {amenity.description}
-                            </p>
+                            <BlurFade delay={0.2}>
+                                <h3 class="text-4xl font-bold text-[#C09A5B]">
+                                    {amenity.title}
+                                </h3>
+                            </BlurFade>
+                            <BlurFade delay={0.4}>
+                                <p class="text-lg text-[#C09A5B]/90 leading-relaxed">
+                                    {amenity.description}
+                                </p>
+                            </BlurFade>
                             {#if amenity.title === 'Full Kitchen'}
                                 <div class="pt-4 space-y-4">
                                     <div class="flex gap-4 text-[#C09A5B]/90">
