@@ -91,7 +91,7 @@
                 <div class="group relative flex flex-col md:flex-row gap-8 items-stretch 
                            {i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} 
                            hover:transform hover:scale-[99.5%] transition-all duration-300">
-                    <BlurFade inViewMargin={"-200px"} class="md:w-1/2 h-96 relative overflow-hidden rounded-2xl border-2 border-[#C09A5B]/20 hover:border-[#C09A5B]/40">
+                    <BlurFade class="md:w-1/2 h-96 relative overflow-hidden rounded-2xl border-2 border-[#C09A5B]/20 hover:border-[#C09A5B]/40">
                         <!-- Image Container -->
                             <img 
                                 src={amenity.image}
