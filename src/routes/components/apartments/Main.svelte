@@ -37,7 +37,7 @@
 
 {#if browser}
 
-<div class="relative px-4 sm:px-8 md:px-20 lg:px-40 w-full overflow-x-hidden bg-[#233441]">
+<div class="relative pt-16 px-4 sm:px-8 md:px-20 lg:px-40 w-full overflow-x-hidden bg-[#233441]">
       <!-- Background Layers -->
       <div class="absolute inset-0 z-0">
         <!-- Primary Background -->
@@ -58,41 +58,39 @@
   
   <!-- Gradient Overlay (Smooth Transition Effect) -->
 
-  <div class="relative flex justify-between items-center mb-4 z-50">
-      <GradualSpacing
-        class="text-4xl max-[489px]:text-2xl font-bold text-[#C09A5B]"
-        words="View All 10 Apartments"
-      />
-    <!-- <h2 class="text-4xl max-[489px]:text-2xl font-bold text-[#C09A5B]">View All 10 Apartments</h2> -->
+  <div class="relative flex flex-col max-[498px]:items-center sm:flex-row sm:justify-between items-center mb-4 z-50 gap-4 max-[498px]:gap-2">
+    <GradualSpacing
+      class="text-4xl max-[400px]:text-3xl max-[330px]:text-2xl font-bold text-[#C09A5B] text-center max-[498px]:order-1"
+      words="View All 10 Apartments"
+    />
     
-
-      <div class="flex gap-2">
-          <!-- Previous Button -->
-          <button 
-            type="button" 
-            class="button-prev flex items-center justify-center h-full px-4 disabled:opacity-50 disabled:cursor-default cursor-pointer group focus:outline-none"
-            >
-            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#C09A5B] group-hover:bg-[#C09A5B]/80 group-focus:ring-4 group-focus:ring-[#C09A5B] group-disabled:opacity-50">
-              <svg class="w-3 h-3 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-              </svg>
-              <span class="sr-only">Previous</span>
-            </span>
-          </button>
-          
-          <!-- Next Button -->
-          <button 
-            type="button" 
-            class="button-next flex items-center justify-center h-full px-4 disabled:opacity-50 disabled:cursor-default cursor-pointer group focus:outline-none"
-          >
-            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#C09A5B] group-hover:bg-[#C09A5B]/80 group-focus:ring-4 group-focus:ring-[#C09A5B] group-disabled:opacity-50">
-              <svg class="w-3 h-3 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-              </svg>
-              <span class="sr-only">Next</span>
-            </span>
-          </button>
-      </div>
+    <div class="flex max-[498px]:order-2 max-[498px]:justify-center max-[498px]:mt-2">
+      <!-- Previous Button -->
+      <button 
+        type="button" 
+        class="button-prev flex items-center justify-center h-full px-4 disabled:opacity-50 disabled:cursor-default cursor-pointer group focus:outline-none"
+      >
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#C09A5B] group-hover:bg-[#C09A5B]/80 group-focus:ring-4 group-focus:ring-[#C09A5B] group-disabled:opacity-50">
+          <svg class="w-3 h-3 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+          </svg>
+          <span class="sr-only">Previous</span>
+        </span>
+      </button>
+      
+      <!-- Next Button -->
+      <button 
+        type="button" 
+        class="button-next flex items-center justify-center h-full px-4 disabled:opacity-50 disabled:cursor-default cursor-pointer group focus:outline-none"
+      >
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#C09A5B] group-hover:bg-[#C09A5B]/80 group-focus:ring-4 group-focus:ring-[#C09A5B] group-disabled:opacity-50">
+          <svg class="w-3 h-3 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+          </svg>
+          <span class="sr-only">Next</span>
+        </span>
+      </button>
+    </div>
   </div>
 
   <swiper-container  

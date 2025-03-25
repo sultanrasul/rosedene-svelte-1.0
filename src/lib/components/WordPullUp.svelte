@@ -6,13 +6,16 @@
   export let words = 'Pull Up';
   export let inViewMargin = '-20px';
   export let once = true;
+  export let delay = 0;
+  export let duration = 0.25;
   
   export let wrapperFramerProps = {
       hidden: { opacity: 0 },
       show: {
           opacity: 1,
           transition: {
-              staggerChildren: 0.25,
+              delayChildren: delay,
+              staggerChildren: duration,
           },
       },
   };

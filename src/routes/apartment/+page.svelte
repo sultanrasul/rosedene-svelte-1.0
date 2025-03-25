@@ -410,7 +410,7 @@
   </script>
   
   <!-- This is the main container that now always shows, regardless of loading/error state -->
-<div class="relative bg-primary-100 dark:bg-[#233441] min-h-screen" id="Home">
+<div class="relative bg-primary-100 dark:bg-[#233441] min-h-[100dvh]" id="Home">
   <div class="z-[50]">
     <Navbar/> 
   </div>
