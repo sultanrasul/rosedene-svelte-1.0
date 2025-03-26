@@ -24,6 +24,7 @@
             scrollToElementWithOffset(scrollToo);
             window.history.replaceState({}, document.title, "/");
         }
+        
     });
 
     function scrollToElementWithOffset(id) {
