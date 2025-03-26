@@ -9,14 +9,60 @@
     import { afterUpdate, onDestroy } from 'svelte';
     import BlurFade from '@/components/BlurFade.svelte';
 
+    
+    let searchTerm = "";
+    let sortBy = "date";
+    let sortOrder = "desc";
+    let debounceTimeout;
+    
+    let showSortOptions = false;
+    let selectedSort = `${sortBy}-${sortOrder}`;
+                    
+    function setSort(type, order) {
+        sortBy = type;
+        sortOrder = order;
+        showSortOptions = false;
+        selectedSort = `${type}-${order}`;
+
+        fetchReviews(currentPage);
+    }
+        
     let reviews = [];
     let currentPage = 1;
     let reviewsPerPage = 20;
     let totalReviews = 0;
-    let sortBy = 'date';
     let sortDirection = 'desc';
     $: totalPages = Math.ceil(totalReviews / reviewsPerPage);
     $: visiblePages = getVisiblePages(currentPage, totalPages);
+
+    function formatDateToMonthYear(dateString) {
+    try {
+      // Parse the full date string directly
+      const date = new Date(dateString);
+      
+      // Check for invalid date
+      if (isNaN(date.getTime())) return 'Invalid Date';
+
+      // Get day with ordinal suffix
+      const day = date.getDate();
+      const nth = (d) => {
+        if (d > 3 && d < 21) return 'th';
+        switch (d % 10) {
+          case 1: return 'st';
+          case 2: return 'nd';
+          case 3: return 'rd';
+          default: return 'th';
+        }
+      };
+
+      // Format as "12th May 2023"
+      return `${day}${nth(day)} ${date.toLocaleString('default', { month: 'short' })} ${date.getFullYear()}`;
+      
+    } catch (e) {
+      console.error('Date formatting error:', e);
+      return 'Invalid Date';
+    }
+  }
 
     function getVisiblePages(current, total) {
         const range = 1;
@@ -40,7 +86,13 @@
             const response = await fetch(`${BACKEND_URL}/get_reviews`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ page: currentPage, limit: reviewsPerPage }),
+                body: JSON.stringify({ 
+                page,
+                limit: reviewsPerPage,
+                search: searchTerm,
+                sort_by: sortBy,
+                sort_order: sortOrder
+                }),
             });
 
             if (!response.ok) throw new Error(`Error: ${response.statusText}`);
@@ -62,6 +114,12 @@
             console.error('Failed to fetch reviews:', err);
             toast.error(`Failed to fetch reviews: ${err}`);
         }
+    }
+
+    function handleSearch(value) {
+        searchTerm = value;
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => fetchReviews(1), 500);
     }
 
     function initResizeObservers() {
@@ -95,12 +153,12 @@
 
     function toggleSort(newSortBy) {
         if (sortBy === newSortBy) {
-            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
         } else {
-            sortBy = newSortBy;
-            sortDirection = 'desc';
+        sortBy = newSortBy;
+        sortOrder = 'desc';
         }
-        fetchReviews(currentPage);
+        fetchReviews(1);
     }
 
     function changePage(page) {
@@ -119,22 +177,17 @@
 
     onMount(() => fetchReviews());
 
-    function formatDateToMonthYear(dateString) {
-        // Pad single-digit time components and format to ISO
-        const [datePart] = dateString.split(' ');
-        const date = new Date(`${datePart}`);
-        
-        if (isNaN(date.getTime())) return '';
-        
-        return date.getDate() + ' ' + 
-           date.toLocaleString('default', { month: 'short' }) + ' ' + 
-           date.getFullYear();
-    }
     function scrollToElementWithOffset(id) {
         const element = document.getElementById(id);
         const yOffset = -100; // Adjust this value as needed
         const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+
+    function highlightText(text, searchTerm) {
+        if (!searchTerm) return text;
+        const regex = new RegExp(`(${searchTerm})`, 'gi');
+        return text.replace(regex, '<mark class="bg-[#C09A5B] text-white px-1 rounded">$1</mark>');
     }
 </script>
 
@@ -175,65 +228,79 @@
         </div>
 
         <!-- Sorting Controls -->
-        <!-- Improved Sorting Controls -->
-        <div id="sortBar" class="flex flex-col sm:flex-row gap-4 mb-8 items-center justify-between bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10 shadow-lg">
-            <div class="flex items-center gap-3 flex-wrap">
-                <span class="text-white/80 font-medium">Sort by:</span>
-                <div class="flex flex-wrap gap-2">
-                    <button 
-                        class="px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-200
-                            {sortBy === 'date' 
-                                ? 'bg-[#D1A054] text-white shadow-md'
-                                : 'bg-white/5 hover:bg-white/10 text-white/80 hover:text-white'}"
-                        on:click={() => toggleSort('date')}
+        <div class="max-w-7xl mx-auto mb-8">
+            <!-- Search and Sort Container -->
+            <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center bg-[#233441]/60 backdrop-blur-sm p-4 rounded-xl border border-[#C09A5B]/20 shadow-lg">
+                <!-- Search Input -->
+                <div class="relative w-full sm:w-96">
+                    <input
+                        type="text"
+                        bind:value={searchTerm}
+                        on:input={(e) => handleSearch(e.target.value)}
+                        placeholder="Search reviews..."
+                        class="w-full pl-12 pr-4 py-3 rounded-lg bg-[#233441]/40 border-2 border-[#C09A5B]/30 focus:border-[#C09A5B] focus:ring-2 focus:ring-[#C09A5B]/50 text-white placeholder-[#C09A5B]/50 transition-all duration-300"
+                    />
+                    <svg class="absolute left-4 top-3.5 w-5 h-5 text-[#C09A5B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+        
+                <!-- Sort Dropdown -->
+                <div class="relative w-full sm:w-64 group">
+                    <select
+                        class="w-full px-6 py-3 rounded-xl bg-[#C09A5B]/10 border-2 border-[#C09A5B]/30 hover:border-[#C09A5B]/50 text-[#C09A5B] transition-all duration-300 appearance-none cursor-pointer"
+                        bind:value={selectedSort}
+                        on:change={(e) => setSort(e.target.value.split('-')[0], e.target.value.split('-')[1])}
                     >
-                        <svg class="w-4 h-4 {sortBy === 'date' ? 'text-white' : 'text-[#D1A054]'}" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5z"/>
+                        <option 
+                            value="date-desc" 
+                            class="bg-[#233441] text-white"
+                            selected={sortBy === 'date' && sortOrder === 'desc'}
+                        >
+                            Newest First
+                        </option>
+                        <option 
+                            value="date-asc" 
+                            class="bg-[#233441] text-white"
+                            selected={sortBy === 'date' && sortOrder === 'asc'}
+                        >
+                            Oldest First
+                        </option>
+                        <option 
+                            value="rating-desc" 
+                            class="bg-[#233441] text-white"
+                            selected={sortBy === 'rating' && sortOrder === 'desc'}
+                        >
+                            Highest Scores
+                        </option>
+                        <option 
+                            value="rating-asc" 
+                            class="bg-[#233441] text-white"
+                            selected={sortBy === 'rating' && sortOrder === 'asc'}
+                        >
+                            Lowest Scores
+                        </option>
+                    </select>
+                    
+                    <!-- Custom dropdown chevron -->
+                    <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                        <svg class="w-5 h-5 text-[#C09A5B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
-                        Date
-                    </button>
-                    <button 
-                        class="px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-200
-                            {sortBy === 'stars' 
-                                ? 'bg-[#D1A054] text-white shadow-md'
-                                : 'bg-white/5 hover:bg-white/10 text-white/80 hover:text-white'}"
-                        on:click={() => toggleSort('stars')}
-                    >
-                        <svg class="w-4 h-4 {sortBy === 'stars' ? 'text-white' : 'text-[#D1A054]'}" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                        </svg>
-                        Rating
-                    </button>
-                    <button 
-                        class="px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-200
-                            {sortBy === 'apartment' 
-                                ? 'bg-[#D1A054] text-white shadow-md'
-                                : 'bg-white/5 hover:bg-white/10 text-white/80 hover:text-white'}"
-                        on:click={() => toggleSort('apartment')}
-                    >
-                        <svg class="w-4 h-4 {sortBy === 'apartment' ? 'text-white' : 'text-[#D1A054]'}" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 18H6c-.55 0-1-.45-1-1V5c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v14c0 .55-.45 1-1 1z"/>
-                            <path d="M8 10h8v2H8zm0 4h5v2H8z"/>
-                        </svg>
-                        Apartment
-                    </button>
+                    </div>
                 </div>
             </div>
-            
-            <button 
-                class="flex items-center gap-2 text-white/80 hover:text-[#D1A054] transition-colors px-4 py-2 rounded-lg border border-white/10 hover:border-[#D1A054]/30"
-                on:click={() => sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'}
-            >
-                <span>{sortDirection === 'asc' ? 'Ascending' : 'Descending'}</span>
-                <svg class="w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                        d={sortDirection === 'asc' ? 'M19 9l-7 7-7-7' : 'M19 15l-7-7-7 7'}/>
-                </svg>
-            </button>
         </div>
+        
+        <style>
+            /* Add smooth rotation for arrows */
+            .transform {
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+        </style>
 
         <!-- Review Cards Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
+        <div class="z-0 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
             {#each reviews as review, index}   
                 <!-- {#if review["Positive review"] != "" }  -->
                 <BlurFade class="relative bg-white/10 rounded-xl p-6 transition-all hover:bg-white/20 border border-white/20 hover:border-white/30 group">
@@ -267,7 +334,7 @@
                                 shadow-lg shadow-[#003B95]/30 
                                 rounded-full w-9 h-9 mb-1.5
                                 transition-all duration-200
-                                hover:scale-105 hover:shadow-[#003B95]/40
+                                group-hover:scale-110 hover:shadow-[#003B95]/40
                                 active:scale-95
                                 group-hover:ring-2 group-hover:ring-white/20">
                             <span class="text-white font-bold text-sm 
@@ -295,15 +362,15 @@
                                     Passable
                                 {/if}
                             {/if}
-                            {review["Review title"]}
+                            {@html highlightText(review["Review title"], searchTerm)}
                         </h4>
                     
                         <!-- Review Content -->
                         <p bind:this={review.contentEl} class="text-white/90 mb-5 {review.isExpanded ? '' : 'line-clamp-4'}">
                             {#if review["Positive review"] == ""}
                                 There are no comments available for this review
-                                {:else}
-                                    {review["Positive review"]}
+                            {:else}
+                                {@html highlightText(review["Positive review"], searchTerm)}
                             {/if}
                         </p>
             

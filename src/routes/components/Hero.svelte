@@ -14,7 +14,7 @@
 </script>
   
 
-<div class="relative min-h-max pt-24 bg-[#233441] overflow-hidden">
+<div class="relative h-[910px] pt-24 bg-[#233441] overflow-hidden">
 
       <!-- Image Container -->
       <div class="absolute inset-0  filter brightness-50"
@@ -25,7 +25,6 @@
   </div>
 
   <div class="relative z-20 pb-56 px-6 max-w-7xl mx-auto">
-
       <div class="flex flex-wrap w-full">  <!-- Added w-full here -->
         <div class="p-4 md:p-0 w-full">  <!-- Added w-full here -->
           <BlurFade class="text-center justify-center w-full">  <!-- Added w-full -->
