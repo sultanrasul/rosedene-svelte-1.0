@@ -5,7 +5,9 @@
     import Navbar from '../Navbar.svelte';
     import { BACKEND_URL } from '../conf';
     import { toast } from 'svelte-sonner';
-  import Footer from '../Footer.svelte';
+    import Footer from '../Footer.svelte';
+    import { afterUpdate, onDestroy } from 'svelte';
+    import BlurFade from '@/components/BlurFade.svelte';
 
     let reviews = [];
     let currentPage = 1;
@@ -44,13 +46,52 @@
             if (!response.ok) throw new Error(`Error: ${response.statusText}`);
             
             const data = await response.json();
-            reviews = data.reviews;
+            
+            reviews = data.reviews.map(review => ({
+                ...review,
+                isExpanded: false,
+                needsReadMore: false, // Changed from showReadMore
+                titleEl: null,
+                contentEl: null,
+                observer: null
+            }));
+
+            initResizeObservers();
             totalReviews = data.total;
         } catch (err) {
             console.error('Failed to fetch reviews:', err);
             toast.error(`Failed to fetch reviews: ${err}`);
         }
     }
+
+    function initResizeObservers() {
+        reviews.forEach((review) => {
+            if (!review.observer && review.titleEl && review.contentEl) {
+                const checkClamping = () => {
+                    const titleClamped = review.titleEl.scrollHeight > review.titleEl.clientHeight;
+                    const contentClamped = review.contentEl.scrollHeight > review.contentEl.clientHeight;
+                    
+                    // Only update needsReadMore if not already set
+                    if (!review.needsReadMore) {
+                        review.needsReadMore = titleClamped || contentClamped;
+                    }
+                };
+                
+                review.observer = new ResizeObserver(checkClamping);
+                review.observer.observe(review.titleEl);
+                review.observer.observe(review.contentEl);
+                checkClamping(); // Initial check
+            }
+        });
+    }
+
+    onDestroy(() => {
+        reviews.forEach(review => {
+            if (review.observer) review.observer.disconnect();
+        });
+    });
+
+    afterUpdate(initResizeObservers);
 
     function toggleSort(newSortBy) {
         if (sortBy === newSortBy) {
@@ -185,63 +226,79 @@
 
         <!-- Review Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
-            {#each reviews as review}   
-                {#if review["Positive review"] != ""}             
-                    <div 
-                        class="relative bg-white/10 rounded-xl p-6 transition-all hover:bg-white/20 border border-white/20 hover:border-white/30 group"
-                        transition:fade
-                    >
-                        <!-- Header -->
+            {#each reviews as review, index}   
+                {#if review["Positive review"] != "" } 
+                <BlurFade class="relative bg-white/10 rounded-xl p-6 transition-all hover:bg-white/20 border border-white/20 hover:border-white/30 group">
+                        <!-- Header (unchanged) -->
                         <div class="flex items-start justify-between mb-4">
                             <!-- Author Info -->
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D1A054] to-amber-700 flex items-center justify-center text-white font-medium">
-                                    {review["Guest name"].split(' ').map(n => n[0]).join('')}                                
+                                    {review["Guest name"].split(' ').map(n => n[0]).join('')}
                                 </div>
                                 <div>
                                     <h3 class="text-white font-semibold">{review["Guest name"]}</h3>
-                                    <p class="text-sm text-white/60">United Kingdom</p>
                                 </div>
                             </div>
                             
-                            <!-- Date -->
-                            <span class="text-sm text-white/50">{formatDateToMonthYear(review["Review date"])}</span>
-                        </div>
-
-                        <!-- Rating & Details -->
-                        <div class="mb-4 flex items-center justify-between">
-
-                            <div class="flex items-center justify-center text-white bg-[#003B95] rounded font-bold rounded-bl-[0px] w-8 h-8">
-                                <p >{formatScore(review["Review score"])}</p>
-                            </div>
-
-                            <span class="text-sm text-white/70 bg-white/10 px-3 py-1 rounded-full">
-                                Emperor 1
+                            <!-- Score & Date -->
+                            <div class="flex items-center justify-center 
+                                bg-gradient-to-br from-[#003B95] to-[#0066CC]
+                                shadow-lg shadow-[#003B95]/30 
+                                rounded-full w-9 h-9 mb-1.5
+                                transition-all duration-200
+                                hover:scale-105 hover:shadow-[#003B95]/40
+                                active:scale-95
+                                group-hover:ring-2 group-hover:ring-white/20">
+                            <span class="text-white font-bold text-sm 
+                                    drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)]
+                                    tracking-tighter">
+                                {formatScore(review["Review score"])}
                             </span>
                         </div>
-
+                        </div>
+                    
+                        <!-- Review Title -->
+                        <h4 bind:this={review.titleEl} class="text-white font-medium text-lg mb-3 {review.isExpanded ? '' : 'line-clamp-3'}">
+                            {review["Review title"]}
+                        </h4>
+                    
                         <!-- Review Content -->
-                        <p class="text-white/90 mb-5 line-clamp-4">
+                        <p bind:this={review.contentEl} class="text-white/90 mb-5 {review.isExpanded ? '' : 'line-clamp-4'}">
                             {review["Positive review"]}
                         </p>
-
-                        <!-- Stay Details -->
-                        <div class="pt-4 border-t border-white/10">
-                            <div class="flex flex-wrap gap-3 text-sm text-white/60">
-                                <span class="flex items-center gap-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                    2 nights
-                                </span>
-                                <span>•</span>
-                                <span>Group Type</span>
-                            </div>
-                        </div>
-                    </div>
+            
+                        {#if review.needsReadMore}
+                        <div>                        
+                            <p class="mt-4">
+                              <button 
+                                on:click={() => review.isExpanded = !review.isExpanded}
+                                class="inline-flex items-center gap-x-1 text-sm font-semibold rounded-lg border border-transparent text-[#C09A5B] hover:underline focus:outline-none focus:underline focus:text-[#C09A5B] disabled:opacity-50 disabled:pointer-events-none" 
+                              >
+                                <span>{review.isExpanded ? 'Read less' : 'Read more'}</span>
+                                <svg 
+                                  class="shrink-0 size-4 transition-transform {review.isExpanded ? 'rotate-180' : ''}" 
+                                  xmlns="http://www.w3.org/2000/svg" 
+                                  width="24" 
+                                  height="24" 
+                                  viewBox="0 0 24 24" 
+                                  fill="none" 
+                                  stroke="currentColor" 
+                                  stroke-width="2" 
+                                  stroke-linecap="round" 
+                                  stroke-linejoin="round"
+                                >
+                                  <path d="m6 9 6 6 6-6"></path>
+                                </svg>
+                              </button>
+                            </p>
+                          </div>
+                        {/if}
+                </BlurFade>            
                 {/if}
             {/each}
         </div>
+        
 
         <!-- Pagination Controls -->
         <div class="flex flex-col sm:flex-row gap-4 justify-between items-center pt-8 border-t border-white/10">
@@ -308,4 +365,5 @@
         </div>
     </div>
 </div>
+
 <Footer/>
