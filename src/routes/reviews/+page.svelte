@@ -107,6 +107,7 @@
         if (page >= 1 && page <= totalPages) {
             currentPage = page;
             fetchReviews(page);
+            scrollToElementWithOffset("sortBar");
         }
     }
 
@@ -125,8 +126,15 @@
         
         if (isNaN(date.getTime())) return '';
         
-        return date.toLocaleString('default', { month: 'long' }) + 
-            ' ' + date.getFullYear();
+        return date.getDate() + ' ' + 
+           date.toLocaleString('default', { month: 'short' }) + ' ' + 
+           date.getFullYear();
+    }
+    function scrollToElementWithOffset(id) {
+        const element = document.getElementById(id);
+        const yOffset = -100; // Adjust this value as needed
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
     }
 </script>
 
@@ -168,7 +176,7 @@
 
         <!-- Sorting Controls -->
         <!-- Improved Sorting Controls -->
-        <div class="flex flex-col sm:flex-row gap-4 mb-8 items-center justify-between bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10 shadow-lg">
+        <div id="sortBar" class="flex flex-col sm:flex-row gap-4 mb-8 items-center justify-between bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10 shadow-lg">
             <div class="flex items-center gap-3 flex-wrap">
                 <span class="text-white/80 font-medium">Sort by:</span>
                 <div class="flex flex-wrap gap-2">
@@ -227,19 +235,31 @@
         <!-- Review Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
             {#each reviews as review, index}   
-                {#if review["Positive review"] != "" } 
+                <!-- {#if review["Positive review"] != "" }  -->
                 <BlurFade class="relative bg-white/10 rounded-xl p-6 transition-all hover:bg-white/20 border border-white/20 hover:border-white/30 group">
                         <!-- Header (unchanged) -->
                         <div class="flex items-start justify-between mb-4">
                             <!-- Author Info -->
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D1A054] to-amber-700 flex items-center justify-center text-white font-medium">
-                                    {review["Guest name"].split(' ').map(n => n[0]).join('')}
+                                    {#if review["Guest name"] == ""}
+                                    A
+                                    {:else}
+                                        {review["Guest name"].split(' ').map(n => n[0]).join('')}
+                                    {/if}
+
                                 </div>
                                 <div>
-                                    <h3 class="text-white font-semibold">{review["Guest name"]}</h3>
+                                    {#if review["Guest name"] == ""}
+                                        <h3 class="text-white font-semibold">Anonymous</h3>
+                                        {:else}
+                                            <h3 class="text-white font-semibold">{review["Guest name"]}</h3>
+                                    {/if}
+                                    <span class="text-sm text-white/50">Reviewed: {formatDateToMonthYear(review["Review date"])}</span>
                                 </div>
                             </div>
+
+                            <!-- Date -->
                             
                             <!-- Score & Date -->
                             <div class="flex items-center justify-center 
@@ -260,12 +280,31 @@
                     
                         <!-- Review Title -->
                         <h4 bind:this={review.titleEl} class="text-white font-medium text-lg mb-3 {review.isExpanded ? '' : 'line-clamp-3'}">
+                            {#if review["Review title"] == ""}
+                                {#if review["Review score"] == 10}
+                                    Exceptional
+                                {:else if review["Review score"] == 9}
+                                    Superb
+                                {:else if review["Review score"] == 8}
+                                    Very Good
+                                {:else if review["Review score"] == 7}
+                                    Good
+                                {:else if review["Review score"] == 6}
+                                    Pleasant
+                                {:else if review["Review score"] == 5}
+                                    Passable
+                                {/if}
+                            {/if}
                             {review["Review title"]}
                         </h4>
                     
                         <!-- Review Content -->
                         <p bind:this={review.contentEl} class="text-white/90 mb-5 {review.isExpanded ? '' : 'line-clamp-4'}">
-                            {review["Positive review"]}
+                            {#if review["Positive review"] == ""}
+                                There are no comments available for this review
+                                {:else}
+                                    {review["Positive review"]}
+                            {/if}
                         </p>
             
                         {#if review.needsReadMore}
@@ -295,7 +334,7 @@
                           </div>
                         {/if}
                 </BlurFade>            
-                {/if}
+                <!-- {/if} -->
             {/each}
         </div>
         
