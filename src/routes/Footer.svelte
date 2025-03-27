@@ -24,7 +24,7 @@
             <div class="mt-3 grid space-y-3 text-sm">
               <p><a class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors" href="#">View Our Apartments</a></p>
               <p><a on:click={() => { window.location.href = "/aparthotel"; }} class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">What is an aparthotel?</a></p>
-              <p><a on:click={() => { window.location.href = "/faq"; }} class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">FAQ</a></p>
+              <p><a on:click={() => { window.location.href = "/reviews"; }} class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">Reviews</a></p>
               <!-- <p><a class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">About us</a></p> -->
             </div>
           </div>
@@ -36,6 +36,7 @@
             <div class="mt-3 grid space-y-3 text-sm">
               <p><a on:click={() => { window.location.href = "/contact"; }} class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">Contact Us</a></p>
               <p><a on:click={() => { window.location.href = "/details"; }} class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">Manage Booking</a></p>
+              <p><a on:click={() => { window.location.href = "/faq"; }} class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">FAQ</a></p>
             </div>
           </div>
           <!-- End Col -->

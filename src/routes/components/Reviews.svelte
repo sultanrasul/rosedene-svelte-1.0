@@ -16,38 +16,64 @@
     /**
    * @type {any}
    */
-    let reviews = [];
+    let reviews = [
+        {
+            "Cleanliness": 10,
+            "Comfort": 10,
+            "Facilities": 10,
+            "Guest name": "Helen",
+            "Location": 10,
+            "Negative review": "Nothing!",
+            "Positive review": "Quiet location right near River Ness and Ness Islands with easy walks to city centre. Comfy bed in a very spacious suite in a recently remodeled character building. The room was thoughtfully appointed, very clean and had more than we needed for dining in. En suite laundry was a bonus. Check-in details were sent ahead of time with clear instructions. Lots of on site parking behind a gate - not locked but felt secure.",
+            "Property reply": "",
+            "Reservation Number": "4497578795",
+            "Review date": "Wed, 02 Oct 2024 16:00:56 GMT",
+            "Review score": 10,
+            "Review title": "Fantastic river location. Spacious suite in a character building with everything we needed and more!",
+            "Staff": 7.5,
+            "Value for money": 7.5
+        },
+        {
+            "Cleanliness": 10,
+            "Comfort": 10,
+            "Facilities": 10,
+            "Guest name": "Serena",
+            "Location": 10,
+            "Negative review": "",
+            "Positive review": "Beautiful grand home in leafy, quiet location. Excellent facilities. Roomy and comfortable. Helpful and responsive staff. When we couldn’t find instruction folder for appliances response via WhatsApp was speedy and efficient. ",
+            "Property reply": "",
+            "Reservation Number": "4816559074",
+            "Review date": "Sat, 28 Sep 2024 07:21:00 GMT",
+            "Review score": 9,
+            "Review title": "A lovely short break in Inverness. Quiet and relaxing environment after a day of sightseeing. ",
+            "Staff": 10,
+            "Value for money": 10
+        },
+        {
+            "Cleanliness": 10,
+            "Comfort": 10,
+            "Facilities": 10,
+            "Guest name": "Laura",
+            "Location": 10,
+            "Negative review": "N/A",
+            "Positive review": "10/10 Incredible property, stay and amenities! The location is gorgeous,  peaceful and a short scenec walk into town. Everything about the apartment was so carefully thought out and beautifully designed. Our entire family was impressed. Also our host was absolutely the kindest most helpful, lovely person. He went out of his way multiple times to assist us even going as far as to upgrade our rooms as we ended up extending our stay 2 additional nights. Highly recommend Rosendene House!",
+            "Property reply": "Thanks again Laura, not only did you add a lovely review on your first reservation, you have been so kind as to add one for your second reservation also. Thank you so much! we are honoured at Rosedene to have such esteemed Guests stay with us. You have a home from home here and are welcome back anytime! ",
+            "Reservation Number": "2780842983",
+            "Review date": "Sun, 28 May 2023 22:43:14 GMT",
+            "Review score": 10,
+            "Review title": "Best place ever!!! 100 Stars ",
+            "Staff": 10,
+            "Value for money": 10
+        }
+    ];
+    let searchTerm = "";
+    let sortBy = "date";
+    let sortOrder = "desc";
+    let debounceTimeout;
 
-    onMount(() => fetchReviews());
+    // onMount(() => fetchReviews());
 
     // @ts-ignore
-    async function fetchReviews(page = 1) {
-        try {
-            const response = await fetch(`${BACKEND_URL}/get_reviews`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ page: 1, limit: 7 }),
-            });
-
-            if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-            
-            const data = await response.json();
-            reviews = data.reviews.map(review => ({
-                ...review,
-                isExpanded: false,
-                needsReadMore: false, // Changed from showReadMore
-                titleEl: null,
-                contentEl: null,
-                observer: null
-            }));
-            initResizeObservers();
-
-        } catch (err) {
-            console.error('Failed to fetch reviews:', err);
-            // @ts-ignore
-            toast.error(`Failed to fetch reviews: ${err}`);
-        }
-    }
 
     function initResizeObservers() {
         reviews.forEach((review) => {
@@ -87,15 +113,34 @@
 
     // @ts-ignore
     function formatDateToMonthYear(dateString) {
-        // Pad single-digit time components and format to ISO
-        const [datePart] = dateString.split(' ');
-        const date = new Date(`${datePart}`);
+        try {
+        // Parse the full date string directly
+        const date = new Date(dateString);
         
-        if (isNaN(date.getTime())) return '';
+        // Check for invalid date
+        if (isNaN(date.getTime())) return 'Invalid Date';
+
+        // Get day with ordinal suffix
+        const day = date.getDate();
+        const nth = (d) => {
+            if (d > 3 && d < 21) return 'th';
+            switch (d % 10) {
+            case 1: return 'st';
+            case 2: return 'nd';
+            case 3: return 'rd';
+            default: return 'th';
+            }
+        };
+
+        // Format as "12th May 2023"
+        return `${day}${nth(day)} ${date.toLocaleString('default', { month: 'short' })} ${date.getFullYear()}`;
         
-        return date.toLocaleString('default', { month: 'long' }) + 
-            ' ' + date.getFullYear();
+        } catch (e) {
+        console.error('Date formatting error:', e);
+        return 'Invalid Date';
+        }
     }
+
 
 
 </script>
@@ -147,21 +192,34 @@
         </div>
 
         <!-- Review Cards Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
+         <!-- Review Cards Grid -->
+         <div class="z-0 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
             {#each reviews as review, index}   
-                {#if review["Positive review"] != "" }             
-                    <BlurFade class="relative bg-white/10 rounded-xl p-6 transition-all hover:bg-white/20 border border-white/20 hover:border-white/30 group">
+                <!-- {#if review["Positive review"] != "" }  -->
+                <BlurFade class="relative bg-white/10 rounded-xl p-6 transition-all hover:bg-white/20 border border-white/20 hover:border-white/30 group">
                         <!-- Header (unchanged) -->
                         <div class="flex items-start justify-between mb-4">
                             <!-- Author Info -->
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D1A054] to-amber-700 flex items-center justify-center text-white font-medium">
-                                    {review["Guest name"].split(' ').map(n => n[0]).join('')}
+                                    {#if review["Guest name"] == ""}
+                                    A
+                                    {:else}
+                                        {review["Guest name"].split(' ').map(n => n[0]).join('')}
+                                    {/if}
+
                                 </div>
                                 <div>
-                                    <h3 class="text-white font-semibold">{review["Guest name"]}</h3>
+                                    {#if review["Guest name"] == ""}
+                                        <h3 class="text-white font-semibold">Anonymous</h3>
+                                        {:else}
+                                            <h3 class="text-white font-semibold">{review["Guest name"]}</h3>
+                                    {/if}
+                                    <span class="text-sm text-white/50">Reviewed: {formatDateToMonthYear(review["Review date"])}</span>
                                 </div>
                             </div>
+
+                            <!-- Date -->
                             
                             <!-- Score & Date -->
                             <div class="flex items-center justify-center 
@@ -169,7 +227,7 @@
                                 shadow-lg shadow-[#003B95]/30 
                                 rounded-full w-9 h-9 mb-1.5
                                 transition-all duration-200
-                                hover:scale-105 hover:shadow-[#003B95]/40
+                                group-hover:scale-110 hover:shadow-[#003B95]/40
                                 active:scale-95
                                 group-hover:ring-2 group-hover:ring-white/20">
                             <span class="text-white font-bold text-sm 
@@ -182,42 +240,61 @@
                     
                         <!-- Review Title -->
                         <h4 bind:this={review.titleEl} class="text-white font-medium text-lg mb-3 {review.isExpanded ? '' : 'line-clamp-3'}">
+                            {#if review["Review title"] == ""}
+                                {#if review["Review score"] == 10}
+                                    Exceptional
+                                {:else if review["Review score"] == 9}
+                                    Superb
+                                {:else if review["Review score"] == 8}
+                                    Very Good
+                                {:else if review["Review score"] == 7}
+                                    Good
+                                {:else if review["Review score"] == 6}
+                                    Pleasant
+                                {:else if review["Review score"] == 5}
+                                    Passable
+                                {/if}
+                            {/if}
                             {review["Review title"]}
                         </h4>
                     
                         <!-- Review Content -->
                         <p bind:this={review.contentEl} class="text-white/90 mb-5 {review.isExpanded ? '' : 'line-clamp-4'}">
-                            {review["Positive review"]}
+                            {#if review["Positive review"] == ""}
+                                There are no comments available for this review
+                            {:else}
+                                {review["Positive review"]}
+                            {/if}
                         </p>
             
                         {#if review.needsReadMore}
                         <div>                        
                             <p class="mt-4">
-                            <button 
+                              <button 
                                 on:click={() => review.isExpanded = !review.isExpanded}
                                 class="inline-flex items-center gap-x-1 text-sm font-semibold rounded-lg border border-transparent text-[#C09A5B] hover:underline focus:outline-none focus:underline focus:text-[#C09A5B] disabled:opacity-50 disabled:pointer-events-none" 
-                            >
+                              >
                                 <span>{review.isExpanded ? 'Read less' : 'Read more'}</span>
                                 <svg 
-                                class="shrink-0 size-4 transition-transform {review.isExpanded ? 'rotate-180' : ''}" 
-                                xmlns="http://www.w3.org/2000/svg" 
-                                width="24" 
-                                height="24" 
-                                viewBox="0 0 24 24" 
-                                fill="none" 
-                                stroke="currentColor" 
-                                stroke-width="2" 
-                                stroke-linecap="round" 
-                                stroke-linejoin="round"
+                                  class="shrink-0 size-4 transition-transform {review.isExpanded ? 'rotate-180' : ''}" 
+                                  xmlns="http://www.w3.org/2000/svg" 
+                                  width="24" 
+                                  height="24" 
+                                  viewBox="0 0 24 24" 
+                                  fill="none" 
+                                  stroke="currentColor" 
+                                  stroke-width="2" 
+                                  stroke-linecap="round" 
+                                  stroke-linejoin="round"
                                 >
-                                <path d="m6 9 6 6 6-6"></path>
+                                  <path d="m6 9 6 6 6-6"></path>
                                 </svg>
-                            </button>
+                              </button>
                             </p>
-                        </div>
+                          </div>
                         {/if}
-                    </BlurFade>   
-                {/if}
+                </BlurFade>            
+                <!-- {/if} -->
             {/each}
         </div>
 
