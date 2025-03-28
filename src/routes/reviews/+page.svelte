@@ -8,7 +8,7 @@
     import Footer from '../Footer.svelte';
     import { afterUpdate, onDestroy } from 'svelte';
     import BlurFade from '@/components/BlurFade.svelte';
-  import { Plus, Search } from 'lucide-svelte';
+    import { Plus, Search } from 'lucide-svelte';
 
     
     let searchTerm = "";
@@ -352,12 +352,6 @@
             {/if}
         </div>
         
-        <style>
-            /* Add smooth rotation for arrows */
-            .transform {
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-        </style>
 
         <!-- Review Cards Grid -->
         <div class="z-0 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
@@ -533,3 +527,10 @@
 </div>
 
 <Footer/>
+
+<style>
+    /* Add smooth rotation for arrows */
+    .transform {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+</style>
