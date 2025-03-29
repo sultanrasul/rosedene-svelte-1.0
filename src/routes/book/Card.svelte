@@ -4,31 +4,32 @@
     // @ts-ignore
     import { BedDouble, Wifi, UtensilsCrossed, Ruler, TvMinimal, User } from "lucide-svelte";
     import { apartments } from '../apartments.js';
+    import Slideshow from "../apartment/components/mobile/Slideshow.svelte";
 
-    export let apartmentNumber;
-    export let apartmentName;
     export let price; // Default price
     export let nights;
+    export let apartmentNumber;
 
     // @ts-ignore
-    const apartmentDetails = apartments[apartmentNumber];
+    export let apartmentDetails;
 </script>
 
-<div class="flex flex-col  bg-gray-800 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden dark:bg-white">
+<div class="flex flex-col  rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden ">
     <!-- Image Section with Rating -->
-    <div class="relative overflow-hidden group">
+     <Slideshow apartmentNumber={apartmentNumber} images={apartmentDetails?.amountOfPictures}/>
+    <!-- <div class="relative overflow-hidden group">
         <img 
             class="w-full  object-cover transition-transform duration-300" 
             src={`/${apartmentNumber}.jpg`} 
             alt={apartmentName}
         />
-    </div>
+    </div> -->
 
     <!-- Content Section -->
-    <div class="flex-1 flex flex-col p-6 space-y-3">
+    <div class="flex-1 flex flex-col p-6 space-y-3 bg-white">
         <!-- Header Section -->
         <div>
-            <h3 class="text-2xl font-bold text-[#C09A5B] mb-2">{apartmentName}</h3>
+            <h3 class="text-2xl font-bold text-[#C09A5B] mb-2">{apartmentDetails?.name}</h3>
         </div>
 
         <!-- Booking Summary -->
@@ -62,7 +63,7 @@
         <div class="pt-4">
             <div class="space-y-3">
                 <div class="flex justify-between items-center">
-                    <span class="text-gray-400 dark:text-gray-600 text-sm">${apartmentDetails.basePrice} x {nights} nights</span>
+                    <span class="text-gray-400 dark:text-gray-600 text-sm">${apartmentDetails?.basePrice} x {nights} nights</span>
                     <span class="text-gray-300 dark:text-gray-700">$2,400</span>
                 </div>
                 <div class="flex justify-between items-center">

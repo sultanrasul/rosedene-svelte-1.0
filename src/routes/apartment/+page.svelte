@@ -280,6 +280,14 @@
     }
     
     async function bookNow (){
+      console.log(window.location.href)
+      const currentUrl = window.location.href;
+    if (currentUrl.includes('apartment')) {
+      const newUrl = currentUrl.replace('apartment', 'book');
+      // window.history.replaceState({}, '', newUrl);
+      // Or if you want to redirect:
+      window.location.replace(newUrl);
+    }
       console.log("testing")
       try {
         bookNowLoading = true;
