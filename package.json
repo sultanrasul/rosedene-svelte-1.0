@@ -48,6 +48,7 @@
 	"dependencies": {
 		"@fontsource/merriweather": "^5.1.1",
 		"@preline/carousel": "^2.5.2",
+		"@stripe/stripe-js": "^6.1.0",
 		"@svelte-plugins/datepicker": "^1.0.9",
 		"@sveltejs/adapter-static": "^3.0.8",
 		"add": "^2.0.6",

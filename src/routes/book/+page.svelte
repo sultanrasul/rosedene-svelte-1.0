@@ -1,22 +1,133 @@
 <script>
-  import ChevronLeft from "@lucide/svelte/icons/chevron-left";
-import Navbar from "../Navbar.svelte";
-import Card from "./Card.svelte";
+    import ChevronLeft from "@lucide/svelte/icons/chevron-left";
+    import Navbar from "../Navbar.svelte";
+    import Card from "./Card.svelte";
+    import { apartments } from "../apartments";
+    // @ts-ignore
+    import { page } from '$app/stores';
+    import { onMount } from 'svelte';
+    import { format, isWithinInterval } from 'date-fns';
+    import { BACKEND_URL } from "../conf";
+    import {loadStripe} from '@stripe/stripe-js'
 
+    // Initialize variables
+    // @ts-ignore
     let checkInDate = '2025-06-09';
+    // @ts-ignore
     let checkOutDate = '2025-06-15';
-    let guests = 1;
+    // @ts-ignore
+    // let guests = 1;
     let fullName = '';
     let email = '';
     let phone = '';
     let cardNumber = '';
     let expiry = '';
     let cvc = '';
-    
-    const handlePayment = () => {
-        // Handle payment logic
+    // @ts-ignore
+    /**
+   * @type {any}
+   */
+    /**
+   * @type {string | number | null}
+   */  
+    // @ts-ignore
+    const parseDate = (dateStr) => {
+      if (dateStr) {
+        const [day, month, year] = dateStr.split('/').map(Number);
+        return new Date(year, month - 1, day); // Month is 0-indexed
+      }
+      return ""
     };
-</script>
+    
+    const url = $page.url;
+    const number = url.searchParams.get('number');
+    const check_in = url.searchParams.get('check_in');
+    const check_out = url.searchParams.get('check_out');
+    const apartmentDetails = apartments[number];
+    let adults = url.searchParams.get('adults') || 1;
+    let nights = Math.floor((parseDate(check_out) - parseDate(check_in)) / (1000 * 60 * 60 * 24));
+    let children = url.searchParams.get('children') || 0;
+    let childrenAges = children ? url.searchParams.getAll('ages').map(Number) : []; // Convert ages to an array of numbers
+    let guests = (adults ? parseInt(adults, 10) : 0) + (children ? parseInt(children, 10) : 0);
+    let disabledDates = [];
+    let dateFormatDMY = 'dd/MM/yyyy';
+    let startDate = parseDate(check_in); // Variable for start date as a Date object
+    let endDate = parseDate(check_out); // Variable for start date as a Date object
+  
+    const formatDateDMY = (dateString) =>
+        dateString && format(new Date(dateString), dateFormatDMY) || '';
+  
+    let dateFrom = {
+      day: parseInt(formatDateDMY(startDate).split('/')[0]),
+      month: parseInt(formatDateDMY(startDate).split('/')[1]),
+      year: parseInt(formatDateDMY(startDate).split('/')[2])
+    };
+  
+    let dateTo = {
+      day: parseInt(formatDateDMY(endDate).split('/')[0]),
+      month: parseInt(formatDateDMY(endDate).split('/')[1]),
+      year: parseInt(formatDateDMY(endDate).split('/')[2])
+    };
+
+    let stripe;
+    let paymentElement;
+    let elements;
+    let clientSecret = null;
+    let loading = true;
+    let error = null;
+
+    onMount(async () => {
+        try {
+            // Initialize Stripe FIRST
+            stripe = await loadStripe('pk_test_51QkSqLAQmfY2PDog1Sd4LCK6Y85GYEdbOP1CeVQ2iw7P9KJ362fbf4PzLq2cEJ4OYJSqrSSN7DI52SmStGCVS8Qa00C9oDsRb0');
+
+            // THEN fetch client secret
+            const response = await fetch(`${BACKEND_URL}/create-checkout`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                date_from: dateFrom,
+                date_to: dateTo,
+                property_id: apartmentDetails.id,
+                adults: adults,
+                children: children,
+                childrenAges: childrenAges,
+                url: window.location.href
+                }),
+            });
+
+            if (!response.ok) throw new Error('Failed to create payment intent');
+            
+            const data = await response.json();
+            clientSecret = data.clientSecret;
+            
+            // Initialize Elements AFTER getting clientSecret
+            elements = stripe.elements({ 
+                clientSecret,
+                appearance: {
+                theme: 'stripe',
+                variables: {
+                    colorPrimary: '#C09A5B',
+                    colorBackground: '#ffffff',
+                }
+                }
+            });
+
+            paymentElement = elements.create('payment');
+            paymentElement.mount('#payment-element');
+
+        } catch (err) {
+        error = err.message;
+        console.error('Payment error:', err);
+        } finally {
+        loading = false;
+        }
+    });
+
+    const handlePayment = () => {
+      // Handle payment logic
+    };
+  </script>
 
 <div class="bg-[#233441]">
     <Navbar/>
@@ -45,7 +156,11 @@ import Card from "./Card.svelte";
         <div class="flex flex-wrap gap-10 justify-between">
             <!-- Left Column (50%) -->
             <div class="md:w-[60%] w-full space-y-6 bg-white rounded-xl ">
-
+                {#if loading}
+                    <div>Loading payment details...</div>
+                    {:else if error}
+                        <div class="text-red-500">Error: {error}</div>
+                {/if}
                 <!-- Guest Details Section -->
                 <div class="bg-white rounded-xl p-6">
                     <h2 class="text-2xl font-bold mb-6" style="color: #233441">Your Trip</h2>
@@ -157,7 +272,8 @@ import Card from "./Card.svelte";
                 <!-- Payment Card -->
                 <div class="bg-white rounded-xl  p-6">
                     <h2 class="text-2xl font-bold mb-6" style="color: #233441">Payment details</h2>
-                    <div class="space-y-4">
+                    <div id="payment-element" class="payment-form"></div>
+                    <!-- <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium mb-2" style="color: #233441">Card number</label>
                             <input
@@ -188,7 +304,7 @@ import Card from "./Card.svelte";
                                 />
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
@@ -224,9 +340,9 @@ import Card from "./Card.svelte";
             </div>
             
             <!-- Right Sticky Column (50%) -->
-            <div class="md:w-[36%] w-full order-first md:order-none sticky md:top-6 z-10 sticky self-start">
+            <div class="md:w-[36%] w-full order-first md:order-none md:top-6 z-10 sticky self-start">
                 <!-- Apartment Details Card -->
-                <Card apartmentName="Emperor Apartment 1" apartmentNumber=1 price={569} nights={2}/>
+                <Card apartmentNumber={number} apartmentDetails={apartmentDetails} price={569} nights={2} />
             </div>
         </div>
         <!-- Footer -->
