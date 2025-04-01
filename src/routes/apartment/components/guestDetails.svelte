@@ -173,6 +173,25 @@
     }
   }
 
+  $: {
+    if (typeof window !== 'undefined' && childrenAges) {
+      const url = new URL(window.location.href);
+      
+      // Remove all existing age parameters
+      url.searchParams.delete('ages');
+      
+      // Add current ages (filter out -1 placeholder values)
+      childrenAges
+        .filter(age => age !== -1)
+        .forEach(age => {
+          url.searchParams.append('ages', age);
+        });
+
+      // Update URL without page reload
+      history.replaceState(null, '', url);
+    }
+  }
+
   $: formattedStartDate = formatDate(startDate);
   $: formattedEndDate = formatDate(endDate);
 
@@ -337,6 +356,10 @@
                   {#each Array(children) as _, index}
                     <select
                     bind:value={childrenAges[index]}
+                    on:change={() => {
+                      // Force array update detection
+                      childrenAges = childrenAges;
+                    }}
                       class="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#C09A5B] focus:border-[#C09A5B]"
                     >
                     <option value={-1} disabled>Select Age</option>

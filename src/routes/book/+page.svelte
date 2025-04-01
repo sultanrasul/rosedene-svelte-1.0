@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
     import ChevronLeft from "@lucide/svelte/icons/chevron-left";
     import Navbar from "../Navbar.svelte";
     import Card from "./Card.svelte";
@@ -6,23 +8,30 @@
     // @ts-ignore
     import { page } from '$app/stores';
     import { onMount } from 'svelte';
+    // @ts-ignore
+    // @ts-ignore
     import { format, isWithinInterval } from 'date-fns';
     import { BACKEND_URL } from "../conf";
     import {loadStripe} from '@stripe/stripe-js'
+    import { User, UserRoundIcon } from "lucide-svelte";
+    import { redirect } from "@sveltejs/kit";
+    import { Toaster, toast } from 'svelte-sonner'
 
     // Initialize variables
     // @ts-ignore
-    let checkInDate = '2025-06-09';
-    // @ts-ignore
-    let checkOutDate = '2025-06-15';
-    // @ts-ignore
-    // let guests = 1;
-    let fullName = '';
+    let name = '';
     let email = '';
     let phone = '';
+    // @ts-ignore
+    // @ts-ignore
     let cardNumber = '';
+    // @ts-ignore
+    // @ts-ignore
     let expiry = '';
+    // @ts-ignore
+    // @ts-ignore
     let cvc = '';
+    let specialRequests = '';
     // @ts-ignore
     /**
    * @type {any}
@@ -43,17 +52,32 @@
     const number = url.searchParams.get('number');
     const check_in = url.searchParams.get('check_in');
     const check_out = url.searchParams.get('check_out');
+    // @ts-ignore
     const apartmentDetails = apartments[number];
-    let adults = url.searchParams.get('adults') || 1;
+    let adults = parseInt(url.searchParams.get('adults'),10) || 1;
+    // @ts-ignore
+    // @ts-ignore
     let nights = Math.floor((parseDate(check_out) - parseDate(check_in)) / (1000 * 60 * 60 * 24));
-    let children = url.searchParams.get('children') || 0;
+    let children = parseInt(url.searchParams.get('children'),10) || 0;
     let childrenAges = children ? url.searchParams.getAll('ages').map(Number) : []; // Convert ages to an array of numbers
+    // @ts-ignore
+    // @ts-ignore
     let guests = (adults ? parseInt(adults, 10) : 0) + (children ? parseInt(children, 10) : 0);
+    // @ts-ignore
+    // @ts-ignore
     let disabledDates = [];
     let dateFormatDMY = 'dd/MM/yyyy';
+    // @ts-ignore
     let startDate = parseDate(check_in); // Variable for start date as a Date object
+    // @ts-ignore
     let endDate = parseDate(check_out); // Variable for start date as a Date object
-  
+    console.log(startDate, endDate)
+    let nameError = '';
+    let emailError = '';
+    let phoneError = '';
+    let isProcessing = false;
+
+    // @ts-ignore
     const formatDateDMY = (dateString) =>
         dateString && format(new Date(dateString), dateFormatDMY) || '';
   
@@ -69,18 +93,64 @@
       year: parseInt(formatDateDMY(endDate).split('/')[2])
     };
 
+    // Validation functions
+    const validateForm = () => {
+        let isValid = true;
+        
+        // Name validation
+        if (!name.trim()) {
+            nameError = 'Name is required';
+            isValid = false;
+        } else {
+            nameError = '';
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email.trim()) {
+            emailError = 'Email is required';
+            isValid = false;
+        } else if (!emailRegex.test(email)) {
+            emailError = 'Invalid email format';
+            isValid = false;
+        } else {
+            emailError = '';
+        }
+
+        // Phone validation (basic international format validation)
+        const phoneRegex = /^\+?[0-9\s\-()]{7,}$/;
+        if (!phone.trim()) {
+            phoneError = 'Phone number is required';
+            isValid = false;
+        } else if (!phoneRegex.test(phone)) {
+            phoneError = 'Invalid phone number format';
+            isValid = false;
+        } else {
+            phoneError = '';
+        }
+
+        return isValid;
+    };
+
+    // @ts-ignore
     let stripe;
     let paymentElement;
+    // @ts-ignore
     let elements;
     let clientSecret = null;
     let loading = true;
+    // @ts-ignore
     let error = null;
+    let paymentIntent;
+    /**
+   * @type {number}
+   */
+    let displayPrice;
 
     onMount(async () => {
         try {
             // Initialize Stripe FIRST
             stripe = await loadStripe('pk_test_51QkSqLAQmfY2PDog1Sd4LCK6Y85GYEdbOP1CeVQ2iw7P9KJ362fbf4PzLq2cEJ4OYJSqrSSN7DI52SmStGCVS8Qa00C9oDsRb0');
-
             // THEN fetch client secret
             const response = await fetch(`${BACKEND_URL}/create-checkout`, {
                 method: 'POST',
@@ -100,23 +170,40 @@
             
             const data = await response.json();
             clientSecret = data.clientSecret;
+            // @ts-ignore
+            paymentIntent  = await stripe.retrievePaymentIntent(clientSecret);
+
+            console.log("Payment Intent: ",paymentIntent)
+
+            // Now you can access the amount
+            console.log('Amount:', paymentIntent.paymentIntent?.amount);
+            console.log('Currency:', paymentIntent.paymentIntent?.currency);
+            
+            // @ts-ignore
+            displayPrice = paymentIntent.paymentIntent?.amount / 100;
+            console.log('Formatted amount:', `£${displayPrice.toFixed(2)}`);
             
             // Initialize Elements AFTER getting clientSecret
+            // @ts-ignore
             elements = stripe.elements({ 
                 clientSecret,
                 appearance: {
-                theme: 'stripe',
-                variables: {
-                    colorPrimary: '#C09A5B',
-                    colorBackground: '#ffffff',
-                }
-                }
+                    type: 'tabs',
+                    defaultCollapsed: false,
+                    theme: 'stripe',
+                    variables: {
+                        colorPrimary: '#C09A5B',
+                        colorBackground: '#FFF',
+                    },
+                },
             });
 
+            // paymentElement = elements.create('payment');
             paymentElement = elements.create('payment');
             paymentElement.mount('#payment-element');
 
         } catch (err) {
+        // @ts-ignore
         error = err.message;
         console.error('Payment error:', err);
         } finally {
@@ -124,9 +211,71 @@
         }
     });
 
-    const handlePayment = () => {
-      // Handle payment logic
-    };
+    async function handlePayment() {
+        // Reset errors
+        nameError = emailError = phoneError = '';
+        
+        // Validate form
+        if (!validateForm()) {
+            scrollToElementWithOffset("guestInformation");
+            return;
+        }
+
+        isProcessing = true;
+        
+        try {
+            const { paymentIntent, error } = await stripe.confirmPayment({
+                redirect: "if_required",
+                elements,
+                confirmParams: {
+                    payment_method_data: {
+                        billing_details: {
+                            name: name,
+                            email: email,
+                            phone: phone,
+                        },
+                    },
+                },
+            });
+
+            if (error) {
+                // toast.error(error.message);
+                // alert("Payment error: " + error.message);
+                return;
+            }
+
+            // Send to backend for processing
+            const response = await fetch(`${BACKEND_URL}/success`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    paymentIntentId: paymentIntent.id,
+                    specialRequests,
+                    customerInfo: { name, email, phone }
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to confirm booking');
+            
+            const data = await response.json();
+            alert(data);
+            // Optional: Redirect to success page
+            // throw redirect(303, '/booking-success');
+
+        } catch (err) {
+            alert(err.message);
+        } finally {
+            isProcessing = false;
+        }
+    }
+
+    function scrollToElementWithOffset(id) {
+        const element = document.getElementById(id);
+        const yOffset = -100; // Adjust this value as needed
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({ top: y, behavior: 'smooth' });
+    }
   </script>
 
 <div class="bg-[#233441]">
@@ -139,6 +288,7 @@
             <button 
                 class="group relative p-1 rounded-full transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#C09A5B]"
                 aria-label="Go back"
+                on:click={window.history.back()}
             >
                 <!-- Hover Circle Background -->
                 <div class="absolute inset-0 rounded-full transition-all group-hover:bg-gray-100/50"></div>
@@ -166,7 +316,7 @@
                     <h2 class="text-2xl font-bold mb-6" style="color: #233441">Your Trip</h2>
                     
                     <!-- Trip Summary -->
-                    <div class="p-5 bg-[#233441]/5 rounded-lg space-y-4">
+                    <div class="p-5 bg-[#233441]/10 rounded-lg space-y-4">
                         <!-- Dates -->
                         <div class="grid grid-cols-2 gap-4">
                             <div class="flex items-center gap-4">
@@ -177,7 +327,7 @@
                                 </div>
                                 <div>
                                     <p class="text-sm text-gray-500">Check-in</p>
-                                    <p class="text-base font-medium" style="color: #233441">9 Jun 2025</p>
+                                    <p class="text-base font-medium" style="color: #233441">{format(startDate, 'd MMM yyyy')}</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-4">
@@ -188,7 +338,7 @@
                                 </div>
                                 <div>
                                     <p class="text-sm text-gray-500">Check-out</p>
-                                    <p class="text-base font-medium" style="color: #233441">15 Jun 2025</p>
+                                    <p class="text-base font-medium" style="color: #233441">{format(endDate, 'd MMM yyyy')}</p>
                                 </div>
                             </div>
                         </div>
@@ -197,29 +347,40 @@
                         <div class="border-t-2 border-solid border-gray-200"></div>
 
                         <!-- Guests -->
-                        <div class="flex items-center gap-4">
-                            <div class="p-3 bg-white rounded-lg shadow-md">
-                                <svg class="w-6 h-6 text-[#C09A5B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                                    <circle cx="9" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/>
-                                </svg>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex items-center gap-4">
+                                <div class="p-3 bg-white rounded-lg shadow-md">
+    
+                                    <UserRoundIcon class="w-6 h-6 md:w-6 md:h-6 text-[#C09A5B]" />
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Guests</p>
+                                    <p class="text-base font-medium space-x-2" style="color: #233441">
+                                        <span>{adults} Adult{adults > 1 ? "s": ""}</span>
+                                        {#if children}
+                                            <span>•</span>
+                                            <span>{children} Child{children > 1 ? "ren": ""}</span>
+                                        {/if}
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Guests</p>
-                                <p class="text-base font-medium space-x-2" style="color: #233441">
-                                    <span>1 Adult</span>
-                                    <span>•</span>
-                                    <span>2 Children</span>
-                                    <span>•</span>
-                                    <span>1 Infant</span>
-                                </p>
+                            <div class="flex items-center gap-4">
+                                <div class="p-3 bg-white rounded-lg shadow-md">
+    
+                                    <UserRoundIcon class="w-6 h-6 md:w-6 md:h-6 text-[#C09A5B]" />
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Children Ages</p>
+                                    <p class="text-base font-medium space-x-2" style="color: #233441">
+                                        {childrenAges.join(", ")} <span class="text-gray-500 text-sm">Year Old</span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
+                <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6" id="guestInformation">
 
                 <!-- Guest Information -->
                 <div class="bg-white rounded-xl p-6">
@@ -229,11 +390,16 @@
                             <label class="block text-sm font-medium mb-2" style="color: #233441">Full name</label>
                             <input
                                 type="text"
-                                bind:value={fullName}
-                                class="w-full p-3 border rounded-lg focus:ring-2 focus:outline-none"
+                                bind:value={name}
+                                on:input={() => nameError = ''}
+                                class="text-black font-light w-full p-3 border rounded focus:ring-2 focus:outline-none focus:border-[#C09A5B] focus:ring-[#C09A5B]"
+                                style="border-color: {nameError ? '#ff4444' : '#CFD7DF'};"
                                 placeholder="John Doe"
                                 required
                             />
+                            {#if nameError}
+                                <p class="text-red-500 text-sm mt-1">{nameError}</p>
+                            {/if}
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -242,27 +408,31 @@
                                 <input
                                     type="email"
                                     bind:value={email}
-                                    class="w-full p-3 border rounded-lg focus:ring-2 focus:outline-none"
+                                    on:input={() => emailError = ''}
+                                    class="text-black font-light w-full p-3 border rounded focus:ring-2 focus:outline-none focus:border-[#C09A5B] focus:ring-[#C09A5B]"
+                                    style="border-color: {emailError ? '#ff4444' : '#CFD7DF'};"
                                     placeholder="john@example.com"
                                     required
                                 />
+                                {#if emailError}
+                                    <p class="text-red-500 text-sm mt-1">{emailError}</p>
+                                {/if}
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2" style="color: #233441">Phone</label>
                                 <input
                                     type="tel"
                                     bind:value={phone}
-                                    class="w-full p-3 border rounded-lg focus:ring-2 focus:outline-none"
+                                    on:input={() => phoneError = ''}
+                                    class="text-black font-light w-full p-3 border rounded focus:ring-2 focus:outline-none focus:border-[#C09A5B] focus:ring-[#C09A5B]"
+                                    style="border-color: {phoneError ? '#ff4444' : '#CFD7DF'};"
                                     placeholder="+44 1234 567890"
                                     required
                                 />
+                                {#if phoneError}
+                                    <p class="text-red-500 text-sm mt-1">{phoneError}</p>
+                                {/if}
                             </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-2" style="color: #233441">Special Requests</label>
-                            <textarea 
-                                class="w-full p-3 border rounded-lg focus:ring-2 focus:outline-none h-32"
-                                placeholder="Accessibility needs, crib requirements, etc."></textarea>
                         </div>
                     </div>
                 </div>
@@ -273,38 +443,6 @@
                 <div class="bg-white rounded-xl  p-6">
                     <h2 class="text-2xl font-bold mb-6" style="color: #233441">Payment details</h2>
                     <div id="payment-element" class="payment-form"></div>
-                    <!-- <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium mb-2" style="color: #233441">Card number</label>
-                            <input
-                                type="text"
-                                bind:value={cardNumber}
-                                class="w-full p-3 border rounded-lg focus:ring-2 focus:outline-none"
-                                placeholder="•••• •••• •••• ••••"
-                            />
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium mb-2" style="color: #233441">Expiry</label>
-                                <input
-                                    type="text"
-                                    bind:value={expiry}
-                                    class="w-full p-3 border rounded-lg focus:ring-2 focus:outline-none"
-                                    placeholder="MM/YY"
-                                />
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-2" style="color: #233441">CVC</label>
-                                <input
-                                    type="text"
-                                    bind:value={cvc}
-                                    class="w-full p-3 border rounded-lg focus:ring-2 focus:outline-none"
-                                    placeholder="•••"
-                                />
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
 
                 <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
@@ -313,7 +451,7 @@
                 <div class="bg-white rounded-xl  p-6">
                     <h3 class="font-semibold mb-2" style="color: #233441">Cancellation policy</h3>
                     <p class="text-sm text-gray-600">
-                        Free cancellation before 10 May. Cancel before 2 Jun for a partial refund.
+                        Free cancellation before  May. Cancel before 2 Jun for a partial refund.
                         <a href="#" class="underline" style="color: #C09A5B">Learn more</a>
                     </p>
                 </div>
@@ -322,12 +460,24 @@
 
                 <!-- Confirm Button - Now at bottom of left column -->
                 <div class="bg-white rounded-xl  p-6">
+                    <!-- Update the Confirm Button -->
                     <button
                         on:click={handlePayment}
-                        class="w-full py-4 rounded-xl font-bold text-white transition-colors hover:"
-                        style="background-color: #C09A5B; hover:bg-#b08a4f"
+                        class="w-full py-4 rounded-xl font-bold text-white transition-colors hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
+                        style="background-color: #C09A5B;"
+                        disabled={isProcessing}
                     >
-                        Confirm and pay
+                        {#if isProcessing}
+                            <div class="flex items-center justify-center gap-2">
+                                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Processing...
+                            </div>
+                        {:else}
+                            Confirm and pay
+                        {/if}
                     </button>
                     
                     <div class="mt-4 flex items-center justify-center gap-2">
@@ -337,12 +487,13 @@
                         <span class="text-sm" style="color: #233441">Secure payment</span>
                     </div>
                 </div>
+                
             </div>
             
             <!-- Right Sticky Column (50%) -->
             <div class="md:w-[36%] w-full order-first md:order-none md:top-6 z-10 sticky self-start">
                 <!-- Apartment Details Card -->
-                <Card apartmentNumber={number} apartmentDetails={apartmentDetails} price={569} nights={2} />
+                <Card apartmentNumber={number} apartmentDetails={apartmentDetails} price={displayPrice} nights={nights} />
             </div>
         </div>
         <!-- Footer -->

@@ -14,7 +14,7 @@
     export let apartmentDetails;
 </script>
 
-<div class="flex flex-col  rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden ">
+<div class="flex flex-col  rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden bg-white">
     <!-- Image Section with Rating -->
      <Slideshow apartmentNumber={apartmentNumber} images={apartmentDetails?.amountOfPictures}/>
     <!-- <div class="relative overflow-hidden group">
@@ -63,13 +63,13 @@
         <div class="pt-4">
             <div class="space-y-3">
                 <div class="flex justify-between items-center">
-                    <span class="text-gray-400 dark:text-gray-600 text-sm">${apartmentDetails?.basePrice} x {nights} nights</span>
-                    <span class="text-gray-300 dark:text-gray-700">$2,400</span>
+                    <span class="text-gray-400 dark:text-gray-600 text-sm">£{price/nights} x {nights} nights</span>
+                    <span class="text-gray-300 dark:text-gray-700">£{price}</span>
                 </div>
-                <div class="flex justify-between items-center">
+                <!-- <div class="flex justify-between items-center">
                     <span class="text-gray-400 dark:text-gray-600 text-sm">Service fee</span>
-                    <span class="text-gray-300 dark:text-gray-700">$144</span>
-                </div>
+                    <span class="text-gray-300 dark:text-gray-700">£144</span>
+                </div> -->
                 <div class="flex justify-between items-center border-t pt-3 border-gray-200">
                     <span class="font-bold text-[#C09A5B]">Total (GBP)</span>
                     <span class="text-2xl font-bold text-[#C09A5B]">£{price}</span>
