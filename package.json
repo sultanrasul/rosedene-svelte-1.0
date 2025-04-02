@@ -52,6 +52,7 @@
 		"@svelte-plugins/datepicker": "^1.0.9",
 		"@sveltejs/adapter-static": "^3.0.8",
 		"add": "^2.0.6",
+		"canvas-confetti": "^1.9.3",
 		"carousel": "^0.0.3",
 		"class-variance-authority": "^0.7.0",
 		"clipboard": "^2.0.11",

@@ -35,6 +35,7 @@
     let cvc = '';
     let specialRequests = '';
     let bookingReference;
+    let returnedEmail;
     // @ts-ignore
     /**
    * @type {any}
@@ -261,7 +262,11 @@
             if (!response.ok) throw new Error('Failed to confirm booking');
             
             const data = await response.json();
-            bookingReference = data["booking_reference"]
+            bookingReference = data["booking_reference"];
+            returnedEmail = data["email"];
+            window.location.href = `/details?ref_number=${bookingReference}&email=${returnedEmail}`;
+
+
 
             // Optional: Redirect to success page
             // throw redirect(303, '/booking-success');
