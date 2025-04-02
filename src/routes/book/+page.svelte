@@ -13,9 +13,11 @@
     import { format, isWithinInterval } from 'date-fns';
     import { BACKEND_URL } from "../conf";
     import {loadStripe} from '@stripe/stripe-js'
-    import { User, UserRoundIcon } from "lucide-svelte";
+    import { Check, User, UserRoundIcon } from "lucide-svelte";
     import { redirect } from "@sveltejs/kit";
     import { Toaster, toast } from 'svelte-sonner'
+  import GuestInformation from "./GuestInformation.svelte";
+  import TripInformation from "./TripInformation.svelte";
 
     // Initialize variables
     // @ts-ignore
@@ -32,6 +34,7 @@
     // @ts-ignore
     let cvc = '';
     let specialRequests = '';
+    let bookingReference;
     // @ts-ignore
     /**
    * @type {any}
@@ -258,7 +261,8 @@
             if (!response.ok) throw new Error('Failed to confirm booking');
             
             const data = await response.json();
-            alert(data);
+            bookingReference = data["booking_reference"]
+
             // Optional: Redirect to success page
             // throw redirect(303, '/booking-success');
 
@@ -303,197 +307,130 @@
             <h1 class="text-3xl font-bold text-[#C09A5B]">Confirm and pay</h1>
         </div>
         
-        <div class="flex flex-wrap gap-10 justify-between">
+        <div class="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-10 items-start">
             <!-- Left Column (50%) -->
-            <div class="md:w-[60%] w-full space-y-6 bg-white rounded-xl ">
-                {#if loading}
-                    <div>Loading payment details...</div>
-                    {:else if error}
-                        <div class="text-red-500">Error: {error}</div>
-                {/if}
-                <!-- Guest Details Section -->
-                <div class="bg-white rounded-xl p-6">
-                    <h2 class="text-2xl font-bold mb-6" style="color: #233441">Your Trip</h2>
-                    
-                    <!-- Trip Summary -->
-                    <div class="p-5 bg-[#233441]/10 rounded-lg space-y-4">
-                        <!-- Dates -->
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="flex items-center gap-4">
-                                <div class="p-3 bg-white rounded-lg shadow-md">
-                                    <svg class="w-6 h-6 text-[#C09A5B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-500">Check-in</p>
-                                    <p class="text-base font-medium" style="color: #233441">{format(startDate, 'd MMM yyyy')}</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="p-3 bg-white rounded-lg shadow-md">
-                                    <svg class="w-6 h-6 text-[#C09A5B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-500">Check-out</p>
-                                    <p class="text-base font-medium" style="color: #233441">{format(endDate, 'd MMM yyyy')}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Divider -->
-                        <div class="border-t-2 border-solid border-gray-200"></div>
-
-                        <!-- Guests -->
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="flex items-center gap-4">
-                                <div class="p-3 bg-white rounded-lg shadow-md">
-    
-                                    <UserRoundIcon class="w-6 h-6 md:w-6 md:h-6 text-[#C09A5B]" />
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-500">Guests</p>
-                                    <p class="text-base font-medium space-x-2" style="color: #233441">
-                                        <span>{adults} Adult{adults > 1 ? "s": ""}</span>
-                                        {#if children}
-                                            <span>•</span>
-                                            <span>{children} Child{children > 1 ? "ren": ""}</span>
-                                        {/if}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="p-3 bg-white rounded-lg shadow-md">
-    
-                                    <UserRoundIcon class="w-6 h-6 md:w-6 md:h-6 text-[#C09A5B]" />
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-500">Children Ages</p>
-                                    <p class="text-base font-medium space-x-2" style="color: #233441">
-                                        {childrenAges.join(", ")} <span class="text-gray-500 text-sm">Year Old</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6" id="guestInformation">
-
-                <!-- Guest Information -->
-                <div class="bg-white rounded-xl p-6">
-                    <h2 class="text-2xl font-bold mb-6" style="color: #233441">Guest information</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium mb-2" style="color: #233441">Full name</label>
-                            <input
-                                type="text"
-                                bind:value={name}
-                                on:input={() => nameError = ''}
-                                class="text-black font-light w-full p-3 border rounded focus:ring-2 focus:outline-none focus:border-[#C09A5B] focus:ring-[#C09A5B]"
-                                style="border-color: {nameError ? '#ff4444' : '#CFD7DF'};"
-                                placeholder="John Doe"
-                                required
-                            />
-                            {#if nameError}
-                                <p class="text-red-500 text-sm mt-1">{nameError}</p>
-                            {/if}
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium mb-2" style="color: #233441">Email</label>
-                                <input
-                                    type="email"
-                                    bind:value={email}
-                                    on:input={() => emailError = ''}
-                                    class="text-black font-light w-full p-3 border rounded focus:ring-2 focus:outline-none focus:border-[#C09A5B] focus:ring-[#C09A5B]"
-                                    style="border-color: {emailError ? '#ff4444' : '#CFD7DF'};"
-                                    placeholder="john@example.com"
-                                    required
-                                />
-                                {#if emailError}
-                                    <p class="text-red-500 text-sm mt-1">{emailError}</p>
-                                {/if}
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-2" style="color: #233441">Phone</label>
-                                <input
-                                    type="tel"
-                                    bind:value={phone}
-                                    on:input={() => phoneError = ''}
-                                    class="text-black font-light w-full p-3 border rounded focus:ring-2 focus:outline-none focus:border-[#C09A5B] focus:ring-[#C09A5B]"
-                                    style="border-color: {phoneError ? '#ff4444' : '#CFD7DF'};"
-                                    placeholder="+44 1234 567890"
-                                    required
-                                />
-                                {#if phoneError}
-                                    <p class="text-red-500 text-sm mt-1">{phoneError}</p>
-                                {/if}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
-
-                <!-- Payment Card -->
-                <div class="bg-white rounded-xl  p-6">
-                    <h2 class="text-2xl font-bold mb-6" style="color: #233441">Payment details</h2>
-                    <div id="payment-element" class="payment-form"></div>
-                </div>
-
-                <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
-
-                <!-- Cancellation Policy -->
-                <div class="bg-white rounded-xl  p-6">
-                    <h3 class="font-semibold mb-2" style="color: #233441">Cancellation policy</h3>
-                    <p class="text-sm text-gray-600">
-                        Free cancellation before  May. Cancel before 2 Jun for a partial refund.
-                        <a href="#" class="underline" style="color: #C09A5B">Learn more</a>
-                    </p>
-                </div>
-
-                <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
-
-                <!-- Confirm Button - Now at bottom of left column -->
-                <div class="bg-white rounded-xl  p-6">
-                    <!-- Update the Confirm Button -->
-                    <button
-                        on:click={handlePayment}
-                        class="w-full py-4 rounded-xl font-bold text-white transition-colors hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
-                        style="background-color: #C09A5B;"
-                        disabled={isProcessing}
-                    >
-                        {#if isProcessing}
-                            <div class="flex items-center justify-center gap-2">
-                                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Processing...
-                            </div>
-                        {:else}
-                            Confirm and pay
-                        {/if}
-                    </button>
-                    
-                    <div class="mt-4 flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="#C09A5B">
-                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
-                        </svg>
-                        <span class="text-sm" style="color: #233441">Secure payment</span>
-                    </div>
-                </div>
+            <div class="space-y-6 bg-white rounded-xl relative overflow-visible">
                 
+                {#if bookingReference}
+                    <div class="z-[10] absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                        <div class={`flex items-center justify-center p-2 rounded-full shadow-2xl bg-green-100 animate-[pulse_1.5s_ease-out]`}>
+                            <div class={`w-16 h-16 flex items-center justify-center rounded-full bg-green-500 shadow-lg`}>
+                                <Check class="w-8 h-8 lg:w-10 lg:h-10" color="white" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 mb-8 pt-8">
+                        <h1 class="text-center text-3xl lg:text-4xl font-bold text-green-600">Payment Successful!</h1>
+                        <p class="text-center text-gray-600 lg:text-lg">Your reservation is confirmed</p>
+                    </div>
+                {/if}
+
+                {#if loading}
+                    <div class="space-y-6 p-6 animate-pulse">
+                        <!-- Trip Summary Skeleton -->
+                        <div class="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
+                        <div class="space-y-4">
+                            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+                            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                            <div class="h-px bg-gray-200 my-8"></div>
+                            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+                        </div>
+
+                        <!-- Guest Info Skeleton -->
+                        <div class="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
+                        <div class="space-y-4">
+                            <div class="h-12 bg-gray-200 rounded"></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="h-12 bg-gray-200 rounded"></div>
+                                <div class="h-12 bg-gray-200 rounded"></div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Details Skeleton -->
+                        <div class="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
+                        <div class="h-32 bg-gray-200 rounded-lg"></div>
+                    </div>
+                {:else if error}
+                    <div class="text-red-500 p-6">Error: {error}</div>                
+                {/if}
+                <div class="{!loading & !error ? 'block' : 'hidden'}">
+    
+                    <!-- Guest Details Section -->
+                    <div class="bg-white rounded-xl p-6">
+                        <h2 class="text-2xl font-bold mb-6" style="color: #233441">Your Trip</h2>
+                        
+                        <!-- Trip Summary -->
+                        <TripInformation bookingReference={bookingReference} startDate={startDate} endDate={endDate} adults={adults} children={children} childrenAges={childrenAges}/>
+                    
+                    </div>
+    
+                    <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6" id="guestInformation">
+    
+                    <!-- Guest Information -->
+                    <GuestInformation readOnly={bookingReference ? true : false} bind:specialRequests={specialRequests} bind:name={name} bind:nameError={nameError} bind:phone={phone} bind:phoneError={phoneError} bind:email={email} bind:emailError={emailError} />
+    
+                    
+                    <!-- Payment Card -->
+                    <div class="{!bookingReference ? 'block' : 'hidden'}">
+                        <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
+
+                        <div class="bg-white rounded-xl  p-6">
+                            <h2 class="text-2xl font-bold mb-6" style="color: #233441">Payment details</h2>
+                            <div id="payment-element" class="payment-form"></div>
+                        </div>
+        
+                        <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
+        
+                        <!-- Cancellation Policy -->
+                        <div class="bg-white rounded-xl  p-6">
+                            <h3 class="font-semibold mb-2" style="color: #233441">Cancellation policy</h3>
+                            <p class="text-sm text-gray-600">
+                                Free cancellation before  May. Cancel before 2 Jun for a partial refund.
+                                <a href="#" class="underline" style="color: #C09A5B">Learn more</a>
+                            </p>
+                        </div>
+        
+                        <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
+        
+                        <!-- Confirm Button - Now at bottom of left column -->
+                        <div class="bg-white rounded-xl  p-6">
+                            <!-- Update the Confirm Button -->
+                            <button
+                                on:click={handlePayment}
+                                class="w-full py-4 rounded-xl font-bold text-white transition-colors hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
+                                style="background-color: #C09A5B;"
+                                disabled={isProcessing}
+                            >
+                                {#if isProcessing}
+                                    <div class="flex items-center justify-center gap-2">
+                                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Processing...
+                                    </div>
+                                {:else}
+                                    Confirm and pay
+                                {/if}
+                            </button>
+                            
+                            <div class="mt-4 flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="#C09A5B">
+                                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                                </svg>
+                                <span class="text-sm" style="color: #233441">Secure payment</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
             </div>
             
             <!-- Right Sticky Column (50%) -->
-            <div class="md:w-[36%] w-full order-first md:order-none md:top-6 z-10 sticky self-start">
+            <div class="md:sticky md:top-6 w-full max-w-xl md:max-w-none mx-auto md:mx-0 order-first md:order-none">
                 <!-- Apartment Details Card -->
-                <Card apartmentNumber={number} apartmentDetails={apartmentDetails} price={displayPrice} nights={nights} />
+                <Card loading={loading} error={error} apartmentNumber={number} apartmentDetails={apartmentDetails} price={displayPrice} nights={nights} />
             </div>
         </div>
         <!-- Footer -->
@@ -506,3 +443,31 @@
         </div>
     </div>
 </div>
+
+<style>
+    
+    @keyframes rotate-glow-reverse {
+      from { transform: rotate(-360deg); }
+      to { transform: rotate(0deg); }
+    }
+  
+    .animate-rotate-glow-reverse {
+      animation: rotate-glow-reverse 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+  
+
+  
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.04); opacity: 0.9; }
+    }
+  
+    .animate-pulse {
+      animation: pulse 2s ease-in-out infinite;
+    }
+  
+    /* Keep original scrollbar styles */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-thumb { background-color: #C09A5B; border-radius: 4px; }
+    ::-webkit-scrollbar-track { background-color: #c0995b7c; border-radius: 4px; }
+  </style>
