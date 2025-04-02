@@ -86,21 +86,25 @@
             nights = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
 
             confetti({
+                colors: ['#C09A5B','#233441'],
                 particleCount: 100,
                 spread: 70,
                 origin: {
-                    y: 0.5
+                    y: 0.9,
+                    x: 0.2
                 }
             });
-            setTimeout(function() {
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: {
-                        y: 0.6
-                    }
-                });
-            }, 500);
+
+            confetti({
+                colors: ['#C09A5B','#233441'],
+                particleCount: 100,
+                spread: 70,
+                origin: {
+                    y: 0.9,
+                    x: 0.8
+                }
+            });
+
 
 
             console.log(bookingData);

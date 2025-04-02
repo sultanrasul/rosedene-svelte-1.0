@@ -238,36 +238,34 @@
             on:click={toggleDatePicker}
           >
              
-            <CalendarDays class="{error ? 'text-red-400' : 'text-[#C09A5B]'}  w-5 h-5 md:w-6 md:h-6 shrink-0" />
-  
-            <span class="font-medium truncate text-center">
+          
+          <span class="font-medium truncate text-center">
             
             {#if loading}
-            <span class="text-gray-700/80">Checking Availability</span>
-            
-            <svg width="50" height="12" fill="#C09A5B" viewBox="0 9 24 6" style="display: inline-block; overflow: visible" xmlns="http://www.w3.org/2000/svg">
-              <style>
-                .spinner_b2T7{animation:spinner_xe7Q .8s linear infinite}
-                .spinner_YRVV{animation-delay:-.65s}
-                .spinner_c9oY{animation-delay:-.5s}
-                @keyframes spinner_xe7Q{93.75%,100%{r:3px}46.875%{r:.2px}}
-                </style>
-                <circle class="spinner_b2T7" cx="4" cy="12" r="3"/>
-                <circle class="spinner_b2T7 spinner_YRVV" cx="12" cy="12" r="3"/>
-                <circle class="spinner_b2T7 spinner_c9oY" cx="20" cy="12" r="3"/>
+            <div class="flex items-center justify-center gap-2">
+              <svg class="animate-spin h-5 w-5 text-[#C09A5B]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
+              Checking Availability
+          </div>
+            
               {:else}
-                <span class="font-medium truncate text-center inline-flex gap-2">
-                {#if error}
-                  <span class="text-gray-700">Unable to check availability</span>
-                {:else if startDate && !endDate}
-                  <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">Check Out</span>
-                {:else if startDate && endDate}
-                  <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">{formattedEndDate}</span>
-                {:else}
-                  <span class="text-gray-900">Check In</span> – <span class="text-gray-900">Check Out</span>
-                {/if}
-              </span>
+                <div class="flex items-center justify-center gap-2">
+              
+                  <CalendarDays class="{error ? 'text-red-400' : 'text-[#C09A5B]'}  w-5 h-5 md:w-6 md:h-6 shrink-0" />
+                  <span class="font-medium truncate text-center inline-flex gap-2">
+                      {#if error}
+                        <span class="text-gray-700">Unable to check availability</span>
+                      {:else if startDate && !endDate}
+                        <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">Check Out</span>
+                      {:else if startDate && endDate}
+                        <span class="text-gray-900">{formattedStartDate}</span> – <span class="text-gray-900">{formattedEndDate}</span>
+                      {:else}
+                        <span class="text-gray-900">Check In</span> – <span class="text-gray-900">Check Out</span>
+                      {/if}
+                  </span>
+                </div>
               {/if}
             </span>
           </button>
