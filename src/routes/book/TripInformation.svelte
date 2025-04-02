@@ -8,6 +8,8 @@
     
     export let startDate = ""
     export let endDate = ""
+    let tooltipText = "Copy reference";
+    let active = false;
 
     export let adults = 1;
     export let children = 0;
@@ -15,34 +17,70 @@
     
     export let bookingReference;
 
+    async function copyButton() {
+        try {
+        await navigator.clipboard.writeText(bookingReference);
+        tooltipText = "Copied!";
+        active = true;
+        // Reset tooltip after 2 seconds
+        setTimeout(() => {
+            active = false;
+            tooltipText = "Copy reference";
+        }, 2000);
+        } catch (err) {
+        console.error('Copy failed:', err);
+        tooltipText = "Copy failed!";
+        setTimeout(() => tooltipText = "Copy reference", 2000);
+        }
+    }
+
 
 </script>
-{#if bookingReference}
-<div class="mb-6 flex items-center gap-4 p-5 bg-[#F5F2ED] rounded-lg border-2 border-[#C09A5B]/20 relative">
-        <div class="p-3 bg-white rounded-lg shadow-md flex-shrink-0">
-            <TicketCheck class="w-8 h-8 text-[#C09A5B]"/>
-        </div>
-        <div class="space-y-1">
-            <p class="text-sm font-medium text-gray-500 tracking-wide">BOOKING REFERENCE</p>
-            <div class="flex items-baseline gap-3">
-                <p class="text-4xl font-bold tracking-tight" style="color: #C09A5B">{bookingReference}</p>
-                <!-- Copy Button -->
-                
-                <button class="p-1 hover:bg-[#C09A5B]/10 rounded-full transition-colors" title="Copy reference">
-                    <svg class="w-5 h-5 text-[#C09A5B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                    </svg>
-                </button>
-            </div>
-            <p class="text-sm text-gray-500">An email confirmation will be sent shortly</p>
-        </div>
+<div class=" {bookingReference ? 'block' : 'hidden'} mb-6 flex items-center gap-4 p-5 bg-[#F5F2ED] rounded-lg border-2 border-[#C09A5B]/20 relative">
+    <div class="p-3 bg-white rounded-lg shadow-md flex-shrink-0">
+        <TicketCheck class="w-8 h-8 text-[#C09A5B]"/>
     </div>
-    {/if}
+    <div class="space-y-1">
+        <p class="text-sm font-medium text-gray-500 tracking-wide">BOOKING REFERENCE</p>
+        <div class="flex items-baseline gap-3">
+            <p class="text-2xl min-[340px]:text-3xl min-[430px]:text-4xl font-bold tracking-tight" style="color: #C09A5B">
+              {bookingReference}
+            </p>
+            
+            <!-- Copy Button with Tooltip -->
+            <div class="relative group">
+              <button 
+                on:click={copyButton}
+                class="p-1 hover:bg-[#C09A5B]/10 rounded-full transition-colors relative"
+                aria-label="Copy booking reference"
+              >
+                <svg class="w-5 h-5 text-[#C09A5B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+                
+                <!-- Tooltip -->
+                <span 
+                  class="absolute left-1/2 -translate-x-1/2 -translate-y-11 px-2 py-1 
+                         bg-gray-800 text-white text-xs rounded-md transition-all
+                         duration-300 opacity-0 group-hover:opacity-100 group-hover:-translate-y-12
+                         {active ? 'opacity-100 -translate-y-12' : ''}"
+                  style="min-width: max-content"
+                >
+                  {tooltipText}
+                  <!-- Tooltip arrow -->
+                  <span class="absolute left-1/2 -translate-x-1/2 bottom-[-4px] w-2 h-2 bg-gray-800 rotate-45"></span>
+                </span>
+              </button>
+            </div>
+          </div>
+        <p class="text-sm text-gray-500">An email confirmation will be sent shortly</p>
+    </div>
+</div>
 
 
 <div class="p-5 bg-[#233441]/10 rounded-lg space-y-4">
     <!-- Dates -->
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 gap-4 min-[430px]:grid-cols-2">
         <div class="flex items-center gap-4">
             <div class="p-3 bg-white rounded-lg shadow-md">
                 <svg class="w-6 h-6 text-[#C09A5B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,7 +109,7 @@
     <div class="border-t-2 border-solid border-gray-200"></div>
 
     <!-- Guests -->
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 gap-4 min-[430px]:grid-cols-2">
         <div class="flex items-center gap-4">
             <div class="p-3 bg-white rounded-lg shadow-md">
 
