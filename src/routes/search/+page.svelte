@@ -8,6 +8,7 @@
     import CardLoading from "./cardLoading.svelte";
     import { BACKEND_URL } from '../conf';
     import Footer from "../Footer.svelte";
+  import BlurFade from "@/components/BlurFade.svelte";
 
     let apartments;
     let startDate, endDate, nights, loading = true;
@@ -128,7 +129,11 @@
     </div>
 
     <div class="min-h-screen relative z-10 pb-20 pl-5 pr-5">
-        <DatePicker isSearch startDate={startDate} endDate={endDate} children={children} adults={adults} childrenAges={childrenAges}/>
+        <div class="pl-5 pr-5 w-full  justify-center text-center flex">
+            <BlurFade delay={0.3}>
+                <DatePicker  isSearch startDate={startDate} endDate={endDate} children={children} adults={adults} childrenAges={childrenAges}/>
+            </BlurFade>
+          </div>
         <div class="flex flex-wrap justify-center gap-4 pt-10">
             {#if loading}
                 <!-- Show loading cards while fetching data -->

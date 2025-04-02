@@ -8,7 +8,7 @@
     import Footer from '../Footer.svelte';
     import { afterUpdate, onDestroy } from 'svelte';
     import BlurFade from '@/components/BlurFade.svelte';
-    import { Plus, Search } from 'lucide-svelte';
+    import { LeafyGreen, Plus, Search } from 'lucide-svelte';
 
     
     let searchTerm = "";
@@ -37,6 +37,26 @@
     let sortDirection = 'desc';
     $: totalPages = Math.ceil(totalReviews / reviewsPerPage);
     $: visiblePages = getVisiblePages(currentPage, totalPages);
+
+    let selectedTopics = new Set(topics);
+    
+    function toggleTopic(topic) {
+        if (selectedTopics.has(topic)) {
+            selectedTopics.delete(topic);
+        } else {
+            selectedTopics.add(topic);
+        }
+        topics = Array.from(selectedTopics);
+        fetchReviews(1);
+    }
+
+    function toggleSearch() {
+        showSearch = !showSearch;
+        if (!showSearch) {
+            searchTerm = "";
+            fetchReviews(1);
+        }
+    }
 
     function formatDateToMonthYear(dateString) {
         try {
@@ -256,30 +276,57 @@
         
             <!-- Topic Filters -->
             <div class="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20 shadow-lg">
-                <p>Select topics to read reviews:</p>
+                <p class="text-white/80 mb-3">Filter by topics:</p>
                 <div class="flex flex-wrap gap-3 items-center">
-                    <!-- Topic Buttons -->
-                    <button on:click={() => {topics.push("Location"); fetchReviews()}} class="inline-flex px-4 py-2 rounded-full bg-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300">
-                      <Plus class="mr-2 w-6"/>  Location
+                    <!-- Updated Topic Buttons -->
+                    {#key topics}
+                        {#each ["Location", "Room", "Clean", "Bed", "Kitchen"] as topic}
+                            <button 
+                                on:click={() => toggleTopic(topic)}
+                                class="inline-flex items-center px-4 py-2 rounded-full transition-all duration-300 group"
+                                class:bg-[#C09A5B]={selectedTopics.has(topic)}
+                                class:border-[#C09A5B]={selectedTopics.has(topic)}
+                                class:border-2={selectedTopics.has(topic)}
+                                class:bg-white={!selectedTopics.has(topic)}
+                                class:bg-opacity-10={!selectedTopics.has(topic)}
+                                class:border-white={!selectedTopics.has(topic)}
+                                class:border-opacity-30={!selectedTopics.has(topic)}
+                            >
+                                {#if selectedTopics.has(topic)}
+                                    <svg class="w-5 h-5 mr-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                {:else}
+                                    <Plus class="w-5 h-5 mr-2 text-white"/>
+                                {/if}
+                                <span class:font-semibold={selectedTopics.has(topic)}>{topic}</span>
+                            </button>
+                        {/each}
+                    {/key}
+        
+                    <!-- Updated Search Toggle Button -->
+                    <!-- Updated Search Button -->
+                    <button 
+                        on:click={toggleSearch}
+                        class="inline-flex px-4 py-2 rounded-full transition-all duration-300"
+                        class:bg-[#C09A5B]={showSearch}
+                        class:border-[#C09A5B]={showSearch}
+                        class:border-2={showSearch}
+                        class:bg-white={!showSearch}
+                        class:bg-opacity-10={!showSearch}
+                        class:border-white={!showSearch}
+                        class:border-opacity-30={!showSearch}
+                        >
+                        {#if showSearch}
+                            <svg class="w-5 h-5 mr-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        {:else}
+                            <Search class="w-5 h-5 mr-2 text-white"/>
+                        {/if}
+                        <span class:font-semibold={showSearch}>Search</span>
                     </button>
-                    <button on:click={() => {topics.push("Room"); fetchReviews()}} class="inline-flex px-4 py-2 rounded-full bg-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300">
-                      <Plus class="mr-2 w-6"/>  Room
-                    </button>
-                    <button on:click={() => {topics.push("Clean"); fetchReviews()}} class="inline-flex px-4 py-2 rounded-full bg-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300">
-                      <Plus class="mr-2 w-6"/>  Clean
-                    </button>
-                    <button on:click={() => {topics.push("Bed"); fetchReviews()}} class="inline-flex px-4 py-2 rounded-full bg-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300">
-                      <Plus class="mr-2 w-6"/>  Bed
-                    </button>
-                    <button on:click={() => {topics.push("Kitchen"); fetchReviews()}} class="inline-flex px-4 py-2 rounded-full bg-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300">
-                      <Plus class="mr-2 w-6"/>  Kitchen
-                    </button>
-                    <!-- svelte-ignore a11y_consider_explicit_label -->
-                    <button  on:click={() => {showSearch = !showSearch}} class="inline-flex px-4 py-2 rounded-full bg-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg> 
-                    </button>
+        
 
                     
                     <!-- Show More Link -->
@@ -289,7 +336,7 @@
                     <!-- Sort Dropdown -->
                     <div class="relative  w-full sm:w-64 group">
                         <select
-                            class="w-full px-6 py-3 rounded-xl bg-[#C09A5B]/10 border-2 border-[#C09A5B]/30 hover:border-[#C09A5B]/50 text-[#C09A5B] transition-all duration-300 appearance-none cursor-pointer"
+                            class="focus:ring-1 focus:ring-[#C09A5B] w-full px-6 py-3 rounded-xl bg-[#C09A5B]/10 border-2 border-[#C09A5B]/30 hover:border-[#C09A5B]/50 text-[#C09A5B] transition-all duration-300 appearance-none cursor-pointer"
                             bind:value={selectedSort}
                             on:change={(e) => setSort(e.target.value.split('-')[0], e.target.value.split('-')[1])}
                         >

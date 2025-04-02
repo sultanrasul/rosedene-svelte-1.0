@@ -290,7 +290,7 @@
 <div class="bg-[#233441]">
     <Navbar/>
 </div>
-<div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8" style="background-color: #233441">
+<div class="relative z-10 pt-10 mt-0 pb-20 sm:pl-5 sm:pr-5 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40 bg-[#233441]">
     <div class="max-w-7xl mx-auto ">
         <div class="inline-flex items-center gap-2 mb-8">
             <!-- Back Button Container -->

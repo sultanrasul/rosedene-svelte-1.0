@@ -38,9 +38,23 @@
     export let childrenAges = [];
     console.log(childrenAges);
     
+    // function toggleDatePicker(){
+    //   isOpenMobile = !isOpenMobile;
+    //   isOpenDesktop = !isOpenDesktop
+    // }
+
     function toggleDatePicker(){
-      isOpenMobile = !isOpenMobile;
-      isOpenDesktop = !isOpenDesktop
+      if (!isOpenMobile){
+        isOpenMobile = true
+      } else {
+        isOpenMobile = false
+      }
+
+      if (!isOpenDesktop){
+        isOpenDesktop = true
+      } else {
+        isOpenDesktop = false
+      }
     }
   
   
