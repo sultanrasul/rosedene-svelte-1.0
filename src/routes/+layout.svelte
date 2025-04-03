@@ -41,7 +41,8 @@
 <Drawer/>
 <!-- <div class="rrlative mx-auto min-h-screen max-w-2xl bg-background px-6 py-12 font-sans antialiased sm:py-24"> -->
 <div class="">
-	<div id="dev-banner" class=" relative top-0 left-0 w-full z-50 overflow-hidden ">
+
+	<div id="dev-banner" class="relative top-0 left-0 w-full z-50 overflow-hidden">
 		<div class="relative bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 border-t border-purple-400/20 backdrop-blur-lg transform-gpu transition-all duration-700">
 			<!-- Animated grid background -->
 			<div class="absolute inset-0 opacity-30 [mask-image:radial-gradient(ellipse_at_center,white_20%,transparent_70%)]">
@@ -55,33 +56,33 @@
 				<div class="animate-particle-flow absolute -top-20 right-1/4 w-1 h-1 bg-pink-400 rounded-full shadow-lg delay-300"></div>
 			</div>
 	
-			<div class="max-w-[85rem] px-4 py-3 sm:px-6 lg:px-8 mx-auto relative">
-				<div class="flex items-center gap-4">
+			<div class="max-w-[85rem] px-4 py-2 sm:px-6 lg:px-8 sm:py-3 mx-auto relative">
+				<div class="flex items-center gap-2 sm:gap-4">
 					<!-- Animated DNA-like helix -->
 					<div class="relative flex-shrink-0">
-						<div class="animate-helix-spin w-8 h-8 border-2 border-purple-400 rounded-full">
-							<div class="absolute w-1 h-4 bg-purple-400 left-1/2 -translate-x-1/2 top-0 rounded-full"></div>
-							<div class="absolute w-1 h-4 bg-blue-400 left-1/2 -translate-x-1/2 bottom-0 rounded-full"></div>
+						<div class="animate-helix-spin w-6 h-6 sm:w-8 sm:h-8 border-2 border-purple-400 rounded-full">
+							<div class="absolute w-1 h-3 sm:h-4 bg-purple-400 left-1/2 -translate-x-1/2 top-0 rounded-full"></div>
+							<div class="absolute w-1 h-3 sm:h-4 bg-blue-400 left-1/2 -translate-x-1/2 bottom-0 rounded-full"></div>
 						</div>
 					</div>
 	
 					<!-- Text Content -->
-					<div class="flex-1">
-						<p class="text-sm font-medium text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-blue-300">
+					<div class="flex-1 min-w-0">
+						<p class="text-xs sm:text-sm font-medium text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-blue-300">
 							<span class="font-bold tracking-wide">CODE IN PROGRESS</span> • 
 							<span class="opacity-90">This digital experience is currently being synthesized</span>
 						</p>
-						<p class="text-xs mt-1 text-purple-200/80">
-							<span class="inline-block mr-2">✦ Features evolving daily</span>
-							<span class="inline-block">✦ Temporary instability expected</span>
+						<p class="text-[0.7rem] sm:text-xs mt-0.5 sm:mt-1 text-purple-200/80 space-y-1 sm:space-y-0 sm:space-x-2">
+							<span class="block sm:inline-block">✦ Features evolving daily</span>
+							<span class="block sm:inline-block">✦ Temporary instability expected</span>
 						</p>
 					</div>
 	
 					<!-- Dismiss Button -->
 					<button type="button" 
-							class="ml-4 p-2 rounded-full hover:bg-purple-800/50 transition-all duration-300 group"
+							class="ml-2 sm:ml-4 p-1 sm:p-2 rounded-full hover:bg-purple-800/50 transition-all duration-300 group"
 							data-hs-remove-element="#dev-banner">
-						<svg class="w-5 h-5 text-purple-300 group-hover:text-purple-100 group-hover:scale-110 transition-transform" 
+						<svg class="w-4 h-4 sm:w-5 sm:h-5 text-purple-300 group-hover:text-purple-100 group-hover:scale-110 transition-transform" 
 							 viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 							 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 							<path d="M18 6 6 18"/>
