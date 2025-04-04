@@ -21,9 +21,18 @@
       <span class="text-gray-500">|</span>
       <span class="text-gray-600">ENGLISH</span>
     </div>
-    <button type="button" class="p-2 hover:bg-[#C09A5B]/60 rounded-full" data-hs-overlay="#hs-sidebar-offcanvas">
-      <svg class="size-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    <!-- svelte-ignore a11y_consider_explicit_label -->
+    <button type="button" 
+        class="ml-2 sm:ml-4 p-1 sm:p-2 rounded-full hover:bg-[#C09A5B]/20 transition-all duration-300 group"
+        data-hs-overlay="#hs-sidebar-offcanvas">
+      <svg class="w-7 h-7  text-[#C09A5B] group-hover:text-[#C09A5B]/80 group-hover:rotate-90 transition-all" 
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 6 6 18"/>
+        <path d="m6 6 12 12"/>
+      </svg>
     </button>
+
   </header>
 
   <!-- Body -->
