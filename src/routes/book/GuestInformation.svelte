@@ -20,8 +20,7 @@
                 disabled={readOnly}
                 bind:value={name}
                 on:input={() => nameError = ''}
-                class="text-black font-light w-full p-3 border rounded focus:ring-2 focus:outline-none focus:border-[#C09A5B] focus:ring-[#C09A5B]"
-                style="border-color: {nameError ? '#ff4444' : '#CFD7DF'};"
+                class="text-black font-light w-full p-3 border rounded focus:ring-[3px] focus:outline-none {nameError ? 'border-red-400 focus:border-[#ff4444] focus:ring-[#ff4444]/25': 'border-[#CFD7DF] focus:border-[#C09A5B] focus:ring-[#C09A5B]/25'} "
                 placeholder="John Doe"
                 required
             />
@@ -38,8 +37,7 @@
                     type="email"
                     bind:value={email}
                     on:input={() => emailError = ''}
-                    class="text-black font-light w-full p-3 border rounded focus:ring-2 focus:outline-none focus:border-[#C09A5B] focus:ring-[#C09A5B]"
-                    style="border-color: {emailError ? '#ff4444' : '#CFD7DF'};"
+                    class="text-black font-light w-full p-3 border rounded focus:ring-[3px] focus:outline-none {emailError ? 'border-red-400 focus:border-[#ff4444] focus:ring-[#ff4444]/25': 'border-[#CFD7DF] focus:border-[#C09A5B] focus:ring-[#C09A5B]/25'} "
                     placeholder="john@example.com"
                     required
                 />
@@ -54,8 +52,7 @@
                     type="tel"
                     bind:value={phone}
                     on:input={() => phoneError = ''}
-                    class="text-black font-light w-full p-3 border rounded focus:ring-2 focus:outline-none focus:border-[#C09A5B] focus:ring-[#C09A5B]"
-                    style="border-color: {phoneError ? '#ff4444' : '#CFD7DF'};"
+                    class="text-black font-light w-full p-3 border rounded focus:ring-[3px] focus:outline-none {phoneError ? 'border-red-400 focus:border-[#ff4444] focus:ring-[#ff4444]/25': 'border-[#CFD7DF] focus:border-[#C09A5B] focus:ring-[#C09A5B]/25'} "
                     placeholder="+44 1234 567890"
                     required
                 />
@@ -69,8 +66,7 @@
             <textarea 
                 disabled={readOnly}
                 bind:value={specialRequests}
-                class="text-black font-light w-full p-3 border rounded focus:ring-2 focus:outline-none focus:border-[#C09A5B] focus:ring-[#C09A5B] h-32"
-                style="border-color: #CFD7DF;"
+                class="text-black font-light w-full p-3 border rounded focus:ring-[3px] focus:outline-none focus:border-[#C09A5B] focus:ring-[#C09A5B]/25 border-[#CFD7DF]"
                 placeholder="Accessibility needs, crib requirements, etc.">
             </textarea>
         </div>

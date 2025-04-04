@@ -107,7 +107,7 @@
     {#each apartmentsEntries as [key, apartment], i}
       <swiper-slide key={key}>
           <div>
-              <BlurFade delay={i * 0.1} > 
+              <BlurFade delay={i * 0.1/45} > 
                   <Card 
                       apartmentName={apartment.name} 
                       price={159} 

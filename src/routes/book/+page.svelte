@@ -13,7 +13,7 @@
     import { format, isWithinInterval } from 'date-fns';
     import { BACKEND_URL } from "../conf";
     import {loadStripe} from '@stripe/stripe-js'
-    import { Check, User, UserRoundIcon } from "lucide-svelte";
+    import { Check, User, UserRoundIcon, X } from "lucide-svelte";
     import { redirect } from "@sveltejs/kit";
     import { Toaster, toast } from 'svelte-sonner'
   import GuestInformation from "./GuestInformation.svelte";
@@ -170,7 +170,16 @@
                 }),
             });
 
-            if (!response.ok) throw new Error('Failed to create payment intent');
+            if (!response.ok) {
+                // Retrieve the error data and throw a custom error with status and details
+                const errorData = await response.json(); // This assumes the error response contains more details
+                throw {
+                    status: response.status,
+                    statusText: response.statusText,
+                    message: errorData.error || 'Unknown error', // Customize based on your error structure
+                    data: errorData,
+                };
+            }
             
             const data = await response.json();
             clientSecret = data.clientSecret;
@@ -208,7 +217,12 @@
 
         } catch (err) {
         // @ts-ignore
-        error = err.message;
+            if (err.status){
+                error = "This apartment is not available for these dates! Please Refresh the page or select other dates.";
+            } else {
+                error = err.message;
+            }
+
         console.error('Payment error:', err);
         } finally {
         loading = false;
@@ -314,21 +328,33 @@
         
         <div class="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-10 items-start">
             <!-- Left Column (50%) -->
-            <div class="space-y-6 bg-white rounded-xl relative overflow-visible">
+            <div class="space-y-6 bg-white rounded-xl relative overflow-visible min-h-[600px]">
                 
-                {#if bookingReference}
+                {#if bookingReference || error}
                     <div class="z-[10] absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                        <div class={`flex items-center justify-center p-2 rounded-full shadow-2xl bg-green-100 animate-[pulse_1.5s_ease-out]`}>
-                            <div class={`w-16 h-16 flex items-center justify-center rounded-full bg-green-500 shadow-lg`}>
-                                <Check class="w-8 h-8 lg:w-10 lg:h-10" color="white" />
+                        <div class={`flex items-center justify-center p-2 rounded-full shadow-2xl ${error ? 'bg-red-100' : 'bg-green-100'} animate-[pulse_1.5s_ease-out]`}>
+                            <div class={`w-16 h-16 flex items-center justify-center rounded-full ${error ? 'bg-red-500' : 'bg-green-500'} shadow-lg`}>
+                                {#if error}
+                                    <X class="w-8 h-8 lg:w-10 lg:h-10" color="white" />
+                                {:else}
+                                    <Check class="w-8 h-8 lg:w-10 lg:h-10" color="white" />
+                                {/if}
                             </div>
                         </div>
                     </div>
 
-                    <div class="space-y-3 mb-8 pt-8">
-                        <h1 class="text-center text-3xl lg:text-4xl font-bold text-green-600">Payment Successful!</h1>
-                        <p class="text-center text-gray-600 lg:text-lg">Your reservation is confirmed</p>
-                    </div>
+                    {#if bookingReference}
+                        <div class="space-y-3 mb-8 pt-8">
+                            <h1 class="text-center text-3xl lg:text-4xl font-bold text-green-600">Payment Successful!</h1>
+                            <p class="text-center text-gray-600 lg:text-lg">Your reservation is confirmed</p>
+                        </div>
+                    {:else if error}
+                        <div class="space-y-3 mb-8 pt-8">
+                            <h1 class="text-center text-3xl lg:text-4xl font-bold text-red-600">Error!</h1>
+                            <p class="text-center text-gray-600 lg:text-lg p-5">{error}</p>
+                        </div>
+                    
+                    {/if}
                 {/if}
 
                 {#if loading}
@@ -356,8 +382,6 @@
                         <div class="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
                         <div class="h-32 bg-gray-200 rounded-lg"></div>
                     </div>
-                {:else if error}
-                    <div class="text-red-500 p-6">Error: {error}</div>                
                 {/if}
                 <div class="{!loading & !error ? 'block' : 'hidden'}">
     
