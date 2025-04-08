@@ -49,7 +49,7 @@
         if (!message.trim()) {
             messageError = 'Message is required';
             isValid = false;
-        } else if(message.length() < 30){
+        } else if(message.length < 30){
             messageError = 'Minimum message length is 30 characters';
             isValid = false;
         } else {

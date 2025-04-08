@@ -38,11 +38,6 @@ const config = {
 				
 			  },
 			  keyframes: {
-				pulse: {
-					'0%': { transform: 'scale(1)', opacity: '1' },
-					'50%': { transform: 'scale(1.2)', opacity: '0.5' },
-					'100%': { transform: 'scale(1)', opacity: '1' },
-				  },
 				flashBorder: {
 					'0%, 100%': { borderColor: 'transparent' },
 					'50%': { borderColor: '#C09A5B' }, // Use your accent color

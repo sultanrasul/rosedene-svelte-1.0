@@ -4,7 +4,8 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	server: {
 		// host: '10.133.156.5', 
-		// host: '192.168.178.63', 
+		// host: '192.168.178.79', 
+		host: '192.168.178.63', 
 	  },
 	plugins: [sveltekit()],
 	ssr: {
