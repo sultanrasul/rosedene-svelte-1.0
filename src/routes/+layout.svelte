@@ -42,8 +42,8 @@
 <!-- <div class="rrlative mx-auto min-h-screen max-w-2xl bg-background px-6 py-12 font-sans antialiased sm:py-24"> -->
 <div class="">
 
-
-	<slot></slot>
+	<!-- Uncomment below to show the website again -->
+	<!-- <slot></slot> --> 
 </div>
 
 <style>
