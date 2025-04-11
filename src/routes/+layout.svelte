@@ -43,7 +43,7 @@
 <div class="">
 
 	<!-- Uncomment below to show the website again -->
-	<!-- <slot></slot> --> 
+	<slot></slot> 
 </div>
 
 <style>
