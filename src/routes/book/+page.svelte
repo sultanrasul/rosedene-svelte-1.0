@@ -18,6 +18,7 @@
     import { Toaster, toast } from 'svelte-sonner'
   import GuestInformation from "./GuestInformation.svelte";
   import TripInformation from "./TripInformation.svelte";
+  import ChevronRight from "@lucide/svelte/icons/chevron-right";
 
     // Initialize variables
     // @ts-ignore
@@ -79,12 +80,15 @@
     let nameError = '';
     let emailError = '';
     let phoneError = '';
-    let isProcessing = false;
+    let paymentProcessing = false;
+    let clientSecretProcessing = false;
+
+    let guestInformationConfirmed = false;
 
     // @ts-ignore
     const formatDateDMY = (dateString) =>
         dateString && format(new Date(dateString), dateFormatDMY) || '';
-  
+    
     let dateFrom = {
       day: parseInt(formatDateDMY(startDate).split('/')[0]),
       month: parseInt(formatDateDMY(startDate).split('/')[1]),
@@ -142,7 +146,7 @@
     // @ts-ignore
     let elements;
     let clientSecret = null;
-    let loading = true;
+    let loading = false;
     // @ts-ignore
     let error = null;
     let paymentIntent;
@@ -151,7 +155,8 @@
    */
     let displayPrice;
 
-    onMount(async () => {
+    async function fetchClientSecret(){
+        clientSecretProcessing = true;
         try {
             // Initialize Stripe FIRST
             stripe = await loadStripe('pk_test_51QkSqLAQmfY2PDog1Sd4LCK6Y85GYEdbOP1CeVQ2iw7P9KJ362fbf4PzLq2cEJ4OYJSqrSSN7DI52SmStGCVS8Qa00C9oDsRb0');
@@ -166,7 +171,13 @@
                 adults: adults,
                 children: children,
                 childrenAges: childrenAges,
-                url: window.location.href
+                url: window.location.href,
+
+                
+                special_requests: specialRequests,
+                name: name,
+                email: email,
+                phone: phone
                 }),
             });
 
@@ -184,7 +195,7 @@
             const data = await response.json();
             clientSecret = data.clientSecret;
             // @ts-ignore
-            paymentIntent  = await stripe.retrievePaymentIntent(clientSecret);
+            paymentIntent = await stripe.retrievePaymentIntent(clientSecret);
 
             console.log("Payment Intent: ",paymentIntent)
 
@@ -214,6 +225,7 @@
             // paymentElement = elements.create('payment');
             paymentElement = elements.create('payment');
             paymentElement.mount('#payment-element');
+            guestInformationConfirmed = true;
 
         } catch (err) {
         // @ts-ignore
@@ -223,11 +235,26 @@
                 error = err.message;
             }
 
-        console.error('Payment error:', err);
+            console.error('Payment error:', err);
         } finally {
-        loading = false;
+            clientSecretProcessing = false;
         }
-    });
+    }
+
+
+    async function confirmDetails(params) {
+        // Validate form
+        if (!validateForm()) {
+            scrollToElementWithOffset("guestInformation");
+            return false;
+        }
+
+        fetchClientSecret();
+
+        return true;
+
+    }
+
 
     async function handlePayment() {
         // Reset errors
@@ -239,7 +266,7 @@
             return;
         }
 
-        isProcessing = true;
+        paymentProcessing = true;
         
         try {
             const { paymentIntent, error } = await stripe.confirmPayment({
@@ -252,6 +279,7 @@
                             email: email,
                             phone: phone,
                         },
+                        specialRequests
                     },
                 },
             });
@@ -263,22 +291,23 @@
             }
 
             // Send to backend for processing
-            const response = await fetch(`${BACKEND_URL}/success`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    paymentIntentId: paymentIntent.id,
-                    specialRequests,
-                    customerInfo: { name, email, phone }
-                })
-            });
 
-            if (!response.ok) throw new Error('Failed to confirm booking');
+            // const response = await fetch(`${BACKEND_URL}/success`, {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({
+            //         paymentIntentId: paymentIntent.id,
+            //         specialRequests,
+            //         customerInfo: { name, email, phone }
+            //     })
+            // });
+
+            // if (!response.ok) throw new Error('Failed to confirm booking');
             
-            const data = await response.json();
-            bookingReference = data["booking_reference"];
-            returnedEmail = data["email"];
-            window.location.href = `/details?ref_number=${bookingReference}&email=${returnedEmail}`;
+            // const data = await response.json();
+            // bookingReference = data["booking_reference"];
+            // returnedEmail = data["email"];
+            // window.location.href = `/details?ref_number=${bookingReference}&email=${returnedEmail}`;
 
 
 
@@ -288,7 +317,7 @@
         } catch (err) {
             alert(err.message);
         } finally {
-            isProcessing = false;
+            paymentProcessing = false;
         }
     }
 
@@ -397,11 +426,21 @@
                     <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6" id="guestInformation">
     
                     <!-- Guest Information -->
-                    <GuestInformation readOnly={bookingReference ? true : false} bind:specialRequests={specialRequests} bind:name={name} bind:nameError={nameError} bind:phone={phone} bind:phoneError={phoneError} bind:email={email} bind:emailError={emailError} />
-    
+                    <GuestInformation 
+                        bind:guestInformationConfirmed={guestInformationConfirmed}
+                        bind:specialRequests={specialRequests} 
+                        bind:name={name}
+                        bind:nameError={nameError}
+                        bind:phone={phone}
+                        bind:phoneError={phoneError}
+                        bind:email={email}
+                        bind:emailError={emailError}
+                        bind:clientSecret={clientSecret}
+                    />    
                     
                     <!-- Payment Card -->
-                    <div class="{!bookingReference ? 'block' : 'hidden'}">
+
+                    <div class="{guestInformationConfirmed ? 'block' : 'hidden'}">
                         <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
 
                         <div class="bg-white rounded-xl  p-6">
@@ -411,7 +450,6 @@
         
                         <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
         
-                        <!-- Cancellation Policy -->
                         <div class="bg-white rounded-xl  p-6">
                             <h3 class="font-semibold mb-2" style="color: #233441">Cancellation policy</h3>
                             <p class="text-sm text-gray-600">
@@ -422,16 +460,15 @@
         
                         <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
         
-                        <!-- Confirm Button - Now at bottom of left column -->
                         <div class="bg-white rounded-xl  p-6">
                             <!-- Update the Confirm Button -->
                             <button
                                 on:click={handlePayment}
                                 class="w-full py-4 rounded-xl font-bold text-white transition-colors hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
                                 style="background-color: #C09A5B;"
-                                disabled={isProcessing}
+                                disabled={paymentProcessing}
                             >
-                                {#if isProcessing}
+                                {#if paymentProcessing}
                                     <div class="flex items-center justify-center gap-2">
                                         <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -452,6 +489,40 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="flex justify-end p-6 {guestInformationConfirmed ? 'hidden' : 'block'}">
+                        <button
+                            on:click={confirmDetails}
+                            class="w-auto px-4 py-2  rounded-xl text-white transition-colors hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
+                            style="background-color: #C09A5B;"
+                            disabled={paymentProcessing}
+                        >
+                            {#if paymentProcessing}
+                                <div class="flex items-center justify-center gap-2">
+                                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Processing...
+                                </div>
+                            {:else}
+                            <div class="flex items-center gap-2">
+                                Next: Continue to Payment  
+                                {#if clientSecretProcessing}
+                                    <svg class="mx-1.5 my-1.5 animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    
+                                    {:else}
+                                        <ChevronRight size={30} class="mt-0.5" />
+                                {/if}
+                            </div>
+                            {/if}
+                        </button>
+                    </div>
+
                     
                 </div>
             </div>
