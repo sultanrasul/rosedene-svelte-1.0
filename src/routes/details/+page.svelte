@@ -381,7 +381,7 @@
                     <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6" id="guestInformation">
     
                     <!-- Guest Information -->
-                    <GuestInformation readOnly={true} specialRequests={bookingData?.SpecialRequest} name={bookingData?.CustomerInfo?.Name} phone={bookingData?.CustomerInfo?.Phone} email={bookingData?.CustomerInfo?.Email}/>
+                    <GuestInformation showEditButton={false} guestInformationConfirmed={true} specialRequests={bookingData?.SpecialRequest} name={bookingData?.CustomerInfo?.Name} phone={bookingData?.CustomerInfo?.Phone} email={bookingData?.CustomerInfo?.Email}/>
     
                     
                     

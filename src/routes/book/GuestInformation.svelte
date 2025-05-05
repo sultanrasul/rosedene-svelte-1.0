@@ -10,6 +10,7 @@
     export let phoneError = "";
     export let guestInformationConfirmed = false;
     export let clientSecret = "";
+    export let showEditButton = true;
 
     let originalName = "";
     let originalPhone = "";
@@ -18,6 +19,7 @@
     let editMode = false;
     let error;
     let updateDetailsProcessing = false
+
 
     function scrollToElementWithOffset(id) {
         const element = document.getElementById(id);
@@ -145,8 +147,9 @@
         {#if guestInformationConfirmed && !editMode}
             <button
                 on:click={handleEdit}
-                class="flex items-center gap-1 px-4 py-2 text-sm font-medium text-[#C09A5B] bg-[#C09A5B]/10 border border-[#C09A5B] rounded-lg hover:bg-[#C09A5B]/20 transition-colors"
+                class="{showEditButton ? 'block' : 'hidden'} flex items-center gap-1 px-4 py-2 text-sm font-medium text-[#C09A5B] bg-[#C09A5B]/10 border border-[#C09A5B] rounded-lg hover:bg-[#C09A5B]/20 transition-colors"
                 type="button"
+                
             >
                 Edit
             </button>

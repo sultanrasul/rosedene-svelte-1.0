@@ -11,14 +11,14 @@
     // @ts-ignore
     // @ts-ignore
     import { format, isWithinInterval } from 'date-fns';
-    import { BACKEND_URL } from "../conf";
+    import { BACKEND_URL, PK } from "../conf";
     import {loadStripe} from '@stripe/stripe-js'
     import { Check, User, UserRoundIcon, X } from "lucide-svelte";
     import { redirect } from "@sveltejs/kit";
     import { Toaster, toast } from 'svelte-sonner'
-  import GuestInformation from "./GuestInformation.svelte";
-  import TripInformation from "./TripInformation.svelte";
-  import ChevronRight from "@lucide/svelte/icons/chevron-right";
+    import GuestInformation from "./GuestInformation.svelte";
+    import TripInformation from "./TripInformation.svelte";
+    import ChevronRight from "@lucide/svelte/icons/chevron-right";
 
     // Initialize variables
     // @ts-ignore
@@ -84,6 +84,8 @@
     let clientSecretProcessing = false;
 
     let guestInformationConfirmed = false;
+
+    
 
     // @ts-ignore
     const formatDateDMY = (dateString) =>
@@ -155,11 +157,53 @@
    */
     let displayPrice;
 
+    let pollingInterval;
+
+    async function pollPaymentStatus(paymentIntentId, email) {
+    let attempts = 0;
+    const maxAttempts = 15; // Timeout after ~75 seconds (5s interval)
+
+    return new Promise((resolve, reject) => {
+        pollingInterval = setInterval(async () => {
+            try {
+                attempts++;
+
+                const response = await fetch(`${BACKEND_URL}/payment-status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ payment_intent_id: paymentIntentId, email })
+                });
+
+                const data = await response.json();
+
+                if (data.status === "confirmed") {
+                    clearInterval(pollingInterval);
+                    resolve(data); // Booking confirmed
+
+                } else if (data.status === "error") {
+                    clearInterval(pollingInterval);
+                    reject(new Error(data["error"]));
+
+                } else if (data.status === "Booking Not Found" || attempts >= maxAttempts) {
+                    clearInterval(pollingInterval);
+                    reject(new Error("Booking not found or polling timeout"));
+                }
+
+                // Else status is still "pending", so do nothing yet
+            } catch (err) {
+                clearInterval(pollingInterval);
+                reject(err);
+            }
+        }, 5000); // every 5 seconds
+        });
+    }
+
+
     async function fetchClientSecret(){
         clientSecretProcessing = true;
         try {
             // Initialize Stripe FIRST
-            stripe = await loadStripe('pk_test_51QkSqLAQmfY2PDog1Sd4LCK6Y85GYEdbOP1CeVQ2iw7P9KJ362fbf4PzLq2cEJ4OYJSqrSSN7DI52SmStGCVS8Qa00C9oDsRb0');
+            stripe = await loadStripe(PK);
             // THEN fetch client secret
             const response = await fetch(`${BACKEND_URL}/create-checkout`, {
                 method: 'POST',
@@ -227,6 +271,8 @@
             paymentElement.mount('#payment-element');
             guestInformationConfirmed = true;
 
+            scrollToElementWithOffset("payment-element");
+
         } catch (err) {
         // @ts-ignore
             if (err.status){
@@ -257,65 +303,32 @@
 
 
     async function handlePayment() {
-        // Reset errors
-        nameError = emailError = phoneError = '';
-        
-        // Validate form
-        if (!validateForm()) {
-            scrollToElementWithOffset("guestInformation");
-            return;
-        }
-
         paymentProcessing = true;
-        
+
         try {
             const { paymentIntent, error } = await stripe.confirmPayment({
-                redirect: "if_required",
                 elements,
                 confirmParams: {
                     payment_method_data: {
-                        billing_details: {
-                            name: name,
-                            email: email,
-                            phone: phone,
-                        },
-                        specialRequests
+                    billing_details: { name, email, phone },
                     },
                 },
+                redirect: "if_required",
             });
 
             if (error) {
-                // toast.error(error.message);
-                // alert("Payment error: " + error.message);
+                toast.error(error.message || "Payment failed");
                 return;
             }
 
-            // Send to backend for processing
+            const pollingResult = await pollPaymentStatus(paymentIntent.id, email);
+            bookingReference = pollingResult.booking_reference;
+            returnedEmail = pollingResult.email;
 
-            // const response = await fetch(`${BACKEND_URL}/success`, {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         paymentIntentId: paymentIntent.id,
-            //         specialRequests,
-            //         customerInfo: { name, email, phone }
-            //     })
-            // });
-
-            // if (!response.ok) throw new Error('Failed to confirm booking');
-            
-            // const data = await response.json();
-            // bookingReference = data["booking_reference"];
-            // returnedEmail = data["email"];
-            // window.location.href = `/details?ref_number=${bookingReference}&email=${returnedEmail}`;
-
-
-
-            // Optional: Redirect to success page
-            // throw redirect(303, '/booking-success');
-
+            window.location.href = `/details?ref_number=${bookingReference}&email=${returnedEmail}`;
         } catch (err) {
-            alert(err.message);
+            console.error("Polling failed:", err.message);
+            error = err.message || "An unexpected error occurred while confirming booking.";
         } finally {
             paymentProcessing = false;
         }
@@ -323,7 +336,7 @@
 
     function scrollToElementWithOffset(id) {
         const element = document.getElementById(id);
-        const yOffset = -100; // Adjust this value as needed
+        const yOffset = 0; // Adjust this value as needed
         const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
 
         window.scrollTo({ top: y, behavior: 'smooth' });
@@ -496,7 +509,7 @@
                             on:click={confirmDetails}
                             class="w-auto px-4 py-2  rounded-xl text-white transition-colors hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
                             style="background-color: #C09A5B;"
-                            disabled={paymentProcessing}
+                            disabled={paymentProcessing || clientSecretProcessing}
                         >
                             {#if paymentProcessing}
                                 <div class="flex items-center justify-center gap-2">
