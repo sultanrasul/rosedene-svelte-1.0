@@ -17,7 +17,7 @@
   import WordPullUp from "@/components/WordPullUp.svelte";
 
 
-    let bookingData = {};
+    let bookingData;
 
     let showBookingDetails = false;
 
@@ -184,6 +184,15 @@
 
     $: email;
     $: bookingReferenceinput;
+
+    // $: if (bookingData?.GuestDetailsInfo?.ChildrenAges) {
+    //     childrenAges = [...bookingData?.GuestDetailsInfo?.ChildrenAges];
+    // }
+
+
+
+
+
 </script>
 
 
@@ -340,33 +349,7 @@
                     <h1 class="text-center text-3xl lg:text-4xl font-bold text-green-600">Payment Successful!</h1>
                     <p class="text-center text-gray-600 lg:text-lg">Your reservation is confirmed</p>
                 </div>
-<!-- 
-                {#if loading}
-                    <div class="space-y-6 p-6 animate-pulse">
-                        <div class="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
-                        <div class="space-y-4">
-                            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-                            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-                            <div class="h-px bg-gray-200 my-8"></div>
-                            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-                        </div>
-
-                        <div class="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
-                        <div class="space-y-4">
-                            <div class="h-12 bg-gray-200 rounded"></div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="h-12 bg-gray-200 rounded"></div>
-                                <div class="h-12 bg-gray-200 rounded"></div>
-                            </div>
-                        </div>
-
-                        <div class="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
-                        <div class="h-32 bg-gray-200 rounded-lg"></div>
-                    </div>
-                {:else if error}
-                    <div class="text-red-500 p-6">Error: {error}</div>                
-                {/if} -->
-                
+          
                 <div class="block">
     
                     <!-- Guest Details Section -->
@@ -374,7 +357,9 @@
                         <h2 class="text-2xl font-bold mb-6" style="color: #233441">Your Trip</h2>
                         
                         <!-- Trip Summary -->
-                        <TripInformation bookingReference={bookingData?.ReservationID} startDate={bookingData.DateFrom} endDate={bookingData.DateTo} adults={bookingData?.GuestDetailsInfo?.NumberOfAdults} children={bookingData?.GuestDetailsInfo?.bookingData?.GuestDetailsInfo?.NumberOfAdults} childrenAges={"childrenAges"}/>
+                        {#if bookingData}
+                            <TripInformation bookingReference={bookingData?.ReservationID} startDate={bookingData.DateFrom} endDate={bookingData.DateTo} adults={bookingData?.GuestDetailsInfo?.NumberOfAdults} children={bookingData?.GuestDetailsInfo?.NumberOfChildren} childrenAges={bookingData?.GuestDetailsInfo?.ChildrenAges.Age}/>
+                        {/if}
                     
                     </div>
     
