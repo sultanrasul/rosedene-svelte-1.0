@@ -34,6 +34,8 @@
         }
     }
 
+    $: normalizedChildrenAges = Array.isArray(childrenAges) ? childrenAges : childrenAges ? [childrenAges] : [];
+
 
 </script>
 <div class=" {bookingReference ? 'block' : 'hidden'} mb-6 flex items-center gap-4 p-5 bg-[#F5F2ED] rounded-lg border-2 border-[#C09A5B]/20 relative">
@@ -135,9 +137,9 @@
                 <p class="text-sm text-gray-500">Children Ages</p>
                 {#if children > 0}
                     <p class="text-base font-medium space-x-2" style="color: #233441">
-                        {childrenAges.join(", ")} <span class="text-gray-500 text-sm">Year Old</span>
+                        {normalizedChildrenAges.join(", ")} <span class="text-gray-500 text-sm">Year Old</span>
                     </p>
-                    {:else}
+                {:else}
                     <p class="text-base font-medium space-x-2 text-[#233441]">
                         0 Children
                     </p>
