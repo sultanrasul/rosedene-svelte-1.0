@@ -121,7 +121,7 @@
                 <p class="text-sm text-gray-500">Guests</p>
                 <p class="text-base font-medium space-x-2" style="color: #233441">
                     <span>{adults} Adult{adults > 1 ? "s": ""}</span>
-                    {#if children}
+                    {#if children > 0}
                         <span>•</span>
                         <span>{children} Child{children > 1 ? "ren": ""}</span>
                     {/if}
