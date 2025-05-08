@@ -430,10 +430,14 @@
                     <!-- Guest Details Section -->
                     <div class="bg-white rounded-xl p-6">
                         <h2 class="text-2xl font-bold mb-6" style="color: #233441">Your Trip</h2>
+                        <!-- Apartment Details Card -->
+                        <div class="pb-10 block md:hidden">
+                            <Card apartmentNumber={number} apartmentDetails={apartmentDetails} price={displayPrice} nights={nights} />
+                        </div>
                         
                         <!-- Trip Summary -->
                         <TripInformation bookingReference={bookingReference} startDate={startDate} endDate={endDate} adults={adults} children={children} childrenAges={childrenAges}/>
-                    
+                        
                     </div>
     
                     <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6" id="guestInformation">
@@ -541,7 +545,7 @@
             </div>
             
             <!-- Right Sticky Column (50%) -->
-            <div class="md:sticky md:top-6 w-full max-w-xl md:max-w-none mx-auto md:mx-0 order-first md:order-none">
+            <div class="hidden md:sticky md:top-6 w-full max-w-xl md:max-w-none mx-auto md:mx-0 order-first md:order-none md:block">
                 <!-- Apartment Details Card -->
                 <Card loading={loading} error={error} apartmentNumber={number} apartmentDetails={apartmentDetails} price={displayPrice} nights={nights} />
             </div>

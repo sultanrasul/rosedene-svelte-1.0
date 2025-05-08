@@ -333,7 +333,7 @@
             <h1 class="text-3xl  text-[#C09A5B]">Find Your Booking</h1>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-5 md:gap-10 items-start">
+        <div class="pt-10 grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-5 md:gap-10 items-start">
             <!-- Left Column (50%) -->
             <div class="space-y-6 bg-white rounded-xl relative overflow-visible">
                 
@@ -358,8 +358,16 @@
                         
                         <!-- Trip Summary -->
                         {#if bookingData}
-                            <TripInformation bookingReference={bookingData?.ReservationID} startDate={bookingData.DateFrom} endDate={bookingData.DateTo} adults={bookingData?.GuestDetailsInfo?.NumberOfAdults} children={bookingData?.GuestDetailsInfo?.NumberOfChildren} childrenAges={bookingData?.GuestDetailsInfo?.ChildrenAges.Age}/>
+                            <!-- Apartment Details Card -->
+                            <div class="pb-10 block md:hidden">
+                                <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} price={bookingData?.ClientPrice} nights={nights} />
+                            </div>
+                            
+                            <TripInformation bookingReference={bookingData?.ReservationID} startDate={bookingData.DateFrom} endDate={bookingData.DateTo} adults={bookingData?.GuestDetailsInfo?.NumberOfAdults} children={bookingData?.GuestDetailsInfo?.NumberOfChildren} childrenAges={bookingData?.GuestDetailsInfo?.ChildrenAges?.Age}/>
+                            
+                            
                         {/if}
+                        
                     
                     </div>
     
@@ -374,7 +382,7 @@
             </div>
             
             <!-- Right Sticky Column (50%) -->
-            <div class="md:sticky md:top-6 w-full max-w-xl md:max-w-none mx-auto md:mx-0 order-first md:order-none">
+            <div class="md:sticky md:top-6 w-full max-w-xl md:max-w-none mx-auto md:mx-0 order-first md:order-none hidden md:block">
                 <!-- Apartment Details Card -->
                 <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} price={bookingData?.ClientPrice} nights={nights} />
             </div>
