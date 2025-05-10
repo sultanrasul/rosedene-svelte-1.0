@@ -19,6 +19,7 @@
     import GuestInformation from "./GuestInformation.svelte";
     import TripInformation from "./TripInformation.svelte";
     import ChevronRight from "@lucide/svelte/icons/chevron-right";
+  import { calculateApartmentPrice } from "../calculateApartmentPrice";
 
     // Initialize variables
     // @ts-ignore
@@ -82,9 +83,40 @@
     let phoneError = '';
     let paymentProcessing = false;
     let clientSecretProcessing = false;
+    let apartmentPrice;
 
     let guestInformationConfirmed = false;
 
+
+
+    async function fetchApartmentPrice(propertyId) {
+        console.log(propertyId)
+      try {
+        const response = await fetch(`${BACKEND_URL}/check_price`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ property_id: propertyId }),
+        });
+
+        if (!response.ok) throw new Error('Price check failed');
+            return await response.json();
+      } catch (err) {
+        console.error('Failed to fetch apartment price:', err);
+        throw err;
+      }
+    }
+    
+    onMount(async () => {
+        console.log(apartmentDetails["id"]);
+        apartmentPrice = await fetchApartmentPrice(apartmentDetails["id"]);
+        console.log(apartmentPrice);
+
+        console.log(guests, startDate, endDate)
+        const newPrice = calculateApartmentPrice(apartmentPrice["Prices"], guests, startDate, endDate);
+        displayPrice = newPrice;
+        // console.log(newPrice);
+
+    });
     
 
     // @ts-ignore
@@ -159,42 +191,43 @@
 
     let pollingInterval;
 
+
     async function pollPaymentStatus(paymentIntentId, email) {
-    let attempts = 0;
-    const maxAttempts = 15; // Timeout after ~75 seconds (5s interval)
+        let attempts = 0;
+        const maxAttempts = 15; // Timeout after ~75 seconds (5s interval)
 
-    return new Promise((resolve, reject) => {
-        pollingInterval = setInterval(async () => {
-            try {
-                attempts++;
+        return new Promise((resolve, reject) => {
+            pollingInterval = setInterval(async () => {
+                try {
+                    attempts++;
 
-                const response = await fetch(`${BACKEND_URL}/payment-status`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ payment_intent_id: paymentIntentId, email })
-                });
+                    const response = await fetch(`${BACKEND_URL}/payment-status`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ payment_intent_id: paymentIntentId, email })
+                    });
 
-                const data = await response.json();
+                    const data = await response.json();
 
-                if (data.status === "confirmed") {
+                    if (data.status === "confirmed") {
+                        clearInterval(pollingInterval);
+                        resolve(data); // Booking confirmed
+
+                    } else if (data.status === "error") {
+                        clearInterval(pollingInterval);
+                        reject(new Error(data["error"]));
+
+                    } else if (data.status === "Booking Not Found" || attempts >= maxAttempts) {
+                        clearInterval(pollingInterval);
+                        reject(new Error("Booking not found or polling timeout"));
+                    }
+
+                    // Else status is still "pending", so do nothing yet
+                } catch (err) {
                     clearInterval(pollingInterval);
-                    resolve(data); // Booking confirmed
-
-                } else if (data.status === "error") {
-                    clearInterval(pollingInterval);
-                    reject(new Error(data["error"]));
-
-                } else if (data.status === "Booking Not Found" || attempts >= maxAttempts) {
-                    clearInterval(pollingInterval);
-                    reject(new Error("Booking not found or polling timeout"));
+                    reject(err);
                 }
-
-                // Else status is still "pending", so do nothing yet
-            } catch (err) {
-                clearInterval(pollingInterval);
-                reject(err);
-            }
-        }, 5000); // every 5 seconds
+            }, 5000); // every 5 seconds
         });
     }
 

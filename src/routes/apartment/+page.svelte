@@ -38,6 +38,7 @@
     import Overview from "./components/information/Overview.svelte";
     import BlurFade from "@/components/BlurFade.svelte";
     import Footer from "../Footer.svelte";
+    import { calculateApartmentPrice } from "../calculateApartmentPrice";
   
   
   
@@ -228,55 +229,6 @@
   
     });
 
-  
-    function calculateApartmentPrice(prices) { 
-      console.log(prices)
-      let totalPrice = 0;
-  
-      // Log to inspect the data
-      console.log('Calculating price for', prices);
-  
-      // Check if prices is defined and contains the 'Season' property
-      if (prices && prices["Season"]) {
-          // Ensure prices["Season"] is an array
-          if (!Array.isArray(prices["Season"])) {
-              prices["Season"] = [prices["Season"]];
-          }
-  
-          let currentDate = new Date(startDate);
-  
-          // Iterate over each night in the stay
-          while (currentDate < endDate) {
-              prices["Season"].forEach(season => {
-                  const seasonStart = new Date(season["@DateFrom"]);
-                  const seasonEnd = new Date(season["@DateTo"]);
-  
-                  // Ensure valid dates are present
-                  if (!isNaN(seasonStart.getTime()) && !isNaN(seasonEnd.getTime())) {
-                      const price = parseFloat(season.Price) || 0; // Default to 0 if price is missing
-                      const extraCharge = parseFloat(season.Extra) || 0; // Default to 0 if extra charge is missing
-  
-                      // If the current night falls within a season range, add its price
-                      if (seasonStart <= currentDate && currentDate <= seasonEnd) {
-                          totalPrice += price;
-                          console.log('Extra charge:', extraCharge);
-                          // Add extra charge if there are more than 2 guests
-                          if (guests > 2) {
-                              totalPrice += extraCharge * (guests - 2);
-                          }
-                      }
-                  } else {
-                      console.warn('Invalid date range for season:', season);
-                  }
-              });
-              currentDate.setDate(currentDate.getDate() + 1);  // Move to next night
-          }
-      } else {
-          console.warn('No valid season data in prices:', prices);
-      }
-  
-      return Math.floor(totalPrice);
-    }
     
     async function bookNow (){
       console.log(window.location.href)
@@ -354,64 +306,60 @@
 
     }  
   
+    // --- Date formatters ---
     $: formattedStartDate = formatDate(startDate);
     $: formattedEndDate = formatDate(endDate);
-  
     $: formattedStartDateDMY = formatDateDMY(startDate);
     $: formattedEndDateDMY = formatDateDMY(endDate);
-  
-    $: {
-      if (startDate && endDate) {
-        const millisecondsPerDay = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
-        if (Math.floor((endDate - startDate) / millisecondsPerDay) < 2){
-          callToastMinNights();
-          startDate = null;
-          endDate = null;
-          isOpen = true;
-          nights = 2;
-          
-        } else{
-          nights = Math.floor((endDate - startDate) / millisecondsPerDay);
-          if (calculateApartmentPrice(Prices) !== displayPrice) {
-            updatePrice(calculateApartmentPrice(Prices)); // Update price with animation
-          }
-          
-          
-          dateFrom = {
-            day: parseInt(formatDateDMY(startDate).split('/')[0]),
-            month: parseInt(formatDateDMY(startDate).split('/')[1]),
-            year: parseInt(formatDateDMY(startDate).split('/')[2])
-          };
-  
-          dateTo = {
-            day: parseInt(formatDateDMY(endDate).split('/')[0]),
-            month: parseInt(formatDateDMY(endDate).split('/')[1]),
-            year: parseInt(formatDateDMY(endDate).split('/')[2])
-          };
-  
-          let url;
-          if (typeof window !== "undefined") {
-            url = new URL(window.location.href);
-            url.searchParams.set('check_in', formatDateDMY(startDate));
-            url.searchParams.set('check_out', formatDateDMY(endDate));
-            window.history.replaceState({}, '', url);
-          }
+
+    // --- Reactive guest calculation ---
+    $: guests = parseInt(adults, 10) + parseInt(children, 10);
+
+    // --- Handle short stays and date-related updates ---
+    $: if (startDate && endDate) {
+      const millisecondsPerDay = 1000 * 60 * 60 * 24;
+      const stayLength = Math.floor((endDate - startDate) / millisecondsPerDay);
+
+      if (stayLength < 2) {
+        callToastMinNights();
+        startDate = null;
+        endDate = null;
+        isOpen = true;
+        nights = 2;
+      } else {
+        nights = stayLength;
+
+        // Update price only if it's changed
+        const newPrice = calculateApartmentPrice(Prices, guests, startDate, endDate);
+        if (newPrice !== displayPrice) {
+          updatePrice(newPrice);
+        }
+
+        // Set check-in/out objects
+        const [dayFrom, monthFrom, yearFrom] = formatDateDMY(startDate).split('/').map(Number);
+        const [dayTo, monthTo, yearTo] = formatDateDMY(endDate).split('/').map(Number);
+
+        dateFrom = { day: dayFrom, month: monthFrom, year: yearFrom };
+        dateTo = { day: dayTo, month: monthTo, year: yearTo };
+
+        // Update URL params (only in browser)
+        if (typeof window !== "undefined") {
+          const url = new URL(window.location.href);
+          url.searchParams.set('check_in', formatDateDMY(startDate));
+          url.searchParams.set('check_out', formatDateDMY(endDate));
+          window.history.replaceState({}, '', url);
         }
       }
-      
     }
-  
-    $: {
-      if (adults || children) {
-  
-        guests = parseInt(adults, 10) + parseInt(children, 10);
-        if (calculateApartmentPrice(Prices) !== displayPrice) {
-          updatePrice(calculateApartmentPrice(Prices)); // Update price with animation
-        }
-  
-        
+
+    // --- Fallback price update if only guests change (e.g., no dates yet selected) ---
+    $: if (Prices && guests && !startDate && !endDate) {
+      const newPrice = calculateApartmentPrice(Prices, guests);
+      if (newPrice !== displayPrice) {
+        updatePrice(newPrice);
       }
     }
+
   
 
   </script>

@@ -60,7 +60,7 @@
                 <span class="text-gray-400 dark:text-gray-500 text-sm">/{nights} nights</span>
             </div>
             <button class="px-4 py-2 text-sm font-semibold text-white bg-[#C09A5B] rounded-lg hover:bg-[#B08A4F] transition-colors duration-200">
-                Read More
+                Book Now
             </button>
         </div>
     </div>
