@@ -199,7 +199,6 @@
         if (!adults || !children) {
             adults = 1;
             children = 0;
-            displayPrice = 100;
           // throw new Error('Missing required URL parameters');
         }
         // Get apartment details

@@ -38,7 +38,7 @@
             <h3 class="text-2xl font-bold leading-tight">{apartmentName.replace('Apartment','')}</h3>
             <div class="flex items-center gap-2 text-sm">
                 <User size="20" class="text-[#C09A5B]" />
-                <span>{apartmentDetails.maxGuests} Guests</span>
+                <span>{apartmentDetails.maxGuests} Max Guests</span>
                 <span class="text-[#C09A5B]">•</span>
                 <BedDouble size="20" class="text-[#C09A5B]" />
                 {#if apartmentDetails.bedrooms == 0}

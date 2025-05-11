@@ -68,10 +68,10 @@
                     <p class="mt-4">Whether you're staying solo, with family, colleagues, or friends, aparthotels offer you ultimate comfort and flexibility, with all the care and attention* you’d expect of a hotel.</p>
                 </BlurFade>
                 <BlurFade delay={0.35}>
-                    <p class="mt-4">Aparthotels are perfect for both short and long stays. With Rosedene Highland House, the longer you stay, the more you save. Enjoy 20% off stays for 7-21 nights and 30% off stays over 21 nights. That is good.</p>
+                    <p class="mt-4">Aparthotels are perfect for both short and long stays. With Rosedene Highland House</p>
                 </BlurFade>
                 <BlurFade delay={0.4}>
-                    <p class="mt-4">*pancake machines, *workout spaces, *continental breakfast options, *in-room kettles</p>
+                    <p class="mt-4">*pancake machines, *workout spaces, *in-room kettles</p>
                 </BlurFade>
             </div>
             <!-- End Col -->
@@ -110,32 +110,34 @@
                                 </h3>
                             </BlurFade>
                             <BlurFade delay={0.4}>
-                                <p class="text-lg text-[#C09A5B]/90 leading-relaxed">
+                                <p class="text-lg  leading-relaxed">
                                     {amenity.description}
                                 </p>
                             </BlurFade>
                             {#if amenity.title === 'Full Kitchen'}
-                                <div class="pt-4 space-y-4">
-                                    <div class="flex gap-4 text-[#C09A5B]/90">
-                                        <div class="flex-1 border-t border-[#C09A5B]/30"></div>
-                                        <span class="text-sm uppercase tracking-wider">Includes</span>
-                                        <div class="flex-1 border-t border-[#C09B5B]/30"></div>
+                                <BlurFade delay={0.5}>
+                                    <div class="pt-4 space-y-4">
+                                        <div class="flex gap-4 text-[#C09A5B]/90">
+                                            <div class="flex-1 border-t border-[#C09A5B]/30"></div>
+                                            <span class="text-sm uppercase tracking-wider">Includes</span>
+                                            <div class="flex-1 border-t border-[#C09B5B]/30"></div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-4 text-sm">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-[#C09A5B]">✓</span> Chef-grade appliances
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-[#C09A5B]">✓</span> Full cookware set
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-[#C09A5B]">✓</span> Smart refrigerator
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-[#C09A5B]">✓</span> Coffee station
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="grid grid-cols-2 gap-4 text-sm">
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-[#C09A5B]">✓</span> Chef-grade appliances
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-[#C09A5B]">✓</span> Full cookware set
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-[#C09A5B]">✓</span> Smart refrigerator
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-[#C09A5B]">✓</span> Coffee station
-                                        </div>
-                                    </div>
-                                </div>
+                                </BlurFade>
                             {/if}
                         </div>
                     </div>

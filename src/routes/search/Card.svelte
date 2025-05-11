@@ -33,7 +33,7 @@
         <!-- Features Section -->
         <div class="flex flex-wrap gap-2 mt-auto mb-5">
             {#each [
-                { icon: User, text: `${apartmentDetails['maxGuests']} Guests` },
+                { icon: User, text: `${apartmentDetails['maxGuests']} Max Guests` },
                 { icon: TvMinimal, text: `${apartmentDetails['tvSize']}" TV` },
                 { icon: Ruler, text: `${apartmentDetails['squareFeet']} ft²` },
                 ...(apartmentDetails["bedrooms"] !== 0 ? [{ icon: BedDouble, text: `${apartmentDetails['bedrooms']} Bedroom${apartmentDetails['bedrooms'] > 1 ? 's' : ''}` }] : []),
