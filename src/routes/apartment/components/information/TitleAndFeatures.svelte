@@ -20,7 +20,7 @@
     <div class="flex flex-wrap gap-2 mb-4 ">
       <BlurFade delay = {0.4 + 0.2}>
         <span class="inline-flex items-center px-2.5 py-1 text-xs text-white font-medium bg-gray-700 border border-gray-600 rounded-full dark:bg-gray-50 dark:border-gray-200 dark:text-gray-700 transition-colors"> 
-          <User size="22px" class="pr-1" /> {maxGuests} Guests
+          <User size="22px" class="pr-1" /> {maxGuests} Max Guests
         </span>
       </BlurFade>
       <BlurFade delay={0.4 +0.4}>

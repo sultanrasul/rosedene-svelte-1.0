@@ -123,17 +123,13 @@
 <!-- Main Menu -->
 <div class="relative bg-primary-100 dark:bg-[#233441]" id="Home">
     <Navbar/>   
-    <div 
-        class="absolute inset-0 opacity-[0.4] z-[-1]"
-        style="background-image: url('background.png'); background-size: cover; background-position: center;">
-    </div>
+    <DatePicker isSearch startDate={startDate} endDate={endDate} children={children} adults={adults} childrenAges={childrenAges}/>
 
-    <div class="min-h-screen relative z-10 pb-20 pl-5 pr-5">
-        <div class="pl-5 pr-5 w-full  justify-center text-center flex">
-            <BlurFade delay={0.3}>
-                <DatePicker  isSearch startDate={startDate} endDate={endDate} children={children} adults={adults} childrenAges={childrenAges}/>
-            </BlurFade>
-          </div>
+    
+    <!-- <BlurFade delay={0.3}> -->
+        <div class="min-h-screen relative z-10 pb-20 pl-5 pr-5">
+        <!-- </BlurFade> -->
+
         <div class="flex flex-wrap justify-center gap-4 pt-10">
             {#if loading}
                 <!-- Show loading cards while fetching data -->
