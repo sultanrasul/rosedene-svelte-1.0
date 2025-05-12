@@ -32,8 +32,8 @@
   export let loading;
   export let error;
   export let dropdownID = "dropdownDefaultCheckbox";
-  let apartmentDetails;
-
+  export let apartmentDetails;
+  console.log("APARTMENT DETAILS IN GUEST DETAILS: ",apartmentDetails)
 
   export let children = 0;
   export let adults = 1;
@@ -104,7 +104,7 @@
     const checkOut = urlParams.get('check_out'); // Format: day/month/year
     
     
-    apartmentDetails = apartments[urlParams.get('number')];
+    // apartmentDetails = apartments[urlParams.get('number')];
     adults = parseInt(urlParams.get('adults'),10)
     children = parseInt(urlParams.get('children'),10)
     
