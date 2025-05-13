@@ -30,12 +30,12 @@
             description: 'Parking on site'
         },
         {
-            image: '📶',
+            image: '/parking.png',
             title: 'High-Speed WiFi',
             description: 'Enterprise-grade connectivity throughout'
         },
         {
-            image: '🏋️',
+            image: '/parking.png',
             title: 'Washing Machine',
             description: 'Stay fresh with our washing machines. Super handy for longer stays!'
         },
