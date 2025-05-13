@@ -19,6 +19,8 @@
   export let bookNowLoading;
   export let loading;
   export let error;
+  export let apartmentDetails;
+  console.log(apartmentDetails)
 </script>
 
 <BlurFade class="w-[28%] text-black self-start sticky top-6 hidden md:block">
@@ -55,7 +57,8 @@
       <!-- Guest Details -->
       <div class="text-black mb-6 hidden md:block z-50">
            <GuestDetails
-            delayAnimation={0.5}
+             apartmentDetails={apartmentDetails}
+             delayAnimation={0.5}
              bind:disabledDates={disabledDates}
              bind:childrenAges={childrenAges} 
              bind:startDate={startDate} 
