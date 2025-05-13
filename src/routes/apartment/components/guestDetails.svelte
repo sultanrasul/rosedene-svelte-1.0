@@ -33,7 +33,6 @@
   export let error;
   export let dropdownID = "dropdownDefaultCheckbox";
   export let apartmentDetails;
-  console.log("APARTMENT DETAILS IN GUEST DETAILS: ",apartmentDetails)
 
   export let children = 0;
   export let adults = 1;

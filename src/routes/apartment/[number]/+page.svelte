@@ -6,7 +6,6 @@
     const number = data.number
     const apartmentDetails = data.apartmentDetails
 
-    console.log(data);
 
     import { currentPageIndex } from "../store";
     import { parse } from "date-fns";
@@ -45,6 +44,7 @@
     import BlurFade from "@/components/BlurFade.svelte";
     import Footer from "../../Footer.svelte";
     import { calculateApartmentPrice } from "../../calculateApartmentPrice";
+  import { browser } from "$app/environment";
   
   
   
@@ -66,18 +66,42 @@
       return details;
     }
     
-    const url = $page.url;
-    // const number = url.searchParams.get('number');
-    const check_in = url.searchParams.get('check_in');
-    const check_out = url.searchParams.get('check_out');
-    // const apartmentDetails = apartments[number];
-    let adults = url.searchParams.get('adults');
-    let nights = Math.floor((parseDate(check_out) - parseDate(check_in)) / (1000 * 60 * 60 * 24));
-    let children = url.searchParams.get('children');
-    let childrenAges = children ? url.searchParams.getAll('ages').map(Number) : []; // Convert ages to an array of numbers
-    let guests = (adults ? parseInt(adults, 10) : 0) + (children ? parseInt(children, 10) : 0);
+    let check_in = '';
+    let check_out = '';
+    let adults = '1';
+    let children = '0';
+    let childrenAges = [];
+    let nights = 0;
+    let guests = '1';
     let disabledDates = [];
+
+
+  if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      check_in = url.searchParams.get('check_in') || '';
+      check_out = url.searchParams.get('check_out') || '';
+      adults = url.searchParams.get('adults') || '1';
+      children = url.searchParams.get('children') || '0';
+      childrenAges = children ? url.searchParams.getAll('ages').map(Number) : [];
+      nights = Math.floor((parseDate(check_out) - parseDate(check_in)) / (1000 * 60 * 60 * 24));
+  }
+
+    // if (browser){
+
+    //   const url = $page.url;
+    //   // const number = url.searchParams.get('number');
+    //   let check_in = url.searchParams.get('check_in');
+    //   let check_out = url.searchParams.get('check_out');
+    //   // const apartmentDetails = apartments[number];
+    //   let adults = url.searchParams.get('adults');
+    //   let nights = Math.floor((parseDate(check_out) - parseDate(check_in)) / (1000 * 60 * 60 * 24));
+    //   let children = url.searchParams.get('children');
+    //   let childrenAges = children ? url.searchParams.getAll('ages').map(Number) : []; // Convert ages to an array of numbers
+    //   let guests = (adults ? parseInt(adults, 10) : 0) + (children ? parseInt(children, 10) : 0);
+    //   let disabledDates = [];
+    // }
     
+
     const parsedDescription = parseDescription(apartmentDetails.description);
     let startDate = parseDate(check_in); // Variable for start date as a Date object
     let endDate = parseDate(check_out); // Variable for start date as a Date object
@@ -455,6 +479,7 @@
          <!-- Price Card -->
          {#if screenWidth >= 768}
            <PriceCard
+             apartmentDetails={apartmentDetails}
              bind:displayPrice={displayPrice}
              bind:initialPrice={initialPrice}
              bind:nights={nights}
