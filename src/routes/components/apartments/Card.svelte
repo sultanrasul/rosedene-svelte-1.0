@@ -51,12 +51,13 @@
 
         <!-- Location & Button -->
         <div class="pt-3 space-y-4">
-            <button 
-            on:click={() => { window.location.href = `/apartment?number=${apartmentNumber}`; }}
-            class="w-full py-3 text-sm font-semibold text-center text-white bg-[#C09A5B] rounded-lg 
-                        hover:bg-[#B08A4F] transition-colors duration-200 transform group-hover:scale-[1.02]">
-                Explore Apartment
-            </button>
+            <a href="/apartment/{apartmentNumber}">
+                <button 
+                    class="w-full py-3 text-sm font-semibold text-center text-white bg-[#C09A5B] rounded-lg 
+                            hover:bg-[#B08A4F] transition-colors duration-200 transform group-hover:scale-[1.02]">
+                    Explore Apartment
+                </button>
+            </a>
         </div>
     </div>
 </div>

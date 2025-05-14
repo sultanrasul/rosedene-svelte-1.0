@@ -75,13 +75,13 @@
             <span class="text-2xl font-bold">€159</span>
             <span class="text-gray-400">/night</span>
           </div>
-          
-          <button 
-            on:click={() => { window.location.href = `/apartment?number=${apartmentNumber}`; }}
-            class="px-6 py-3 text-sm font-semibold text-center text-white bg-[#C09A5B] rounded-lg 
-                  hover:bg-[#B08A4F] transition-colors duration-200 transform">
-            Book Now
-          </button>
+          <a href="/apartment?number={apartmentNumber}">
+            <button 
+              class="px-6 py-3 text-sm font-semibold text-center text-white bg-[#C09A5B] rounded-lg 
+                    hover:bg-[#B08A4F] transition-colors duration-200 transform">
+              Book Now
+            </button>
+          </a>
         </div>
       </div>
     </div>
