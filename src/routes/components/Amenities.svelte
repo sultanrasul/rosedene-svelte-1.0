@@ -102,7 +102,7 @@
         <!-- Enhanced CTA Button -->
         <BlurFade delay={0.5}>
             <div class="text-center relative">
-                <button on:click={() => { window.location.href = "/aparthotel"; }}
+                <button href = "/aparthotel"
                  class="bg-[#C09A5B] text-[#233441] px-8 py-4 rounded-lg font-semibold hover:bg-[#b08d52] transition-all 
                            transform hover:scale-105 shadow-lg hover:shadow-xl shadow-[#C09A5B]/30 
                            border-2 border-[#C09A5B]/80 flex items-center gap-2 mx-auto

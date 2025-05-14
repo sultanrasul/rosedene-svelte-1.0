@@ -58,12 +58,14 @@
     <div class="flex-shrink-0">
       <!-- svelte-ignore a11y_click_events_have_key_events -->
       <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-      <img src="/name.svg" 
-           class="h-auto w-[150px] md:w-[200px] max-w-full cursor-pointer" 
-           alt="Logo"
-           style="object-fit: contain"
-           on:click={() => { window.location.href = "/"; }}
-           >
+       <a href="/">
+        <img src="/name.svg" 
+             class="h-auto w-[150px] md:w-[200px] max-w-full cursor-pointer" 
+             alt="Logo"
+             style="object-fit: contain"
+  
+             >
+      </a>
     </div>
 
     <!-- Navigation Links -->
