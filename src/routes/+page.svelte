@@ -16,16 +16,7 @@
 
 
     
-    onMount( () => {
 
-        const scrollToo = urlParams.get("scrollToo") || null;
-        if (scrollToo) {
-            console.log("Scroll Too:", scrollToo);
-            scrollToElementWithOffset(scrollToo);
-            window.history.replaceState({}, document.title, "/");
-        }
-        
-    });
 
     function scrollToElementWithOffset(id) {
         const element = document.getElementById(id);
@@ -34,8 +25,9 @@
         window.scrollTo({ top: y, behavior: 'smooth' });
     }
 
-    export const prerender = true;
+    // export const prerender = true;
 </script>
+
 
 
 <div id="dev-banner" class="relative top-0 left-0 w-full z-50 overflow-hidden border-b border-[#C09A5B]/20">

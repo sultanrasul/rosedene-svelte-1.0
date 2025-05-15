@@ -7,6 +7,7 @@
 	import { afterNavigate } from "$app/navigation";
 	import { onMount } from 'svelte';
 	import { Toaster} from 'svelte-sonner'
+	
 
 
 	import { ModeWatcher, setMode } from 'mode-watcher';
@@ -15,6 +16,10 @@
 
 	setMode('dark');
 	afterNavigate(() => {
+		if (typeof initFlowbite === 'function') {
+			initFlowbite();
+		}
+		
 		window.HSStaticMethods.autoInit();
 
 	});
@@ -27,7 +32,10 @@
   import Footer from './Footer.svelte';
 
 	onMount(() => {
-		initFlowbite();
+		if (typeof initFlowbite === 'function') {
+			initFlowbite();
+		}
+
 		window.HSStaticMethods.autoInit();
 
 		
@@ -36,9 +44,9 @@
 
 </script>
 
+<Drawer/>
 <Toaster position="top-right" richColors={true}/>
 <ModeWatcher />
-<Drawer/>
 <!-- <div class="rrlative mx-auto min-h-screen max-w-2xl bg-background px-6 py-12 font-sans antialiased sm:py-24"> -->
 <div class="">
 
