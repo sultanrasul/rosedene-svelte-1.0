@@ -15,6 +15,7 @@
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
   import Card from "../book/Card.svelte";
   import WordPullUp from "@/components/WordPullUp.svelte";
+  import Drawer from "../Drawer.svelte";
 
 
     let bookingData;
@@ -194,6 +195,7 @@
 
 
 </script>
+
 
 
 {#if !showBookingDetails && !showErrorDetails}

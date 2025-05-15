@@ -12,6 +12,7 @@
     import Navbar from "../Navbar.svelte";
   import BlurFade from "@/components/BlurFade.svelte";
   import WordPullUp from "@/components/WordPullUp.svelte";
+  import Drawer from "../Drawer.svelte";
 
     let name = "";
     let email = "";
@@ -115,6 +116,7 @@
     }
 
 </script>
+
 
 <div class="absolute w-full z-50 md:bg-transparent bg-[#233441]">
     <Navbar/>

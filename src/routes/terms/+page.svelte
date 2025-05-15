@@ -4,6 +4,7 @@
     import { onMount } from 'svelte';
     import Navbar from '../Navbar.svelte'; // Update path as needed
     import Footer from '../Footer.svelte'; // Update path as needed
+  import Drawer from '../Drawer.svelte';
 
     let activeSection = 1;
     let showScrollButton = false;

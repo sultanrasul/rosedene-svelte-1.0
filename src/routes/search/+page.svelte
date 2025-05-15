@@ -9,6 +9,7 @@
     import { BACKEND_URL } from '../conf';
     import Footer from "../Footer.svelte";
   import BlurFade from "@/components/BlurFade.svelte";
+  import Drawer from "../Drawer.svelte";
 
     let apartments;
     let startDate, endDate, nights, loading = true;
@@ -118,6 +119,7 @@
 
 
 </script>
+
 
     
 <!-- Main Menu -->

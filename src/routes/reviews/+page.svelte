@@ -10,6 +10,7 @@
     import BlurFade from '@/components/BlurFade.svelte';
     import { LeafyGreen, Plus, Search } from 'lucide-svelte';
   import WordPullUp from '@/components/WordPullUp.svelte';
+  import Drawer from '../Drawer.svelte';
 
     let animateBars = false;
     
@@ -246,6 +247,8 @@
         return text.replace(regex, '<mark class="bg-[#C09A5B] text-white px-1 rounded">$1</mark>');
     }
 </script>
+
+
 
 <div class="bg-[#233441] min-h-screen ">
 
