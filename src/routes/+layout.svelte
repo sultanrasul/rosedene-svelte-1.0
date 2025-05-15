@@ -19,28 +19,40 @@
 		if (typeof initFlowbite === 'function') {
 			initFlowbite();
 		}
-		
-		window.HSStaticMethods.autoInit();
+
+		// Init Preline
+		if (window?.HSStaticMethods?.autoInit) {
+			requestAnimationFrame(() => {
+				window.HSStaticMethods.autoInit();
+			});
+		}
 
 	});
 
-	export const prerender = true;
+
 
 	import { initFlowbite } from 'flowbite'
-  import Navbar from './Navbar.svelte';
-  import Drawer from './Drawer.svelte';
-  import Footer from './Footer.svelte';
+	import Navbar from './Navbar.svelte';
+	import Drawer from './Drawer.svelte';
+	import Footer from './Footer.svelte';
 
 	onMount(() => {
 		if (typeof initFlowbite === 'function') {
 			initFlowbite();
 		}
 
-		window.HSStaticMethods.autoInit();
+		// Init Preline
+		if (window?.HSStaticMethods?.autoInit) {
+			requestAnimationFrame(() => {
+				window.HSStaticMethods.autoInit();
+			});
+		}
 
 		
 	})
 
+	export const prerender = false;
+	export const ssr = false;
 
 </script>
 
@@ -48,11 +60,9 @@
 <Toaster position="top-right" richColors={true}/>
 <ModeWatcher />
 <!-- <div class="rrlative mx-auto min-h-screen max-w-2xl bg-background px-6 py-12 font-sans antialiased sm:py-24"> -->
-<div class="">
 
-	<!-- Uncomment below to show the website again -->
-	<slot></slot> 
-</div>
+<!-- Uncomment below to show the website again -->
+<slot></slot> 
 
 <style>
     :global(.swiper-pagination-bullet) {

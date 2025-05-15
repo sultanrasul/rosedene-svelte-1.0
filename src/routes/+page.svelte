@@ -113,14 +113,12 @@
 
 
     <!-- Content Container (now with transparent background) -->
-    <div class="relative">
-        
-        <!-- <Navbar fixed/> -->
-        <Hero/>
-        <Apartments/>
-        <Amenities/>
-        <Location/>
-        <Reviews/>
-        <Footer/>
+    <div class="min-h-screen bg-[#233441] text-white relative z-10" id="Home">
+        <Hero />
+        <Apartments />
+        <Amenities />
+        <Location />
+        <Reviews />
+        <Footer />
     </div>
 </div>
