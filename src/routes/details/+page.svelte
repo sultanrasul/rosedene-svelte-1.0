@@ -198,8 +198,7 @@
 
 
 
-{#if !showBookingDetails && !showErrorDetails}
-<div class="min-h-screen flex">
+<div class="min-h-screen flex {!showBookingDetails && !showErrorDetails ? 'block' : 'hidden'}">
     
     <!-- Right Form Section -->
     <div class=" absolute w-full z-10">
@@ -305,101 +304,102 @@
         </div>
     </div>
         
-    </div>
-{/if}
-
-
-{#if showBookingDetails || showErrorDetails}
-<div class="bg-[#233441]">
-    <Navbar/>
 </div>
-<div class="relative z-10 pt-10 mt-0 pb-20 sm:pl-5 sm:pr-5 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40 bg-[#233441]">
-    <div class="max-w-7xl mx-auto ">
-        <div class="inline-flex items-center gap-2 mb-8">
-            <!-- Back Button Container -->
-            <button 
-                class="group relative p-1 rounded-full transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#C09A5B]"
-                aria-label="Go back"
-                on:click={backButton}
-            >
-                <!-- Hover Circle Background -->
-                <div class="absolute inset-0 rounded-full transition-all group-hover:bg-gray-100/50"></div>
+
+
+
+<div class="{showBookingDetails || showErrorDetails ? 'block' : 'hidden'}">
+    <div class="bg-[#233441]">
+        <Navbar/>
+    </div>
+    <div class="relative z-10 pt-10 mt-0 pb-20 sm:pl-5 sm:pr-5 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40 bg-[#233441]">
+        <div class="max-w-7xl mx-auto ">
+            <div class="inline-flex items-center gap-2 mb-8">
+                <!-- Back Button Container -->
+                <button 
+                    class="group relative p-1 rounded-full transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#C09A5B]"
+                    aria-label="Go back"
+                    on:click={backButton}
+                >
+                    <!-- Hover Circle Background -->
+                    <div class="absolute inset-0 rounded-full transition-all group-hover:bg-gray-100/50"></div>
+                    
+                    <!-- Chevron Icon -->
+                    <ChevronLeft 
+                        class="w-8 h-8 text-gray-300 transition-all group-hover:text-[#C09A5B] group-hover:scale-110" 
+                        stroke-width="2"
+                    />
+                </button>
                 
-                <!-- Chevron Icon -->
-                <ChevronLeft 
-                    class="w-8 h-8 text-gray-300 transition-all group-hover:text-[#C09A5B] group-hover:scale-110" 
-                    stroke-width="2"
-                />
-            </button>
+                <h1 class="text-3xl  text-[#C09A5B]">Find Your Booking</h1>
+            </div>
             
-            <h1 class="text-3xl  text-[#C09A5B]">Find Your Booking</h1>
-        </div>
-        
-        <div class="pt-10 grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-5 md:gap-10 items-start">
-            <!-- Left Column (50%) -->
-            <div class="space-y-6 bg-white rounded-xl relative overflow-visible">
-                
-                <div class="z-[10] absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <div class={`flex items-center justify-center p-2 rounded-full shadow-2xl bg-green-100 animate-[pulse_1.5s_ease-out]`}>
-                        <div class={`w-16 h-16 flex items-center justify-center rounded-full bg-green-500 shadow-lg`}>
-                            <Check class="w-8 h-8 lg:w-10 lg:h-10" color="white" />
+            <div class="pt-10 grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-5 md:gap-10 items-start">
+                <!-- Left Column (50%) -->
+                <div class="space-y-6 bg-white rounded-xl relative overflow-visible">
+                    
+                    <div class="z-[10] absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                        <div class={`flex items-center justify-center p-2 rounded-full shadow-2xl bg-green-100 animate-[pulse_1.5s_ease-out]`}>
+                            <div class={`w-16 h-16 flex items-center justify-center rounded-full bg-green-500 shadow-lg`}>
+                                <Check class="w-8 h-8 lg:w-10 lg:h-10" color="white" />
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="space-y-3 mb-8 pt-8">
-                    <h1 class="text-center text-3xl lg:text-4xl font-bold text-green-600">Payment Successful!</h1>
-                    <p class="text-center text-gray-600 lg:text-lg">Your reservation is confirmed</p>
-                </div>
-          
-                <div class="block">
     
-                    <!-- Guest Details Section -->
-                    <div class="bg-white rounded-xl p-6">
-                        <h2 class="text-2xl font-bold mb-6" style="color: #233441">Your Trip</h2>
-                        
-                        <!-- Trip Summary -->
-                        {#if bookingData}
-                            <!-- Apartment Details Card -->
-                            <div class="pb-10 block md:hidden">
-                                <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} price={bookingData?.ClientPrice} nights={nights} />
-                            </div>
-                            
-                            <TripInformation bookingReference={bookingData?.ReservationID} startDate={bookingData.DateFrom} endDate={bookingData.DateTo} adults={bookingData?.GuestDetailsInfo?.NumberOfAdults} children={bookingData?.GuestDetailsInfo?.NumberOfChildren} childrenAges={bookingData?.GuestDetailsInfo?.ChildrenAges?.Age}/>
-                            
-                            
-                        {/if}
-                        
-                    
+                    <div class="space-y-3 mb-8 pt-8">
+                        <h1 class="text-center text-3xl lg:text-4xl font-bold text-green-600">Payment Successful!</h1>
+                        <p class="text-center text-gray-600 lg:text-lg">Your reservation is confirmed</p>
                     </div>
-    
-                    <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6" id="guestInformation">
-    
-                    <!-- Guest Information -->
-                    <GuestInformation showEditButton={false} guestInformationConfirmed={true} specialRequests={bookingData?.SpecialRequest} name={bookingData?.CustomerInfo?.Name} phone={bookingData?.CustomerInfo?.Phone} email={bookingData?.CustomerInfo?.Email}/>
-    
-                    
-                    
+              
+                    <div class="block">
+        
+                        <!-- Guest Details Section -->
+                        <div class="bg-white rounded-xl p-6">
+                            <h2 class="text-2xl font-bold mb-6" style="color: #233441">Your Trip</h2>
+                            
+                            <!-- Trip Summary -->
+                            {#if bookingData}
+                                <!-- Apartment Details Card -->
+                                <div class="pb-10 block md:hidden">
+                                    <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} price={bookingData?.ClientPrice} nights={nights} />
+                                </div>
+                                
+                                <TripInformation bookingReference={bookingData?.ReservationID} startDate={bookingData.DateFrom} endDate={bookingData.DateTo} adults={bookingData?.GuestDetailsInfo?.NumberOfAdults} children={bookingData?.GuestDetailsInfo?.NumberOfChildren} childrenAges={bookingData?.GuestDetailsInfo?.ChildrenAges?.Age}/>
+                                
+                                
+                            {/if}
+                            
+                        
+                        </div>
+        
+                        <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6" id="guestInformation">
+        
+                        <!-- Guest Information -->
+                        <GuestInformation showEditButton={false} guestInformationConfirmed={true} specialRequests={bookingData?.SpecialRequest} name={bookingData?.CustomerInfo?.Name} phone={bookingData?.CustomerInfo?.Phone} email={bookingData?.CustomerInfo?.Email}/>
+        
+                        
+                        
+                    </div>
+                </div>
+                
+                <!-- Right Sticky Column (50%) -->
+                <div class="md:sticky md:top-6 w-full max-w-xl md:max-w-none mx-auto md:mx-0 order-first md:order-none hidden md:block">
+                    <!-- Apartment Details Card -->
+                    <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} price={bookingData?.ClientPrice} nights={nights} />
                 </div>
             </div>
-            
-            <!-- Right Sticky Column (50%) -->
-            <div class="md:sticky md:top-6 w-full max-w-xl md:max-w-none mx-auto md:mx-0 order-first md:order-none hidden md:block">
-                <!-- Apartment Details Card -->
-                <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} price={bookingData?.ClientPrice} nights={nights} />
+            <!-- Footer -->
+            <div class="text-center text-sm text-gray-300 mt-12 ">
+                <div class="flex justify-center gap-4 mb-2">
+                    <a href="#" class="hover:text-[#C09A5B]">Privacy</a>
+                    <a href="#" class="hover:text-[#C09A5B]">Terms</a>
+                </div>
+                <p>© 2025 Boardbeach Ltd | All rights reserved</p>
             </div>
-        </div>
-        <!-- Footer -->
-        <div class="text-center text-sm text-gray-300 mt-12 ">
-            <div class="flex justify-center gap-4 mb-2">
-                <a href="#" class="hover:text-[#C09A5B]">Privacy</a>
-                <a href="#" class="hover:text-[#C09A5B]">Terms</a>
-            </div>
-            <p>© 2025 Boardbeach Ltd | All rights reserved</p>
         </div>
     </div>
 </div>
-{/if}
+
 
 <Footer/>
 <style>
