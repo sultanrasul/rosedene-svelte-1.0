@@ -7,6 +7,7 @@
 	import { afterNavigate, onNavigate } from "$app/navigation";
 	import { onMount, tick } from 'svelte';
 	import { Toaster} from 'svelte-sonner'
+	import { browser } from '$app/environment';
 	
 
 
@@ -14,8 +15,9 @@
 
 	let lastPath = '';
 
-	setMode('dark');
-	afterNavigate(() => {
+	function initPackages(){
+		if (!browser) return; // Avoid DOM access on non-browser environments
+
 		if (typeof initFlowbite === 'function') {
 			initFlowbite();
 		}
@@ -26,6 +28,11 @@
 				window.HSStaticMethods.autoInit();
 			});
 		}
+	}
+
+	setMode('dark');
+	afterNavigate(() => {
+		initPackages();
 
 	});
 
@@ -41,6 +48,7 @@
 
 		transitionToNewPage();
 		previousRoute = currentRoute;
+		initPackages();
 	} else {
 		console.log(currentRoute);
 	}
@@ -62,17 +70,7 @@
 	import { page } from '$app/stores';
 
 	onMount(() => {
-		if (typeof initFlowbite === 'function') {
-			initFlowbite();
-		}
-
-		// Init Preline
-		if (window?.HSStaticMethods?.autoInit) {
-			requestAnimationFrame(() => {
-				window.HSStaticMethods.autoInit();
-			});
-		}
-
+		initPackages();
 		
 	})
 
@@ -89,8 +87,8 @@
 
 <!-- Uncomment below to show the website again -->
 {#if show}
-	<slot></slot> 
 {/if}
+<slot></slot> 
 
 <style>
     :global(.swiper-pagination-bullet) {
