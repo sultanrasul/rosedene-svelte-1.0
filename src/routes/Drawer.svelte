@@ -42,14 +42,14 @@
     <!-- Locations Section -->
 
     <!-- Our Company -->
-    <div class="space-y-2">
+    <div class="space-y-2" >
       <h3 class="text-sm font-semibold text-gray-500 uppercase">Our Company</h3>
       <!-- <ul class="space-y-1 cursor-pointer" data-sveltekit-reload> This is the fix to the issue of combinging two pages -->
       <ul class="space-y-1 cursor-pointer">
         <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <li><a href="/" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">View Our Apartments</a></li>
-        <li><a href="/aparthotel" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">What is an aparthotel?</a></li>
-        <li><a href="/reviews" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Reviews </a></li>
+        <li><a data-hs-overlay="#hs-sidebar-offcanvas" href="/" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">View Our Apartments</a></li>
+        <li><a data-hs-overlay="#hs-sidebar-offcanvas" href="/aparthotel" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">What is an aparthotel?</a></li>
+        <li><a data-hs-overlay="#hs-sidebar-offcanvas" href="/reviews" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Reviews </a></li>
         <!-- <li><a on:click={() => { window.location.href = "/"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">About Us</a></li> -->
         <!-- <li><a href="#" class="block p-2 text-gray-700 hover:bg-[#tygyC09A5B]/60 rounded">Press & Media</a></li> -->
       </ul>
@@ -59,10 +59,10 @@
     <div class="space-y-2">
       <h3 class="text-sm font-semibold text-gray-500 uppercase">Customer Support</h3>
       <ul class="space-y-1 cursor-pointer">
-        <li><a href="/contact" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Contact Us</a></li>
-        <li><a href="/details" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Manage Booking</a></li>
-        <li><a href = "/terms" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Terms and Conditions</a></li>
-        <li><a href = "/faq"   class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">FAQ</a></li>
+        <li><a data-hs-overlay="#hs-sidebar-offcanvas" href="/contact" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Contact Us</a></li>
+        <li><a data-hs-overlay="#hs-sidebar-offcanvas" href="/details" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Manage Booking</a></li>
+        <li><a data-hs-overlay="#hs-sidebar-offcanvas" href = "/terms" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Terms and Conditions</a></li>
+        <li><a data-hs-overlay="#hs-sidebar-offcanvas" href = "/faq"   class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">FAQ</a></li>
       </ul>
     </div>
 
