@@ -22,6 +22,8 @@
       <span class="text-gray-600">ENGLISH</span>
     </div>
     <!-- svelte-ignore a11y_consider_explicit_label -->
+
+    <!-- Close Button -->
     <button type="button" 
         class="ml-2 sm:ml-4 p-1 sm:p-2 rounded-full hover:bg-[#C09A5B]/20 transition-all duration-300 group"
         data-hs-overlay="#hs-sidebar-offcanvas">
@@ -42,6 +44,7 @@
     <!-- Our Company -->
     <div class="space-y-2">
       <h3 class="text-sm font-semibold text-gray-500 uppercase">Our Company</h3>
+      <!-- <ul class="space-y-1 cursor-pointer" data-sveltekit-reload> This is the fix to the issue of combinging two pages -->
       <ul class="space-y-1 cursor-pointer">
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <li><a href="/" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">View Our Apartments</a></li>

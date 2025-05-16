@@ -4,8 +4,8 @@
 	import '@fontsource/merriweather/400.css';
 	import '@fontsource/merriweather/700.css';
 	import '@fontsource/merriweather/900.css';
-	import { afterNavigate } from "$app/navigation";
-	import { onMount } from 'svelte';
+	import { afterNavigate, onNavigate } from "$app/navigation";
+	import { onMount, tick } from 'svelte';
 	import { Toaster} from 'svelte-sonner'
 	
 
@@ -29,12 +29,37 @@
 
 	});
 
+	let currentRoute = '';
+	let previousRoute = '';
+	$: currentRoute = $page.url.pathname;
+
+	let show = true;
+
+	$: if (currentRoute !== previousRoute) {
+		console.log(currentRoute)
+
+
+		transitionToNewPage();
+		previousRoute = currentRoute;
+	} else {
+		console.log(currentRoute);
+	}
+
+	async function transitionToNewPage() {
+		console.log(show)
+
+		show = false;          // Hide current content
+		await tick();          // Let DOM react
+		show = true;           // Show new content
+	}
+
 
 
 	import { initFlowbite } from 'flowbite'
 	import Navbar from './Navbar.svelte';
 	import Drawer from './Drawer.svelte';
 	import Footer from './Footer.svelte';
+	import { page } from '$app/stores';
 
 	onMount(() => {
 		if (typeof initFlowbite === 'function') {
@@ -53,6 +78,7 @@
 
 	export const prerender = false;
 	export const ssr = false;
+	export const router = false;
 
 </script>
 
@@ -62,7 +88,9 @@
 <!-- <div class="rrlative mx-auto min-h-screen max-w-2xl bg-background px-6 py-12 font-sans antialiased sm:py-24"> -->
 
 <!-- Uncomment below to show the website again -->
-<slot></slot> 
+{#if show}
+	<slot></slot> 
+{/if}
 
 <style>
     :global(.swiper-pagination-bullet) {

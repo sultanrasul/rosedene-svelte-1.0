@@ -35,7 +35,7 @@
 </script>
 
 
-<section class="bg-[#233441] py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+<section class="bg-[#233441] py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden" >
     <!-- Background Layers -->
     <div class="absolute inset-0 z-0">
         <!-- Primary Background -->
