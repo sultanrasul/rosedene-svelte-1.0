@@ -23,12 +23,12 @@
     <!-- Content Section -->
     <div class="flex-1 text-2xl flex flex-col p-6">
         <!-- Apartment Name -->
-        <h3 class="mb-3  font-bold text-[#C09A5B] ">{apartmentName}</h3>
+        <h3 class="mb-4  font-bold text-[#C09A5B] ">{apartmentName}</h3>
 
         <!-- Apartment Description -->
-        <p class="mb-4 text-gray-300 dark:text-gray-600 text-base leading-relaxed">
+        <!-- <p class="mb-4 text-gray-300 dark:text-gray-600 text-base leading-relaxed">
             Located in Nakagyo Ward, this hotel is known for its helpful staff, great location, and additional amenities like a bath and laundry.
-        </p>
+        </p> -->
 
         <!-- Features Section -->
         <div class="flex flex-wrap gap-2 mt-auto mb-5">

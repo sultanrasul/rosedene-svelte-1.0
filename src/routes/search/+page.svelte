@@ -153,15 +153,17 @@
                 <!-- Once loading is false, show apartments -->
                 {#if apartments && apartments["properties"]["available"].length > 0}
                     {#each apartments["properties"]["available"] as apartment}
-                        <!-- svelte-ignore a11y_click_events_have_key_events -->
-                        <!-- svelte-ignore a11y_no_static_element_interactions -->
-                        <div on:click={() => 
-                        {
-                            const agesParam = childrenAges.map(age => `ages=${age}`).join('&');
-                            window.location.href = `/apartment?number=${apartment.name.match(/\d+/)?.[0]}&check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}&${agesParam}`;                        
-                        }}>
-                            <Card nights={nights} price={calculateApartmentPrice(apartment.Prices)} apartmentName={apartment.name} apartmentNumber={apartment.name.match(/\d+/)?.[0]} />
-                        </div>
+                        <a
+                            class="block"
+                            href={`/apartment/${apartment.name.match(/\d+/)?.[0]}?check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}&${childrenAges.map(age => `ages=${age}`).join('&')}`}
+                        >
+                            <Card
+                                nights={nights}
+                                price={calculateApartmentPrice(apartment.Prices)}
+                                apartmentName={apartment.name}
+                                apartmentNumber={apartment.name.match(/\d+/)?.[0]}
+                            />
+                        </a>
                     {/each}
                 {:else}
                     <!-- If no apartments are available -->
