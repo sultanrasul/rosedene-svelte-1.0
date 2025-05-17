@@ -13,6 +13,7 @@ const config = {
 		'./node_modules/preline/dist/*.js',
 		'./src/**/*.{html,js,svelte,ts}',
 		'./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}',
+		'./node_modules/flowbite/**/*.js',
 		'./node_modules/flowbite-svelte-blocks/**/*.{html,js,svelte,ts}',
 		"./node_modules/flowbite/**/*.js",
 		"./node_modules/flyonui/dist/js/*.js"
