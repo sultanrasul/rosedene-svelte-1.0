@@ -2,26 +2,28 @@
     // @ts-nocheck
     
         import ChevronLeft from "@lucide/svelte/icons/chevron-left";
-        import Navbar from "../Navbar.svelte";
-        import Card from "./Card.svelte";
-        import { apartments } from "../apartments";
+        import Navbar from "../../Navbar.svelte";
+
+        import Card from "../Card.svelte";
+        import { apartments } from "../../apartments";
         // @ts-ignore
         import { page } from '$app/stores';
         import { onMount } from 'svelte';
         // @ts-ignore
         // @ts-ignore
         import { format, isWithinInterval } from 'date-fns';
-        import { BACKEND_URL, PK } from "../conf";
+        import { BACKEND_URL, PK } from "../../conf";
         import {loadStripe} from '@stripe/stripe-js'
         import { Check, User, UserRoundIcon, X } from "lucide-svelte";
         import { redirect } from "@sveltejs/kit";
         import { Toaster, toast } from 'svelte-sonner'
-        import GuestInformation from "./GuestInformation.svelte";
-        import TripInformation from "./TripInformation.svelte";
+        import GuestInformation from "../GuestInformation.svelte";
+        import TripInformation from "../TripInformation.svelte";
         import ChevronRight from "@lucide/svelte/icons/chevron-right";
-        import { calculateApartmentPrice } from "../calculateApartmentPrice";
+        import { calculateApartmentPrice } from "../../calculateApartmentPrice";
 
         export let data;
+        console.log(data)
 
 
     
@@ -59,7 +61,7 @@
         };
         
         const url = $page.url;
-        const number = url.searchParams.get('number');
+        const number = data.number;
         const check_in = url.searchParams.get('check_in');
         const check_out = url.searchParams.get('check_out');
         // @ts-ignore

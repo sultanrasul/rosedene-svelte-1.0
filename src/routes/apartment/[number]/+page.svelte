@@ -134,7 +134,7 @@
     };
   
     let Prices;
-    let displayPrice;
+    let displayPrice = 0;
     let initialPrice = 0;
     let screenWidth = 800;
   
@@ -402,7 +402,7 @@
   <div class="z-[50]">
     <Navbar/> 
   </div>
-  {#if apartmentDetails}
+  {#if apartmentDetails && screenWidth}
     <div class="relative z-10 pt-0 mt-0 pb-20 sm:pl-0 sm:pr-0 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40">
       <!-- Breadcrumb -->
       <div class="pt-8 hidden md:block">
@@ -532,9 +532,8 @@
     <AmenitiesModel/>
 
     <!-- Sideshow Modal -->
-     {#if browser}
-      <SlideshowModal apartmentDetails={apartmentDetails} apartmentNumber={number}/>
-    {/if}
+    <SlideshowModal apartmentDetails={apartmentDetails} apartmentNumber={number}/>
+
     
   
     <style>

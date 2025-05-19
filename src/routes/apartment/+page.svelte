@@ -107,6 +107,7 @@
   
     // Function to update the price with animation
     function updatePrice(newPrice) {
+      console.log("updating the price!")
       initialPrice = displayPrice; // Set initialPrice to the current displayPrice
       displayPrice = newPrice; // Update displayPrice to the new value
     }

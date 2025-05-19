@@ -9,5 +9,5 @@ export async function load({ params, url }) {
 
   const apartmentDetails = apartments[number];
 
-  return { number, apartmentDetails, params };
+  return { number, apartmentDetails, fullUrl: url.href };
 }

@@ -71,7 +71,12 @@
       <!-- "View All" Button -->
       <button
         class="inline-flex absolute bottom-10 right-5 mb-0 mr-0 bg-white text-[#C09A5B] px-4 py-2 rounded-lg shadow-md hover:bg-[#C09A5B] hover:text-white transition duration-300"
-        on:click={openModel}
+        type="button" 
+        aria-haspopup="dialog" 
+        aria-expanded="false" 
+        aria-controls="hs-scale-animation-modal-slideshow" 
+        data-hs-overlay="#hs-scale-animation-modal-slideshow"
+        data-hs-overlay-options={'{"backdropClasses":"hs-overlay-backdrop transition duration fixed inset-0 bg-[#233441] "}'}
       >
         <Camera class="mr-2" /> View all
       </button>
