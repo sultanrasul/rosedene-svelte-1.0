@@ -102,16 +102,18 @@
         <!-- Enhanced CTA Button -->
         <BlurFade delay={0.5}>
             <div class="text-center relative">
-                <button href = "/aparthotel"
-                 class="bg-[#C09A5B] text-[#233441] px-8 py-4 rounded-lg font-semibold hover:bg-[#b08d52] transition-all 
-                           transform hover:scale-105 shadow-lg hover:shadow-xl shadow-[#C09A5B]/30 
-                           border-2 border-[#C09A5B]/80 flex items-center gap-2 mx-auto
-                           relative z-20">
-                    <span class="text-white">{ctaText}</span>
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
-                </button>
+                <a href="/aparthotel">
+                    <button 
+                     class="bg-[#C09A5B] text-[#233441] px-8 py-4 rounded-lg font-semibold hover:bg-[#b08d52] transition-all 
+                               transform hover:scale-105 shadow-lg hover:shadow-xl shadow-[#C09A5B]/30 
+                               border-2 border-[#C09A5B]/80 flex items-center gap-2 mx-auto
+                               relative z-20">
+                        <span class="text-white">{ctaText}</span>
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </button>
+                </a>
             </div>
         </BlurFade>
     </div>

@@ -3,8 +3,10 @@
     // @ts-nocheck
 
     export let data;
+    console.log(data, "logging the data");
     const number = data.number
     const apartmentDetails = data.apartmentDetails
+  
 
 
     import { currentPageIndex } from "../store";
@@ -45,6 +47,7 @@
     import Footer from "../../Footer.svelte";
     import { calculateApartmentPrice } from "../../calculateApartmentPrice";
   import { browser } from "$app/environment";
+  import SlideshowModal from "../components/information/SlideshowModal.svelte";
   
   
   
@@ -393,115 +396,117 @@
 
   </script>
   
-  <!-- This is the main container that now always shows, regardless of loading/error state -->
+
+<!-- This is the main container that now always shows, regardless of loading/error state -->
 <div class="relative bg-primary-100 dark:bg-[#233441] min-h-[100dvh]" id="Home">
   <div class="z-[50]">
     <Navbar/> 
   </div>
-  
-  <div class="relative z-10 pt-0 mt-0 pb-20 sm:pl-0 sm:pr-0 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40">
-    <!-- Breadcrumb -->
-    <div class="pt-8 hidden md:block">
-      <Breadcrumb apartmentName={apartmentDetails?.name}/>
-    </div>
+  {#if apartmentDetails}
+    <div class="relative z-10 pt-0 mt-0 pb-20 sm:pl-0 sm:pr-0 md:pl-5 md:pr-5 lg:pl-10 lg:pr-10 xl:pl-40 xl:pr-40">
+      <!-- Breadcrumb -->
+      <div class="pt-8 hidden md:block">
+        <Breadcrumb apartmentName={apartmentDetails?.name}/>
+      </div>
 
-    {#if screenWidth < 768 }
+      {#if screenWidth < 768 }
+        <BlurFade>
+          <MobileSlideshow images={apartmentDetails?.amountOfPictures} apartmentNumber={number}/>
+        </BlurFade>
+          <PriceFooter 
+            bind:displayPrice={displayPrice}
+            bind:initialPrice={initialPrice}
+            bind:nights={nights}
+            bind:childrenAges={childrenAges}
+            bind:children={children}
+            bind:startDate={startDate}
+            bind:endDate={endDate}
+            bind:bookNowLoading={bookNowLoading}
+            bind:loading={loading}
+            bind:error={error}
+            bookNow={bookNow}
+          />
+      {:else}
+          <ImageDisplay apartmentNumber={number} openModel={openModel}/>
+      {/if}
+            
+      <!-- Information Section -->
       <BlurFade>
-        <MobileSlideshow images={apartmentDetails?.amountOfPictures} apartmentNumber={number}/>
-      </BlurFade>
-        <PriceFooter 
-          bind:displayPrice={displayPrice}
-          bind:initialPrice={initialPrice}
-          bind:nights={nights}
-          bind:childrenAges={childrenAges}
-          bind:children={children}
-          bind:startDate={startDate}
-          bind:endDate={endDate}
-          bind:bookNowLoading={bookNowLoading}
-          bind:loading={loading}
-          bind:error={error}
-          bookNow={bookNow}
-        />
-    {:else}
-        <ImageDisplay apartmentNumber={number} openModel={openModel}/>
-    {/if}
-          
-    <!-- Information Section -->
-     <BlurFade>
-       <div class="flex flex-wrap mt-0 justify-between">
-         <div class="bg-white rounded-b-lg md:rounded-lg shadow-lg p-6 pt-6 w-full md:w-[66.4%]">
-           <div class="p-0 block md:hidden">
-             <Breadcrumb apartmentName={apartmentDetails?.name}/>
-           </div>
-   
-           <!-- Property Title & Key Points -->
-           <TitleAndFeatures
-             apartmentName={apartmentDetails?.name}
-             maxGuests={apartmentDetails?.maxGuests}
-             bedrooms={apartmentDetails?.bedrooms}
-             bathrooms={apartmentDetails?.bathrooms}
-           />
-           
-           <hr class="h-px my-8 bg-[#C09A5B] border-0">
-           
-           <!-- Overview Section -->
-           <Overview parsedDescription={parsedDescription}/>
-   
-           <div class="text-black">
-             <div class="block md:hidden">
-               <hr class="h-px my-8 bg-[#C09A5B] border-0">
-               <GuestDetails
-                 apartmentDetails={apartmentDetails} 
-                 bind:disabledDates={disabledDates} 
-                 bind:childrenAges={childrenAges} 
-                 bind:startDate={startDate} 
-                 bind:endDate={endDate} 
-                 bind:children={children} 
-                 bind:adults={adults}
-                 dropdownID={"mobile"}
-                 bind:loading={loading}
-                 bind:error={error}
-               />              
-             </div>
-           </div>
-   
-           <hr class="h-px my-8 bg-[#C09A5B] border-0">
-           
-           <!-- Amenities Section -->
-           <Amenities/>
-   
-           <hr class="h-px my-8 bg-[#C09A5B] border-0">
-   
-           <!-- House Rules -->
-           <HouseRules/>
-         </div>
-       
-         <!-- Price Card -->
-         {#if screenWidth >= 768}
-           <PriceCard
-             apartmentDetails={apartmentDetails}
-             bind:displayPrice={displayPrice}
-             bind:initialPrice={initialPrice}
-             bind:nights={nights}
-             bind:childrenAges={childrenAges}
-             bind:startDate={startDate}
-             bind:endDate={endDate}
-             bind:children={children}
-             bind:adults={adults}
-             bind:disabledDates={disabledDates}
-             bind:bookNowLoading={bookNowLoading}
-             bind:loading={loading}
-             bind:error={error}
-             bookNow={bookNow}
-           />
-         {/if}
-       </div>
-     </BlurFade>
+        <div class="flex flex-wrap mt-0 justify-between">
+          <div class="bg-white rounded-b-lg md:rounded-lg shadow-lg p-6 pt-6 w-full md:w-[66.4%]">
+            <div class="p-0 block md:hidden">
+              <Breadcrumb apartmentName={apartmentDetails?.name}/>
+            </div>
     
-    <div class="{screenWidth < 768 ? '' : 'hidden'}">
-      <Footer/>
+            <!-- Property Title & Key Points -->
+            <TitleAndFeatures
+              apartmentName={apartmentDetails?.name}
+              maxGuests={apartmentDetails?.maxGuests}
+              bedrooms={apartmentDetails?.bedrooms}
+              bathrooms={apartmentDetails?.bathrooms}
+            />
+            
+            <hr class="h-px my-8 bg-[#C09A5B] border-0">
+            
+            <!-- Overview Section -->
+            <Overview parsedDescription={parsedDescription}/>
+    
+            <div class="text-black">
+              <div class="block md:hidden">
+                <hr class="h-px my-8 bg-[#C09A5B] border-0">
+                <GuestDetails
+                  apartmentDetails={apartmentDetails} 
+                  bind:disabledDates={disabledDates} 
+                  bind:childrenAges={childrenAges} 
+                  bind:startDate={startDate} 
+                  bind:endDate={endDate} 
+                  bind:children={children} 
+                  bind:adults={adults}
+                  dropdownID={"mobile"}
+                  bind:loading={loading}
+                  bind:error={error}
+                />              
+              </div>
+            </div>
+    
+            <hr class="h-px my-8 bg-[#C09A5B] border-0">
+            
+            <!-- Amenities Section -->
+            <Amenities/>
+    
+            <hr class="h-px my-8 bg-[#C09A5B] border-0">
+    
+            <!-- House Rules -->
+            <HouseRules/>
+          </div>
+        
+          <!-- Price Card -->
+          {#if screenWidth >= 768}
+            <PriceCard
+              apartmentDetails={apartmentDetails}
+              bind:displayPrice={displayPrice}
+              bind:initialPrice={initialPrice}
+              bind:nights={nights}
+              bind:childrenAges={childrenAges}
+              bind:startDate={startDate}
+              bind:endDate={endDate}
+              bind:children={children}
+              bind:adults={adults}
+              bind:disabledDates={disabledDates}
+              bind:bookNowLoading={bookNowLoading}
+              bind:loading={loading}
+              bind:error={error}
+              bookNow={bookNow}
+            />
+          {/if}
+        </div>
+      </BlurFade>
+      
+      <div class="{screenWidth < 768 ? '' : 'hidden'}">
+        <Footer/>
+      </div>
     </div>
-  </div>
+  {/if}
   
   <div class="{screenWidth >= 768 ? '' : 'hidden'}">
     <Footer/>
@@ -525,6 +530,11 @@
     
     <!-- Amenities Modal -->
     <AmenitiesModel/>
+
+    <!-- Sideshow Modal -->
+     {#if browser}
+      <SlideshowModal apartmentDetails={apartmentDetails} apartmentNumber={number}/>
+    {/if}
     
   
     <style>

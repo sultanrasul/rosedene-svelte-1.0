@@ -1,4 +1,4 @@
-  <script>
+<script>
   // @ts-nocheck
   import { onMount } from 'svelte';
   import { register } from 'swiper/element/bundle';
