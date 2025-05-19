@@ -38,7 +38,8 @@
   
   <!-- Modal Overlay -->
   <div id="hs-scale-animation-modal-slideshow"
-    class="hs-overlay hidden fixed inset-0 z-[100] pointer-events-none max-h-[100vh] focus:outline-none"
+    class="hs-overlay hidden fixed inset-0 z-[100] pointer-events-none max-h-[90vh] focus:outline-none [--overlay-backdrop:static]"
+    
     role="dialog"
     tabindex="-1"
     aria-labelledby="hs-scale-animation-modal-label"
@@ -68,6 +69,7 @@
       <div class="flex-1 flex items-center justify-center relative overflow-hidden">
         {#if browser}
           <swiper-container
+
             bind:this={swiperInstance}
             slides-per-view={1}
             space-between={spaceBetween}
