@@ -4,6 +4,7 @@
   <div id="hs-sidebar-offcanvas" 
   class="hs-overlay w-full sm:w-[40%]
          hs-overlay-open:translate-x-0
+         hs-overlay-backdrop-open:bg-blue-950/90
          translate-x-full transition-all duration-300 transform
          h-full
          hidden

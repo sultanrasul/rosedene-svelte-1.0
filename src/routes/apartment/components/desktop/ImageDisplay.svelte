@@ -19,7 +19,13 @@
             <!-- svelte-ignore a11y_click_events_have_key_events -->
             <!-- svelte-ignore a11y_no_static_element_interactions -->
             <BlurFade>
-                <div class="group relative inline-block cursor-pointer" on:click={openModel}>
+                <div class="group relative inline-block cursor-pointer"  
+                type="button" 
+                aria-haspopup="dialog" 
+                aria-expanded="false" 
+                aria-controls="hs-scale-animation-modal-slideshow" 
+                data-hs-overlay="#hs-scale-animation-modal-slideshow"
+                data-hs-overlay-options={'{"backdropClasses":"hs-overlay-backdrop transition duration fixed inset-0 bg-[#233441] "}'}>
                   <img
                     class="rounded-lg transition-all max-h-[800px] object-cover"
                     src="/{apartmentNumber}/0.jpg"
@@ -39,7 +45,14 @@
                 <!-- svelte-ignore a11y_click_events_have_key_events -->
                 <!-- svelte-ignore a11y_no_static_element_interactions -->
                  <BlurFade delay={i*0.09}>
-                   <div class="group relative inline-block cursor-pointer" on:click={openModel}>
+                   <div class="group relative inline-block cursor-pointer" 
+                   type="button" 
+                   aria-haspopup="dialog" 
+                   aria-expanded="false" 
+                   aria-controls="hs-scale-animation-modal-slideshow" 
+                   data-hs-overlay="#hs-scale-animation-modal-slideshow"
+                   data-hs-overlay-options={'{"backdropClasses":"hs-overlay-backdrop transition duration fixed inset-0 bg-[#233441] "}'}>
+                   
                      <img
                        class="max-h-[400px] max-w-full rounded-lg transition-all"
                        src={`/${apartmentNumber}/${i}.jpg`}
