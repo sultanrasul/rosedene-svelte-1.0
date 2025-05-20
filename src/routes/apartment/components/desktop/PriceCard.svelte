@@ -141,7 +141,7 @@
               'bg-[#C09A5B] hover:bg-[#B08A4F] text-white shadow-md hover:shadow-lg'
             }`}
           disabled={(childrenAges.filter(age => age !== -1).length != children) || !(startDate && endDate)}
-          on:click={() => { window.location.href = window.location.href.replace('apartment', 'book'); }}
+          on:click={bookNow}
         >
           Book Now 
         </button>

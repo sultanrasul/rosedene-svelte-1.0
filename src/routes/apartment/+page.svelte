@@ -230,68 +230,7 @@
     });
 
     
-    async function bookNow (){
-      console.log(window.location.href)
-      const currentUrl = window.location.href;
-    if (currentUrl.includes('apartment')) {
-      const newUrl = currentUrl.replace('apartment', 'book');
-      // window.history.replaceState({}, '', newUrl);
-      // Or if you want to redirect:
-      window.location.replace(newUrl);
-    }
-      console.log("testing")
-      try {
-        bookNowLoading = true;
-        const response = await fetch(`${BACKEND_URL}/create-checkout-session`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                date_from: dateFrom,
-                date_to: dateTo,
-                property_id: apartmentDetails.id,
-                adults: adults,
-                children: children,
-                childrenAges: childrenAges,
-                url: window.location.href
-            }),
-        });
-        console.log(response);
-  
-        // Check if the response is not OK (non-2xx status code)
-        if (!response.ok) {
-            // Retrieve the error data and throw a custom error with status and details
-            const errorData = await response.json(); // This assumes the error response contains more details
-            throw {
-                status: response.status,
-                statusText: response.statusText,
-                message: errorData.error || 'Unknown error', // Customize based on your error structure
-                data: errorData,
-            };
-        }
-  
-        // If the response is successful, parse the checkout URL
-        const checkoutURL = await response.json();
-        window.open(checkoutURL.url, "_self");
-        console.log(checkoutURL.url);
-  
-  
-      } catch (error) {
-          // Log detailed error information
-          if (error.status == 420) {
-            callToastError("This apartment is not available for these dates! Please Refresh the page or select other dates.")
-            startDate = null;
-            endDate = null;
-          } else {
-            callToastError(`An error has occured, ${error.message}`)
-            }
-  
-  
-          // Optionally, handle specific errors (e.g., show alert to the user)
-      } finally {
-        bookNowLoading = false;
-      }
-  
-    }
+    async function bookNow (){}
   
   
   
