@@ -2,18 +2,18 @@
 	import { Motion, AnimatePresence } from 'svelte-motion';
 	import { inview } from 'svelte-inview';
 	import { cn } from '$lib/utils';
-	export let duration = 0.4;
+	export let duration = 0.6;
 	export let delay = 0;
 	export let yOffset = 8;
-	export let inViewMargin = '-20px';
+	export let inViewMargin = '0px';
 	export let blur = '2px';
 	// export let id = crypto.randomUUID().slice(0, 6);
 	export let id = (Date.now().toString(36) + Math.random().toString(36).substr(2, 3)).substr(-6);
 
 	export let once = true;
 	let defaultVariants = {
-		hidden: { opacity: 0, y: yOffset, filter: `blur(${blur})` },
-		visible: { opacity: 1, y: 0, filter: `blur(0px)` }
+		hidden: { opacity: 0, y: 40 }, // fly up from 40px below
+		visible: { opacity: 1, y: 0 }  // settle into place
 	};
 	let isInView = 'hidden';
 	let _class = '';

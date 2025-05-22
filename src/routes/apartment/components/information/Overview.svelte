@@ -6,10 +6,12 @@
 </script>
 
 <div class="mb-6">
-    <GradualSpacing words="Overview" class="text-3xl font-bold text-black mb-4"/>
+    <!-- <GradualSpacing words="Overview" class="text-3xl font-bold text-black mb-4"/> -->
+     <BlurFade>
+       <h2 class="text-3xl font-bold text-black mb-4">Overview</h2>
+     </BlurFade>
       
-    <!-- <h2 class="text-3xl font-bold text-black mb-4">Overview</h2> -->
-    <BlurFade delay={0.4}>
+    <BlurFade>
       <p class="text-sm text-gray-600">  
         {#each parsedDescription?.slice(0, 2) as line}
           {line}
@@ -20,7 +22,7 @@
 
     
     <!-- Read More Section -->
-    <BlurFade delay={0.6}>
+    <BlurFade>
       <div>
         <div id="hs-show-hide-collapse-heading" class="hs-collapse hidden w-full overflow-hidden transition-[height] duration-300" aria-labelledby="hs-show-hide-collapse">
           <p class="text-sm text-gray-600 mt-4">
