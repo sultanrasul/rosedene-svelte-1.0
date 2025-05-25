@@ -2,10 +2,10 @@
 	import { Motion, AnimatePresence } from 'svelte-motion';
 	import { inview } from 'svelte-inview';
 	import { cn } from '$lib/utils';
-	export let duration = 0.6;
+	export let duration = 0.5;
 	export let delay = 0;
 	export let yOffset = 8;
-	export let inViewMargin = '0px';
+	export let inViewMargin = '-50px';
 	export let blur = '2px';
 	// export let id = crypto.randomUUID().slice(0, 6);
 	export let id = (Date.now().toString(36) + Math.random().toString(36).substr(2, 3)).substr(-6);
