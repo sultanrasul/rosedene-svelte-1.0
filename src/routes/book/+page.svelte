@@ -19,7 +19,7 @@
     import GuestInformation from "./GuestInformation.svelte";
     import TripInformation from "./TripInformation.svelte";
     import ChevronRight from "@lucide/svelte/icons/chevron-right";
-  import { calculateApartmentPrice } from "../calculateApartmentPrice";
+    import { calculateApartmentPrice } from "../calculateApartmentPrice";
 
     // Initialize variables
     // @ts-ignore
@@ -86,6 +86,9 @@
     let apartmentPrice;
 
     let guestInformationConfirmed = false;
+
+    let agreedToTerms = false;
+    let termsError = '';
 
 
 
@@ -336,6 +339,12 @@
 
 
     async function handlePayment() {
+
+        if (!agreedToTerms){
+            termsError = 'Please accept terms & conditions';
+            return;
+        }
+
         paymentProcessing = true;
 
         try {
@@ -486,8 +495,8 @@
                         bind:email={email}
                         bind:emailError={emailError}
                         bind:clientSecret={clientSecret}
-                    />    
-                    
+                    />   
+
                     <!-- Payment Card -->
 
                     <div class="{guestInformationConfirmed ? 'block' : 'hidden'}">
@@ -500,7 +509,7 @@
         
                         <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
         
-                        <div class="bg-white rounded-xl  p-6">
+                        <!-- <div class="bg-white rounded-xl  p-6">
                             <h3 class="font-semibold mb-2" style="color: #233441">Cancellation policy</h3>
                             <p class="text-sm text-gray-600">
                                 Free cancellation before  May. Cancel before 2 Jun for a partial refund.
@@ -508,9 +517,36 @@
                             </p>
                         </div>
         
-                        <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
-        
-                        <div class="bg-white rounded-xl  p-6">
+                        <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6"> -->
+
+                        
+                        <div class="bg-white rounded-xl p-6">
+                            <!-- Agree to Terms -->
+                            <div class="mb-10">
+                                <div class="flex items-center">  <!-- Changed from items-start to items-center -->
+                                    <input
+                                        type="checkbox"
+                                        id="termsAgreement"
+                                        bind:checked={agreedToTerms}
+                                        on:input={() => termsError = ''}
+                                        class="mr-3 h-6 w-6 rounded border-gray-300 text-[#C09A5B] focus:ring-[#C09A5B] transition-all duration-150 ease-in-out
+                                            {termsError ? 
+                                                'border-red-500 shadow-[0_0_0_1px_#ef4444,0_0_0_3px_#fca5a5]' 
+                                                : ''}"
+                                    />
+                                    <label for="termsAgreement" class="text-sm text-gray-700">
+                                        I agree to the 
+                                        <a href="/terms" target="_blank" class="underline text-[#C09A5B] hover:text-[#a17843] transition-colors duration-150">Terms and Conditions</a> 
+                                        and understand the cancellation policy.
+                                    </label>
+                                </div>
+                                
+                                {#if termsError}
+                                    <p class="text-red-500 text-sm mt-2 ml-9">{termsError}</p>  <!-- Adjusted ml-8 to ml-9 to account for larger checkbox -->
+                                {/if}
+                            </div>
+
+
                             <!-- Update the Confirm Button -->
                             <button
                                 on:click={handlePayment}

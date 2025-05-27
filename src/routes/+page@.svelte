@@ -28,7 +28,9 @@
     // export const prerender = true;
 </script>
 
-
+<svelte:head>
+	<title>Rosedene Highland House</title>
+</svelte:head>
 
 <div id="dev-banner" class="relative top-0 left-0 w-full z-50 overflow-hidden border-b border-[#C09A5B]/20">
     <div class="relative bg-[#233441] backdrop-blur-lg transform-gpu transition-all duration-700">

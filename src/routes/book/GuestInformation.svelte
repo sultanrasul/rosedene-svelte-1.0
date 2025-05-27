@@ -218,6 +218,7 @@
             ></textarea>
         </div>
     </div>
+    
 
     {#if editMode}
         <div class="mt-6 flex justify-end gap-4">
