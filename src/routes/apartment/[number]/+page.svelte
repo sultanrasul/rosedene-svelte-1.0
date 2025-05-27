@@ -278,11 +278,12 @@
 
       // Copy over all existing search params
       for (const [key, value] of searchParams.entries()) {
-        newParams.set(key, value);
+        newParams.append(key, value);
       }
 
       // Create the final URL
       const newUrl = `/book?${newParams.toString()}`;
+
 
       // Redirect to the new URL
       window.location.href = newUrl;
@@ -358,7 +359,10 @@
   
 
   </script>
-  
+
+<svelte:head>
+	<title>{apartmentDetails?.name} | Rosedene Highland House</title>
+</svelte:head>
 
 <!-- This is the main container that now always shows, regardless of loading/error state -->
 <div class="relative bg-primary-100 dark:bg-[#233441] min-h-[100dvh]" id="Home">
