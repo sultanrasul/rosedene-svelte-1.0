@@ -196,7 +196,9 @@
 
 </script>
 
-
+<svelte:head>
+	<title>Manage Your Booking | Rosedene Highland House</title>
+</svelte:head>
 
 <div class="min-h-screen flex {!showBookingDetails && !showErrorDetails ? 'block' : 'hidden'}">
     

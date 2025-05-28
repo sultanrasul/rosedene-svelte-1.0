@@ -248,7 +248,9 @@
     }
 </script>
 
-
+<svelte:head>
+	<title>Reviews | Rosedene Highland House</title>
+</svelte:head>
 
 <div class="bg-[#233441] min-h-screen ">
 
