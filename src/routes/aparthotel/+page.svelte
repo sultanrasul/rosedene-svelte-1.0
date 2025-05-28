@@ -42,6 +42,10 @@
     ];
 </script>
 
+<svelte:head>
+	<title>What is an Aparthotel? | Rosedene Highland House</title>
+</svelte:head>
+
 <div class="bg-[#233441]">
     <Navbar/>
 </div>

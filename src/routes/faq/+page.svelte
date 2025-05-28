@@ -6,6 +6,11 @@
   import WordPullUp from "@/components/WordPullUp.svelte";
 
 </script>
+
+<svelte:head>
+	<title>Frequently Asked Questions | Rosedene Highland House</title>
+</svelte:head>
+
 <!-- FAQ -->
 <div class="min-h-screen bg-[#233441]">
      <Navbar/>
@@ -24,7 +29,7 @@
            </div>
            <div class="w-full md:w-1/2">
                 <BlurFade delay={0.3}>
-                  <p class="mt-1  text-white/90">Got a question? Please find your answer below...</p>
+                  <p class="mt-1  text-white/90">Got a question? Find your answer below...</p>
                 </BlurFade>
            </div>
            <!-- End Col -->

@@ -117,6 +117,9 @@
 
 </script>
 
+<svelte:head>
+	<title>Contact Us | Rosedene Highland House</title>
+</svelte:head>
 
 <div class="absolute w-full z-50 md:bg-transparent bg-[#233441]">
     <Navbar/>

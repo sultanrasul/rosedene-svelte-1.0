@@ -3,8 +3,12 @@
     import Footer from "../Footer.svelte";
     import Navbar from "../Navbar.svelte";
 
-  </script>
-  
+</script>
+
+<svelte:head>
+	<title>Terms and Conditions | Rosedene Highland House</title>
+</svelte:head>
+
   <div class="bg-[#233441]">
       <Navbar/>
   </div>
