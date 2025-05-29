@@ -149,7 +149,7 @@
       
               <div class="space-x-4 text-sm">
                 <a href = "/terms" class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] transition-colors" >Terms</a>
-                <a class="inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] transition-colors" href="#">Privacy</a>
+                <a class="inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] transition-colors" href="/privacy">Privacy</a>
                 <a class="inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] transition-colors" href="#">Cookies</a>
               </div>
             </div>

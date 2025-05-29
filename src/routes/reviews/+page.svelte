@@ -481,7 +481,7 @@
             {#if !isLoading}
                 {#each reviews as review, index}   
                     <!-- {#if review["Positive review"] != "" }  -->
-                    <BlurFade class="relative bg-white/10 rounded-xl p-6 transition-all hover:bg-white/20 border border-white/20 hover:border-white/30 group">
+                    <BlurFade class="relative bg-white/10 rounded-xl p-6 hover:bg-white/20 border border-white/20 hover:border-white/30 group">
                             <!-- Header (unchanged) -->
                             <div class="flex items-start justify-between mb-4">
                                 <!-- Author Info -->
@@ -511,7 +511,6 @@
                                     bg-gradient-to-br from-[#003B95] to-[#0066CC]
                                     shadow-lg shadow-[#003B95]/30 
                                     rounded-full w-9 h-9 mb-1.5
-                                    transition-all duration-200
                                     group-hover:scale-110 hover:shadow-[#003B95]/40
                                     active:scale-95
                                     group-hover:ring-2 group-hover:ring-white/20">

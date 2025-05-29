@@ -622,7 +622,7 @@
         <!-- Footer -->
         <div class="text-center text-sm text-gray-300 mt-12 ">
             <div class="flex justify-center gap-4 mb-2">
-                <a href="#" class="hover:text-[#C09A5B]">Privacy</a>
+                <a href="/privacy" target="_blank" class="hover:text-[#C09A5B]">Privacy</a>
                 <a href="/terms" target="_blank" class="hover:text-[#C09A5B]">Terms</a>
             </div>
             <p>© 2025 Boardbeach Ltd | All rights reserved</p>
