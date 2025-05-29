@@ -205,7 +205,7 @@
 
             <p class="mt-4 mb-2 font-semibold text-white text-[13px]">13.2 Making a Group Booking</p>
             <p class="text-white text-[13px]">
-                If you have any questions about booking group accommodation with Rosedene Highland House please call our dedicated team on <a href="tel:01463218233" class="underline text-white">01463 218 233</a>  or email <a href="mailto:bookings@rosedene-highland-house.com" class="underline text-white">bookings@rosedene-highland-house.com</a>.
+                If you have any questions about booking group accommodation with Rosedene Highland House please call our dedicated team on <a href="tel:01463218233" class="underline text-white">01463 218 233</a>  or email <a href="mailto:bookings@rosedenehighlandhouse.com" class="underline text-white">bookings@rosedenehighlandhouse.com</a>.
             </p>
 
             <p class="mt-4 mb-2 font-semibold text-white text-[13px]">13.3 Rosedene Highland House Expectations of Your Group</p>
