@@ -67,7 +67,6 @@
 	
 	export const prerender = false;
 	export const ssr = false;
-	export const router = false;
 </script>
 
 <Drawer />
@@ -75,7 +74,9 @@
 <ModeWatcher />
 
 {#if show}
-	<slot/>
+	<div on:introend={initPackages}>
+		<slot/>
+	</div>
 {/if}
 
 <style>
