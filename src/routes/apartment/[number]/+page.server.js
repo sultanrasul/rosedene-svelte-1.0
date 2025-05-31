@@ -2,7 +2,7 @@
 import { apartments } from "../../apartments";
 
 // @ts-nocheck
-export const prerender = false;
+export const prerender = true;
 
 export function entries() {
   return Array.from({ length: 10 }, (_, i) => ({ number: (i + 1).toString() }));
