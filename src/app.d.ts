@@ -33,4 +33,6 @@ declare global {
   }
 }
 
+window.HSStaticMethods.autoInit();
+
 export {};
