@@ -33,11 +33,11 @@
 			initFlowbite();
 		}
 
-		if (window?.HSStaticMethods?.autoInit) {
-			requestAnimationFrame(() => {
-				window.HSStaticMethods.autoInit();
-			});
-		}
+		requestAnimationFrame(() => {
+			window.HSStaticMethods.autoInit();
+		});
+		window.HSStaticMethods.autoInit();
+		
 	}
 
 	async function transitionToNewPage() {
@@ -65,7 +65,7 @@
 		initPackages();
 	});
 	
-	export const router = false;
+	// export const router = false;
 </script>
 
 <Drawer />
