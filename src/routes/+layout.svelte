@@ -33,10 +33,13 @@
 			initFlowbite();
 		}
 
-		requestAnimationFrame(() => {
-			window.HSStaticMethods.autoInit();
-		});
-		window.HSStaticMethods.autoInit();
+		if (typeof window.HSStaticMethods.autoInit === 'function') {
+			console.log("Preline init is running"); // Debug line
+			if (window?.HSStaticMethods?.autoInit) {
+				window.HSStaticMethods.autoInit();
+				console.log("Preline initialized");
+			}
+		}
 		
 	}
 
