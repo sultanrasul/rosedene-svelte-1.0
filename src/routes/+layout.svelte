@@ -25,23 +25,31 @@
 
 	setMode('dark');
 
-	function initPackages() {
+	async function initPackages() {
 		if (!browser) return;
 
+		// Initialize Flowbite (always works)
 		if (typeof initFlowbite === 'function') {
-			console.log("Flowbite init is running"); // Debug line
 			initFlowbite();
+			console.log("Flowbite initialized");
 		}
 
-		if (typeof window.HSStaticMethods.autoInit === 'function') {
-			console.log("Preline init is running"); // Debug line
-			if (window?.HSStaticMethods?.autoInit) {
-				window.HSStaticMethods.autoInit();
-				console.log("Preline initialized");
-			}
-		}
-		
+		// Delay Preline's init until DOM is fully stable
+		await tick(); // Wait for Svelte DOM updates
+		await tick(); // Extra safety (optional)
+
+		requestAnimationFrame(() => {
+			setTimeout(() => {
+				if (window?.HSStaticMethods?.autoInit) {
+					window.HSStaticMethods.autoInit();
+					console.log("Preline initialized");
+				} else {
+					console.warn("Preline HSStaticMethods not found");
+				}
+			}, 50); // Delay slightly for safety
+		});
 	}
+
 
 	async function transitionToNewPage() {
 		show = false;
