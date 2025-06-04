@@ -4,10 +4,12 @@
   import GuestDetails from "../guestDetails.svelte";
   import NumberTicker from "@/components/NumberTicker.svelte";
   import BlurFade from "@/components/BlurFade.svelte";
+  import { calculateRefundableRate } from "../../../calculateApartmentPrice";
 
 
   export let displayPrice;
   export let initialPrice;
+  export let refundable;
   export let nights;
   export let childrenAges;
   export let startDate;
@@ -20,7 +22,9 @@
   export let loading;
   export let error;
   export let apartmentDetails;
+  export let basePrice;
   console.log(apartmentDetails)
+
 </script>
 
 <BlurFade class="w-[28%] text-black self-start sticky top-6 hidden md:block">
@@ -68,6 +72,9 @@
              dropdownID={"desktop"}
              bind:loading={loading}
              bind:error={error}
+             bind:displayPrice={displayPrice}
+             bind:basePrice={basePrice}
+             bind:refundable={refundable}
      
           />
         </div>

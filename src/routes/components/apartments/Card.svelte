@@ -51,7 +51,7 @@
 
         <!-- Location & Button -->
         <div class="pt-3 space-y-4">
-            <a href="/apartment/{apartmentNumber}">
+            <a href="/apartment/{apartmentNumber}" data-sveltekit-reload>
                 <button 
                     class="w-full py-3 text-sm font-semibold text-center text-white bg-[#C09A5B] rounded-lg 
                             hover:bg-[#B08A4F] transition-colors duration-200 transform group-hover:scale-[1.02]">
