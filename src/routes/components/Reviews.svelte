@@ -196,7 +196,7 @@
          <div class="z-0 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
             {#each reviews as review, index}   
                 <!-- {#if review["Positive review"] != "" }  -->
-                <BlurFade class="relative bg-white/10 rounded-xl p-6 transition-all hover:bg-white/20 border border-white/20 hover:border-white/30 group">
+                <BlurFade class="relative bg-white/10 rounded-xl p-6 hover:bg-white/20 border border-white/20 hover:border-white/30 group">
                         <!-- Header (unchanged) -->
                         <div class="flex items-start justify-between mb-4">
                             <!-- Author Info -->

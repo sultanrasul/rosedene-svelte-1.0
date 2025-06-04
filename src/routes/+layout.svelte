@@ -44,7 +44,7 @@
 					window.HSStaticMethods.autoInit();
 					console.log("Preline initialized");
 				} else {
-					console.warn("Preline HSStaticMethods not found");
+					console.warn("Preline HSStaticMethods not found"); 
 				}
 			}, 50); // Delay slightly for safety
 		});
@@ -76,7 +76,7 @@
 		initPackages();
 	});
 	
-	// export const router = false;
+
 </script>
 
 <Drawer />

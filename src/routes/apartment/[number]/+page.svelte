@@ -45,9 +45,10 @@
     import Overview from "../components/information/Overview.svelte";
     import BlurFade from "@/components/BlurFade.svelte";
     import Footer from "../../Footer.svelte";
-    import { calculateApartmentPrice } from "../../calculateApartmentPrice";
+    import { calculateApartmentPrice, calculateRefundableRate } from "../../calculateApartmentPrice";
   import { browser } from "$app/environment";
   import SlideshowModal from "../components/information/SlideshowModal.svelte";
+  import { base } from "$app/paths";
   
   
   
@@ -134,15 +135,23 @@
     };
   
     let Prices;
+    let basePrice = 0;
     let displayPrice = 0;
+    let refundable = false;
     let initialPrice = 0;
     let screenWidth = 800;
-  
+
     // Function to update the price with animation
-    function updatePrice(newPrice) {
-      initialPrice = displayPrice; // Set initialPrice to the current displayPrice
-      displayPrice = newPrice; // Update displayPrice to the new value
+    function updatePrice(newBasePrice) {
+      basePrice = newBasePrice;
+      const newDisplayPrice = refundable ? calculateRefundableRate(basePrice) + basePrice : basePrice;
+
+      if (displayPrice !== newDisplayPrice) {
+        initialPrice = displayPrice;
+        displayPrice = newDisplayPrice;
+      }
     }
+
   
     function openModel(){
       isModalOpen = !isModalOpen;
@@ -327,7 +336,7 @@
 
         // Update price only if it's changed
         const newPrice = calculateApartmentPrice(Prices, guests, startDate, endDate);
-        if (newPrice !== displayPrice) {
+        if (newPrice !== basePrice) {
           updatePrice(newPrice);
         }
 
@@ -351,10 +360,22 @@
     // --- Fallback price update if only guests change (e.g., no dates yet selected) ---
     $: if (Prices && guests && !startDate && !endDate) {
       const newPrice = calculateApartmentPrice(Prices, guests);
-      if (newPrice !== displayPrice) {
+      if (newPrice !== basePrice) {
         updatePrice(newPrice);
       }
     }
+
+    $: if (typeof refundable === 'boolean') {
+      const newDisplayPrice = refundable ? calculateRefundableRate(basePrice) + basePrice : basePrice;
+
+      if (displayPrice !== newDisplayPrice) {
+        initialPrice = displayPrice;
+        displayPrice = newDisplayPrice;
+        console.log("Display Price", displayPrice);
+      }
+    }
+
+
 
   
 
@@ -432,6 +453,10 @@
                   dropdownID={"mobile"}
                   bind:loading={loading}
                   bind:error={error}
+                  bind:displayPrice={basePrice}
+                  bind:basePrice={basePrice}
+                  bind:refundable={refundable}
+
                 />              
               </div>
             </div>
@@ -452,7 +477,9 @@
             <PriceCard
               apartmentDetails={apartmentDetails}
               bind:displayPrice={displayPrice}
+              bind:basePrice={basePrice}
               bind:initialPrice={initialPrice}
+              bind:refundable={refundable}
               bind:nights={nights}
               bind:childrenAges={childrenAges}
               bind:startDate={startDate}
