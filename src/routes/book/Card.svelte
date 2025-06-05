@@ -10,6 +10,7 @@
         export let apartmentNumber;
         export let loading;
         export let error;
+        export let refundable;
     
         // @ts-ignore
         export let apartmentDetails;

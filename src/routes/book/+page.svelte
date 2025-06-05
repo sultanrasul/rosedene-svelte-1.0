@@ -58,6 +58,8 @@
     const number = url.searchParams.get('number');
     const check_in = url.searchParams.get('check_in');
     const check_out = url.searchParams.get('check_out');
+    const refundable = url.searchParams.has('refundable');
+    console.log("checking refundable: ", refundable)
     // @ts-ignore
     const apartmentDetails = apartments[number];
     let adults = parseInt(url.searchParams.get('adults'),10) || 1;
@@ -92,13 +94,22 @@
 
 
 
-    async function fetchApartmentPrice(propertyId) {
+    async function fetchApartmentPrice(propertyId, refundable) {
         console.log(propertyId)
       try {
-        const response = await fetch(`${BACKEND_URL}/check_price`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ property_id: propertyId }),
+        const response = await fetch(`${BACKEND_URL}/verify_price`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                date_from: dateFrom,
+                date_to: dateTo,
+                property_id: apartmentDetails.id,
+                adults: adults,
+                children: children,
+                childrenAges: childrenAges,
+                url: window.location.href,
+                refundable: refundable
+            }),
         });
 
         if (!response.ok) throw new Error('Price check failed');
@@ -111,12 +122,10 @@
     
     onMount(async () => {
         console.log(apartmentDetails["id"]);
-        apartmentPrice = await fetchApartmentPrice(apartmentDetails["id"]);
-        console.log(apartmentPrice);
+        apartmentPrice = await fetchApartmentPrice(apartmentDetails["id"], refundable);
+        console.log(apartmentPrice, "backend price");
 
-        console.log(guests, startDate, endDate)
-        const newPrice = calculateApartmentPrice(apartmentPrice["Prices"], guests, startDate, endDate);
-        displayPrice = newPrice;
+        displayPrice = apartmentPrice;
         // console.log(newPrice);
 
     });
@@ -251,6 +260,7 @@
                 adults: adults,
                 children: children,
                 childrenAges: childrenAges,
+                refundable: refundable,
                 url: window.location.href,
 
                 
@@ -474,7 +484,7 @@
                         <h2 class="text-2xl font-bold mb-6" style="color: #233441">Your Trip</h2>
                         <!-- Apartment Details Card -->
                         <div class="pb-10 block md:hidden">
-                            <Card apartmentNumber={number} apartmentDetails={apartmentDetails} price={displayPrice} nights={nights} />
+                            <Card apartmentNumber={number} apartmentDetails={apartmentDetails} price={displayPrice} nights={nights} refundable={refundable} />
                         </div>
                         
                         <!-- Trip Summary -->
@@ -594,7 +604,7 @@
                                 </div>
                             {:else}
                             <div class="flex items-center gap-2">
-                                Next: Continue to Payment  
+                                Continue to Payment  
                                 {#if clientSecretProcessing}
                                     <svg class="mx-1.5 my-1.5 animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
