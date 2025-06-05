@@ -48,6 +48,7 @@
   export let isOpen = false;
 
   export let disabledDates;
+  let urlInitialized = false;
   
 
 
@@ -109,6 +110,7 @@
     // apartmentDetails = apartments[urlParams.get('number')];
     adults = parseInt(urlParams.get('adults'),10)
     children = parseInt(urlParams.get('children'),10)
+    refundable = urlParams.has('refundable');
     
     childrenAges = urlParams.getAll('ages').map(Number); // Convert to numbers
 
@@ -144,6 +146,7 @@
     } else {
       console.error('Missing check_in or check_out parameters in URL');
     }
+    urlInitialized = true;
 
   });
 
@@ -221,6 +224,18 @@
     };
 
     elements.forEach(flash);
+  }
+
+  $: if (typeof window !== 'undefined' && urlInitialized) {
+    const url = new URL(window.location.href);
+
+    url.searchParams.delete('refundable'); // Remove first, regardless
+
+    if (refundable) {
+      url.searchParams.set('refundable', '');
+    }
+
+    history.replaceState(null, '', url);
   }
 </script>
 

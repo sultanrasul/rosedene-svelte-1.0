@@ -80,16 +80,6 @@
     let disabledDates = [];
 
 
-  if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      check_in = url.searchParams.get('check_in') || '';
-      check_out = url.searchParams.get('check_out') || '';
-      adults = url.searchParams.get('adults') || '1';
-      children = url.searchParams.get('children') || '0';
-      childrenAges = children ? url.searchParams.getAll('ages').map(Number) : [];
-      nights = Math.floor((parseDate(check_out) - parseDate(check_in)) / (1000 * 60 * 60 * 24));
-  }
-
     // if (browser){
 
     //   const url = $page.url;
@@ -233,8 +223,33 @@
     };
   
     onMount(async () => {
-      updateWidth(); // Set initial width
+      updateWidth();
       window.addEventListener('resize', updateWidth);
+
+      // ✅ Safely read URL params inside onMount
+      const url = new URL(window.location.href);
+
+      check_in = url.searchParams.get('check_in') || '';
+      check_out = url.searchParams.get('check_out') || '';
+
+      const adultsParam = url.searchParams.get('adults');
+      const childrenParam = url.searchParams.get('children');
+      const agesParam = url.searchParams.getAll('ages');
+
+      adults = adultsParam && !isNaN(Number(adultsParam)) ? adultsParam : '1';
+      children = childrenParam && !isNaN(Number(childrenParam)) ? childrenParam : '0';
+      childrenAges = agesParam.length ? agesParam.map(Number) : [];
+
+      // ✅ guests is reactive, will recalculate automatically
+      const inDate = parseDate(check_in);
+      const outDate = parseDate(check_out);
+      startDate = inDate;
+      endDate = outDate;
+
+      if (inDate && outDate) {
+        const msPerDay = 1000 * 60 * 60 * 24;
+        nights = Math.floor((outDate - inDate) / msPerDay);
+      }
       
       try {
         // Validate required parameters
