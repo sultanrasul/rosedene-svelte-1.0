@@ -125,7 +125,8 @@
         apartmentPrice = await fetchApartmentPrice(apartmentDetails["id"], refundable);
         console.log(apartmentPrice, "backend price");
 
-        displayPrice = apartmentPrice;
+        priceBreakDown = apartmentPrice["breakdown"];
+        totalPrice = apartmentPrice["total"];
         // console.log(newPrice);
 
     });
@@ -199,7 +200,8 @@
     /**
    * @type {number}
    */
-    let displayPrice;
+    let priceBreakDown;
+    let totalPrice;
 
     let pollingInterval;
 
@@ -254,20 +256,19 @@
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                date_from: dateFrom,
-                date_to: dateTo,
-                property_id: apartmentDetails.id,
-                adults: adults,
-                children: children,
-                childrenAges: childrenAges,
-                refundable: refundable,
-                url: window.location.href,
+                    date_from: dateFrom,
+                    date_to: dateTo,
+                    property_id: apartmentDetails.id,
+                    adults: adults,
+                    children: children,
+                    childrenAges: childrenAges,
+                    refundable: refundable,
+                    url: window.location.href,
 
-                
-                special_requests: specialRequests,
-                name: name,
-                email: email,
-                phone: phone
+                    special_requests: specialRequests,
+                    name: name,
+                    email: email,
+                    phone: phone
                 }),
             });
 
@@ -294,8 +295,8 @@
             console.log('Currency:', paymentIntent.paymentIntent?.currency);
             
             // @ts-ignore
-            displayPrice = paymentIntent.paymentIntent?.amount / 100;
-            console.log('Formatted amount:', `£${displayPrice.toFixed(2)}`);
+            totalPrice = paymentIntent.paymentIntent?.amount / 100;
+            console.log('Total Price amount:', `£${totalPrice.toFixed(2)}`);
             
             // Initialize Elements AFTER getting clientSecret
             // @ts-ignore
@@ -484,7 +485,7 @@
                         <h2 class="text-2xl font-bold mb-6" style="color: #233441">Your Trip</h2>
                         <!-- Apartment Details Card -->
                         <div class="pb-10 block md:hidden">
-                            <Card apartmentNumber={number} apartmentDetails={apartmentDetails} price={displayPrice} nights={nights} refundable={refundable} />
+                            <Card apartmentNumber={number} apartmentDetails={apartmentDetails} totalPrice={totalPrice} priceBreakDown={priceBreakDown} nights={nights} refundable={refundable} />
                         </div>
                         
                         <!-- Trip Summary -->
@@ -626,7 +627,7 @@
             <!-- Right Sticky Column (50%) -->
             <div class="hidden md:sticky md:top-6 w-full max-w-xl md:max-w-none mx-auto md:mx-0 order-first md:order-none md:block">
                 <!-- Apartment Details Card -->
-                <Card loading={loading} error={error} apartmentNumber={number} apartmentDetails={apartmentDetails} price={displayPrice} nights={nights} />
+                <Card loading={loading} error={error} apartmentNumber={number} apartmentDetails={apartmentDetails} totalPrice={totalPrice} priceBreakDown={priceBreakDown} nights={nights} />
             </div>
         </div>
         <!-- Footer -->

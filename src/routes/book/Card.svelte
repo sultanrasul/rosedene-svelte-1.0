@@ -5,9 +5,10 @@
         import { apartments } from '../apartments.js';
         import Slideshow from "../apartment/components/mobile/Slideshow.svelte";
     
-        export let price; // Default price
+        export let totalPrice; // Default price
         export let nights;
         export let apartmentNumber;
+        export let priceBreakDown;
         export let loading;
         export let error;
         export let refundable;
@@ -29,15 +30,17 @@
     
             <!-- Price Breakdown -->
             <div class="pt-4">
-                {#if price}
+                {#if priceBreakDown && totalPrice}
                     <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400 dark:text-gray-600 text-sm">£{(price/nights).toFixed(2)} x {nights} nights</span>
-                            <span class="text-gray-300 dark:text-gray-700">£{price}</span>
-                        </div>
+                        {#each priceBreakDown as line}
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400 dark:text-gray-600 text-sm">{line["label"]}</span>
+                                <span class="text-gray-300 dark:text-gray-700">£{line["amount"]}</span>
+                            </div>
+                        {/each}
                         <div class="flex justify-between items-center border-t pt-3 border-gray-200">
                             <span class="font-bold text-[#C09A5B]">Total (GBP)</span>
-                            <span class="text-2xl font-bold text-[#C09A5B]">£{price}</span>
+                            <span class="text-2xl font-bold text-[#C09A5B]">£{totalPrice}</span>
                         </div>
                     </div>
                 {:else}
