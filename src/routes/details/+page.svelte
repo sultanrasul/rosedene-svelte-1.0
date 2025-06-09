@@ -10,12 +10,12 @@
     import { toast } from "svelte-sonner";
     import BlurFade from "@/components/BlurFade.svelte";
     import Footer from "../Footer.svelte";
-  import GuestInformation from "../book/GuestInformation.svelte";
-  import TripInformation from "../book/TripInformation.svelte";
-  import ChevronLeft from "@lucide/svelte/icons/chevron-left";
-  import Card from "../book/Card.svelte";
-  import WordPullUp from "@/components/WordPullUp.svelte";
-  import Drawer from "../Drawer.svelte";
+    import GuestInformation from "../book/GuestInformation.svelte";
+    import TripInformation from "../book/TripInformation.svelte";
+    import ChevronLeft from "@lucide/svelte/icons/chevron-left";
+    import Card from "../book/Card.svelte";
+    import WordPullUp from "@/components/WordPullUp.svelte";
+    import Drawer from "../Drawer.svelte";
 
 
     let bookingData;
@@ -44,10 +44,12 @@
         const [day, month, year] = dateStr.split('/').map(Number);
         return new Date(year, month - 1, day); // Month is 0-indexed
     };
+
     let nights;
     let startDate = ""
     let endDate = ""
     let apartmentNumber;
+    let breakdown;
 
 
     async function getBookingDetails(bookingReference, email){
@@ -363,7 +365,7 @@
                             {#if bookingData}
                                 <!-- Apartment Details Card -->
                                 <div class="pb-10 block md:hidden">
-                                    <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} price={bookingData?.ClientPrice} nights={nights} />
+                                    <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} nights={nights} totalPrice={bookingData?.ClientPrice} priceBreakDown={bookingData?.breakdown}/>
                                 </div>
                                 
                                 <TripInformation bookingReference={bookingData?.ReservationID} startDate={bookingData.DateFrom} endDate={bookingData.DateTo} adults={bookingData?.GuestDetailsInfo?.NumberOfAdults} children={bookingData?.GuestDetailsInfo?.NumberOfChildren} childrenAges={bookingData?.GuestDetailsInfo?.ChildrenAges?.Age}/>
@@ -387,7 +389,7 @@
                 <!-- Right Sticky Column (50%) -->
                 <div class="md:sticky md:top-6 w-full max-w-xl md:max-w-none mx-auto md:mx-0 order-first md:order-none hidden md:block">
                     <!-- Apartment Details Card -->
-                    <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} price={bookingData?.ClientPrice} nights={nights} />
+                    <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} nights={nights} totalPrice={bookingData?.ClientPrice} priceBreakDown={bookingData?.breakdown}/>
                 </div>
             </div>
             <!-- Footer -->

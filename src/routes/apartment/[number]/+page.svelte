@@ -397,7 +397,7 @@
   </script>
 
 <svelte:head>
-	<title>{apartmentDetails?.name} | Rosedene Highland House</title>
+	<title>{apartmentDetails.name} | Rosedene Highland House</title>
 </svelte:head>
 
 <!-- This is the main container that now always shows, regardless of loading/error state -->
