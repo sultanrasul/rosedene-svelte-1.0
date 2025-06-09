@@ -34,6 +34,16 @@ export function calculateApartmentPrice(prices, guests, dateFrom, dateTo) {
       }
     }
   
-    return Math.floor(totalPrice);
+    return parseFloat(totalPrice.toFixed(2));
   }
   
+  
+  
+  // @ts-ignore
+  export function calculateRefundableRate(baseRate) {
+    const WORST_CASE_PERCENTAGE = 0.0575; // 5.75%
+    
+    const feeAmount = baseRate * WORST_CASE_PERCENTAGE;
+
+    return parseFloat(feeAmount.toFixed(2));
+}
