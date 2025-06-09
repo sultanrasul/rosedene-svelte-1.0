@@ -3,12 +3,13 @@
 
   import { DatePicker } from '@svelte-plugins/datepicker';
   import { format } from 'date-fns';
-  import { Search, UserCircle, CalendarDays, LucideMinus, Plus, Baby, UserRound, UserRoundIcon, Triangle } from 'lucide-svelte';
+  import { Search, UserCircle, CalendarDays, LucideMinus, Plus, Baby, UserRound, UserRoundIcon, Triangle, RotateCcw } from 'lucide-svelte';
   import FormInputs from '$lib/components/formInputs.svelte';
   import { onMount } from 'svelte';
   import { apartments } from '../../apartments';
   import { load } from '../old';
   import BlurFade from '@/components/BlurFade.svelte';
+  import { calculateRefundableRate } from '../../calculateApartmentPrice';
   
 
   const today = new Date();
@@ -33,6 +34,9 @@
   export let error;
   export let dropdownID = "dropdownDefaultCheckbox";
   export let apartmentDetails;
+  export let displayPrice;
+  export let basePrice;
+  export let refundable;
 
   export let children = 0;
   export let adults = 1;
@@ -44,8 +48,8 @@
   export let isOpen = false;
 
   export let disabledDates;
+  let urlInitialized = false;
   
-
 
 
 
@@ -106,6 +110,7 @@
     // apartmentDetails = apartments[urlParams.get('number')];
     adults = parseInt(urlParams.get('adults'),10)
     children = parseInt(urlParams.get('children'),10)
+    refundable = urlParams.has('refundable');
     
     childrenAges = urlParams.getAll('ages').map(Number); // Convert to numbers
 
@@ -141,11 +146,13 @@
     } else {
       console.error('Missing check_in or check_out parameters in URL');
     }
+    urlInitialized = true;
 
   });
 
 
   function toggleDatePicker(){
+    console.log(displayPrice, "this is from guestDetails component ")
     if (!isOpen){
       isOpen = true
     } else {
@@ -217,6 +224,18 @@
     };
 
     elements.forEach(flash);
+  }
+
+  $: if (typeof window !== 'undefined' && urlInitialized) {
+    const url = new URL(window.location.href);
+
+    url.searchParams.delete('refundable'); // Remove first, regardless
+
+    if (refundable) {
+      url.searchParams.set('refundable', '');
+    }
+
+    history.replaceState(null, '', url);
   }
 </script>
 
@@ -295,7 +314,7 @@
         <!-- Dropdown Menu -->
         <div 
           id={dropdownID}
-          class={`min-w-[240px] z-20 hidden absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white border-2 border-gray-200 rounded-lg shadow-xl`}
+          class={`min-w-[240px] z-20 hidden absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white border-2 border-gray-300 rounded-lg shadow-xl`}
         >
           <div class="p-4 space-y-4">
             <!-- Adults -->
@@ -372,8 +391,79 @@
         </div>
       </div>
     </BlurFade>
+
+    <!-- Refundable Toggle - Improved Version -->
+    <BlurFade delay={delayAnimation + 0.3}>
+      <button on:click={() => {refundable=!refundable}} id="flashGuestsInput" class="w-full flex flex-col items-start bg-white border-2 border-gray-300 rounded-lg px-4 py-3 transition-all duration-200 hover:border-[#C09A5B]">
+        <div class="flex justify-between items-center w-full">
+          <div class="flex items-center gap-2">
+            <RotateCcw class="text-[#C09A5B]"/>
+            <span class="text-base md:text-[17px] font-medium text-gray-700">Refundable Rate</span>
+          </div>
+          
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input disabled type="checkbox" class="sr-only peer" bind:checked={refundable} />
+            <div class="w-12 h-6 bg-gray-300 peer-checked:bg-[#C09A5B]/80 rounded-full transition-colors duration-300"></div>
+            <div class="absolute top-1/2 -translate-y-1/2 left-[2px] w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 peer-checked:translate-x-[24px] peer-checked:bg-white flex items-center justify-center">
+              {#if refundable}
+                <svg class="w-3 h-3 text-[#C09A5B]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
+              {:else}
+                <svg class="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              {/if}
+            </div>
+          </label>
+        </div>
+        
+        <div class="mt-2 w-full">
+          <p class="text-sm font-medium {refundable ? 'text-green-600' : 'text-red-600'}">
+            {#if refundable}
+              <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Includes free cancellation
+              </span>
+            {:else}
+              <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Non-refundable - save more
+              </span>
+            {/if}
+          </p>
+          
+          <!-- Cost information section -->
+          <div class="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-gray-600">
+            {#if refundable}
+              <div class="flex items-center gap-1 bg-green-50 px-2 py-1 rounded">
+                <span>+£{calculateRefundableRate(basePrice)}</span>
+                <div class="w-1 h-1 rounded-full bg-gray-400"></div>
+                <span>5.75% of base price</span>
+              </div>
+              <span class="text-gray-500 text-xs">
+                (Added to your total)
+              </span>
+            {:else}
+              <div class="flex items-center gap-1 bg-red-50 px-2 py-1 rounded">
+                <span>Save £{calculateRefundableRate(basePrice)}</span>
+                <div class="w-1 h-1 rounded-full bg-gray-400"></div>
+                <span>5.75% savings</span>
+              </div>
+            {/if}
+          </div>
+        </div>
+      </button>
+    </BlurFade>
+
+
   </div>
 </div>
+
 
 <!-- DatePicker Component -->
 <style>

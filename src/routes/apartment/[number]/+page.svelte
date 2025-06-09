@@ -45,9 +45,10 @@
     import Overview from "../components/information/Overview.svelte";
     import BlurFade from "@/components/BlurFade.svelte";
     import Footer from "../../Footer.svelte";
-    import { calculateApartmentPrice } from "../../calculateApartmentPrice";
+    import { calculateApartmentPrice, calculateRefundableRate } from "../../calculateApartmentPrice";
   import { browser } from "$app/environment";
   import SlideshowModal from "../components/information/SlideshowModal.svelte";
+  import { base } from "$app/paths";
   
   
   
@@ -78,16 +79,6 @@
     let guests = '1';
     let disabledDates = [];
 
-
-  if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      check_in = url.searchParams.get('check_in') || '';
-      check_out = url.searchParams.get('check_out') || '';
-      adults = url.searchParams.get('adults') || '1';
-      children = url.searchParams.get('children') || '0';
-      childrenAges = children ? url.searchParams.getAll('ages').map(Number) : [];
-      nights = Math.floor((parseDate(check_out) - parseDate(check_in)) / (1000 * 60 * 60 * 24));
-  }
 
     // if (browser){
 
@@ -134,15 +125,23 @@
     };
   
     let Prices;
+    let basePrice = 0;
     let displayPrice = 0;
+    let refundable = false;
     let initialPrice = 0;
     let screenWidth = 800;
-  
+
     // Function to update the price with animation
-    function updatePrice(newPrice) {
-      initialPrice = displayPrice; // Set initialPrice to the current displayPrice
-      displayPrice = newPrice; // Update displayPrice to the new value
+    function updatePrice(newBasePrice) {
+      basePrice = newBasePrice;
+      const newDisplayPrice = refundable ? calculateRefundableRate(basePrice) + basePrice : basePrice;
+
+      if (displayPrice !== newDisplayPrice) {
+        initialPrice = displayPrice;
+        displayPrice = newDisplayPrice;
+      }
     }
+
   
     function openModel(){
       isModalOpen = !isModalOpen;
@@ -224,8 +223,33 @@
     };
   
     onMount(async () => {
-      updateWidth(); // Set initial width
+      updateWidth();
       window.addEventListener('resize', updateWidth);
+
+      // ✅ Safely read URL params inside onMount
+      const url = new URL(window.location.href);
+
+      check_in = url.searchParams.get('check_in') || '';
+      check_out = url.searchParams.get('check_out') || '';
+
+      const adultsParam = url.searchParams.get('adults');
+      const childrenParam = url.searchParams.get('children');
+      const agesParam = url.searchParams.getAll('ages');
+
+      adults = adultsParam && !isNaN(Number(adultsParam)) ? adultsParam : '1';
+      children = childrenParam && !isNaN(Number(childrenParam)) ? childrenParam : '0';
+      childrenAges = agesParam.length ? agesParam.map(Number) : [];
+
+      // ✅ guests is reactive, will recalculate automatically
+      const inDate = parseDate(check_in);
+      const outDate = parseDate(check_out);
+      startDate = inDate;
+      endDate = outDate;
+
+      if (inDate && outDate) {
+        const msPerDay = 1000 * 60 * 60 * 24;
+        nights = Math.floor((outDate - inDate) / msPerDay);
+      }
       
       try {
         // Validate required parameters
@@ -327,7 +351,7 @@
 
         // Update price only if it's changed
         const newPrice = calculateApartmentPrice(Prices, guests, startDate, endDate);
-        if (newPrice !== displayPrice) {
+        if (newPrice !== basePrice) {
           updatePrice(newPrice);
         }
 
@@ -351,17 +375,29 @@
     // --- Fallback price update if only guests change (e.g., no dates yet selected) ---
     $: if (Prices && guests && !startDate && !endDate) {
       const newPrice = calculateApartmentPrice(Prices, guests);
-      if (newPrice !== displayPrice) {
+      if (newPrice !== basePrice) {
         updatePrice(newPrice);
       }
     }
+
+    $: if (typeof refundable === 'boolean') {
+      const newDisplayPrice = refundable ? calculateRefundableRate(basePrice) + basePrice : basePrice;
+
+      if (displayPrice !== newDisplayPrice) {
+        initialPrice = displayPrice;
+        displayPrice = newDisplayPrice;
+        console.log("Display Price", displayPrice);
+      }
+    }
+
+
 
   
 
   </script>
 
 <svelte:head>
-	<title>{apartmentDetails?.name} | Rosedene Highland House</title>
+	<title>{apartmentDetails.name} | Rosedene Highland House</title>
 </svelte:head>
 
 <!-- This is the main container that now always shows, regardless of loading/error state -->
@@ -432,6 +468,10 @@
                   dropdownID={"mobile"}
                   bind:loading={loading}
                   bind:error={error}
+                  bind:displayPrice={basePrice}
+                  bind:basePrice={basePrice}
+                  bind:refundable={refundable}
+
                 />              
               </div>
             </div>
@@ -452,7 +492,9 @@
             <PriceCard
               apartmentDetails={apartmentDetails}
               bind:displayPrice={displayPrice}
+              bind:basePrice={basePrice}
               bind:initialPrice={initialPrice}
+              bind:refundable={refundable}
               bind:nights={nights}
               bind:childrenAges={childrenAges}
               bind:startDate={startDate}
