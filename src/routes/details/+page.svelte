@@ -1,7 +1,7 @@
 <script>
 // @ts-nocheck
 
-    import { Check, CloudDownload, Info, UserRoundIcon } from "lucide-svelte";
+    import { Ban, Check, CloudDownload, Info, TriangleAlert, UserRoundIcon, X, XCircle } from "lucide-svelte";
     import { onMount, tick } from "svelte";
     import BookingDetails from "./bookingDetails.svelte";
     import Navbar from "../Navbar.svelte";
@@ -16,6 +16,7 @@
     import Card from "../book/Card.svelte";
     import WordPullUp from "@/components/WordPullUp.svelte";
     import Drawer from "../Drawer.svelte";
+    import CancelationModal from "./CancelationModal.svelte";
 
 
     let bookingData;
@@ -177,12 +178,9 @@
         bookingData = {};
         showBookingDetails = false;
 
-        apartmentDetails = None;
-        apartmentNumber = None;
+        apartmentDetails = null;
+        apartmentNumber = null;
 
-        startDate = None;
-        endDate = None;
-        nights = None;
     }
 
     $: email;
@@ -380,8 +378,19 @@
         
                         <!-- Guest Information -->
                         <GuestInformation showEditButton={false} guestInformationConfirmed={true} specialRequests={bookingData?.SpecialRequest} name={bookingData?.CustomerInfo?.Name} phone={bookingData?.CustomerInfo?.Phone} email={bookingData?.CustomerInfo?.Email}/>
-        
                         
+                        <div class="mt-8 flex justify-center {bookingData?.refundable ? 'block' : 'hidden'}">
+                            <button
+                                data-hs-overlay="#hs-scale-animation-modal-cancelation"
+                                on:click={() => console.log('Cancellation initiated')}
+                                class="flex items-center justify-center gap-2 m-4 py-3 px-7 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                            >
+                                <XCircle class="w-5 h-5 text-white" />
+                                <span>Cancel Booking</span>
+                            </button>
+                        </div>
+                        <!-- <Cancelation bookingReference={bookingData?.ReservationID} email={bookingData?.CustomerInfo?.Email}/> -->
+
                         
                     </div>
                 </div>
@@ -426,3 +435,5 @@
         -moz-appearance: textfield;
     }
 </style>
+
+<CancelationModal bookingReference={bookingData?.ReservationID} email={bookingData?.CustomerInfo?.Email}/>
