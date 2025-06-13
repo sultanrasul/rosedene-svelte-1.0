@@ -7,6 +7,7 @@
 
     
     export let startDate = ""
+    export let refundable;
     export let endDate = ""
     let tooltipText = "Copy reference";
     let active = false;
@@ -38,6 +39,8 @@
 
 
 </script>
+
+<!-- Booking Reference Display -->
 <div class=" {bookingReference ? 'block' : 'hidden'} mb-6 flex items-center gap-4 p-5 bg-[#F5F2ED] rounded-lg border-2 border-[#C09A5B]/20 relative">
     <div class="p-3 bg-white rounded-lg shadow-md flex-shrink-0">
         <TicketCheck class="w-8 h-8 text-[#C09A5B]"/>
@@ -79,7 +82,49 @@
     </div>
 </div>
 
+<!-- Refundable Rate -->
+<div class="mt-4 mb-4 flex items-center gap-3 p-4 border rounded-lg shadow-sm"
+    class:border-green-300={refundable}
+    class:border-red-300={!refundable}
+    class:bg-green-50={refundable}
+    class:bg-red-50={!refundable}>
+    
+    <div class="p-2 rounded-full"
+            class:bg-green-200={refundable}
+            class:bg-red-200={!refundable}>
+        <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        class:text-green-700={refundable}
+        class:text-red-700={!refundable}>
+        {#if refundable}
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 13l4 4L19 7" />
+        {:else}
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M6 18L18 6M6 6l12 12" />
+        {/if}
+        </svg>
+    </div>
 
+    <div>
+        <p class="text-sm font-medium text-gray-700">
+        {refundable ? "Refundable Booking" : "Non-Refundable Booking"}
+        </p>
+        <p class="text-xs text-gray-500 mt-1">
+            
+            {refundable
+            ? "You are eligible for a refund if canceled 2 weeks before your check-in date."
+            : "This booking cannot be refunded after cancellation."}
+        </p>
+    </div>
+</div>
+
+
+<!-- Guest Details they picked from page before -->
 <div class="p-5 bg-[#233441]/10 rounded-lg space-y-4">
     <!-- Dates -->
     <div class="grid grid-cols-1 gap-4 min-[430px]:grid-cols-2">

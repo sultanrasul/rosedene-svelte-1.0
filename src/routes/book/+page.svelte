@@ -489,7 +489,7 @@
                         </div>
                         
                         <!-- Trip Summary -->
-                        <TripInformation bookingReference={bookingReference} startDate={startDate} endDate={endDate} adults={adults} children={children} childrenAges={childrenAges}/>
+                        <TripInformation refundable={refundable} bookingReference={bookingReference} startDate={startDate} endDate={endDate} adults={adults} children={children} childrenAges={childrenAges}/>
                         
                     </div>
     
