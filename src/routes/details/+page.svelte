@@ -89,25 +89,48 @@
             endDate = parseDate(formatDate(bookingData?.DateTo));
             nights = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
 
-            confetti({
-                colors: ['#C09A5B','#233441'],
-                particleCount: 100,
-                spread: 70,
-                origin: {
-                    y: 0.9,
-                    x: 0.2
-                }
-            });
+            if (bookingData?.reservationStatusID === 1){
+                confetti({
+                    colors: ['#C09A5B','#233441'],
+                    particleCount: 100,
+                    spread: 70,
+                    origin: {
+                        y: 0.9,
+                        x: 0.2
+                    }
+                });
+    
+                confetti({
+                    colors: ['#C09A5B','#233441'],
+                    particleCount: 100,
+                    spread: 70,
+                    origin: {
+                        y: 0.9,
+                        x: 0.8
+                    }
+                });
+            } else {
+                confetti({
+                    colors: ['#FF342C','#FF5A5E'],
+                    particleCount: 100,
+                    spread: 70,
+                    origin: {
+                        y: 0.9,
+                        x: 0.2
+                    }
+                });
+    
+                confetti({
+                    colors: ['#FF342C','#FF5A5E'],
+                    particleCount: 100,
+                    spread: 70,
+                    origin: {
+                        y: 0.9,
+                        x: 0.8
+                    }
+                });
 
-            confetti({
-                colors: ['#C09A5B','#233441'],
-                particleCount: 100,
-                spread: 70,
-                origin: {
-                    y: 0.9,
-                    x: 0.8
-                }
-            });
+            }
 
 
 
@@ -340,18 +363,49 @@
                 <!-- Left Column (50%) -->
                 <div class="space-y-6 bg-white rounded-xl relative overflow-visible">
                     
-                    <div class="z-[10] absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                        <div class={`flex items-center justify-center p-2 rounded-full shadow-2xl bg-green-100 animate-[pulse_1.5s_ease-out]`}>
-                            <div class={`w-16 h-16 flex items-center justify-center rounded-full bg-green-500 shadow-lg`}>
+                    {#if bookingData?.reservationStatusID === 1}
+                        <!-- ✅ CONFIRMED UI -->
+                        <div class="z-[10] absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                            <div class="flex items-center justify-center p-2 rounded-full shadow-2xl bg-green-100 animate-[pulse_1.5s_ease-out]">
+                            <div class="w-16 h-16 flex items-center justify-center rounded-full bg-green-500 shadow-lg">
                                 <Check class="w-8 h-8 lg:w-10 lg:h-10" color="white" />
                             </div>
+                            </div>
                         </div>
-                    </div>
-    
-                    <div class="space-y-3 mb-8 pt-8">
-                        <h1 class="text-center text-3xl lg:text-4xl font-bold text-green-600">Payment Successful!</h1>
-                        <p class="text-center text-gray-600 lg:text-lg">Your reservation is confirmed</p>
-                    </div>
+
+                        <div class="space-y-3 mb-8 pt-8">
+                            <h1 class="text-center text-3xl lg:text-4xl font-bold text-green-600">Payment Successful!</h1>
+                            <p class="text-center text-gray-600 lg:text-lg">Your reservation is confirmed</p>
+                        </div>
+
+                        {:else if bookingData?.reservationStatusID === 2}
+                            <!-- ❌ CANCELED UI -->
+                            <div class="z-[10] absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                <div class="flex items-center justify-center p-2 rounded-full shadow-2xl bg-red-100 animate-[pulse_1.5s_ease-out]">
+                                <div class="w-16 h-16 flex items-center justify-center rounded-full bg-red-500 shadow-lg">
+                                    <X class="w-8 h-8 lg:w-10 lg:h-10" color="white" />
+                                </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3 mb-6 pt-8 p-6">
+                                <h1 class="text-center text-3xl lg:text-4xl font-bold text-red-600">Booking Cancelled</h1>
+                                <p class="text-center text-gray-600 lg:text-lg">
+                                    This reservation has been cancelled. 
+                                </p>
+
+                                {#if bookingData?.refundable}
+                                <p class="text-center text-green-700 bg-green-50 border border-green-200 rounded-lg p-4 text-sm w-full">
+                                    Since your booking was made on a <strong>refundable rate</strong>, you will receive a refund within <strong>5–7 business days</strong>.
+                                </p>
+                                {:else}
+                                <p class="text-center text-red-700 bg-red-50 border border-red-200 rounded-lg p-4 text-sm w-full mx-auto">
+                                    This booking was made on a <strong>non-refundable rate</strong>. Unfortunately, no refund will be issued.
+                                </p>
+                                {/if}
+                            </div>
+
+                    {/if}
               
                     <div class="block">
         
@@ -366,7 +420,7 @@
                                     <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} nights={nights} totalPrice={bookingData?.ClientPrice} priceBreakDown={bookingData?.breakdown}/>
                                 </div>
                                 
-                                <TripInformation bookingReference={bookingData?.ReservationID} startDate={bookingData.DateFrom} endDate={bookingData.DateTo} adults={bookingData?.GuestDetailsInfo?.NumberOfAdults} children={bookingData?.GuestDetailsInfo?.NumberOfChildren} childrenAges={bookingData?.GuestDetailsInfo?.ChildrenAges?.Age}/>
+                                <TripInformation refundable={bookingData?.refundable} bookingReference={bookingData?.ReservationID} startDate={bookingData.DateFrom} endDate={bookingData.DateTo} adults={bookingData?.GuestDetailsInfo?.NumberOfAdults} children={bookingData?.GuestDetailsInfo?.NumberOfChildren} childrenAges={bookingData?.GuestDetailsInfo?.ChildrenAges?.Age}/>
                                 
                                 
                             {/if}
@@ -379,7 +433,8 @@
                         <!-- Guest Information -->
                         <GuestInformation showEditButton={false} guestInformationConfirmed={true} specialRequests={bookingData?.SpecialRequest} name={bookingData?.CustomerInfo?.Name} phone={bookingData?.CustomerInfo?.Phone} email={bookingData?.CustomerInfo?.Email}/>
                         
-                        <div class="mt-8 flex justify-center {bookingData?.refundable ? 'block' : 'hidden'}">
+                        <!-- <div class="mt-8 flex justify-center"> -->
+                        <div class="mt-8 flex justify-center {bookingData?.reservationStatusID === 2 ? 'hidden' : 'block'}">
                             <button
                                 data-hs-overlay="#hs-scale-animation-modal-cancelation"
                                 on:click={() => console.log('Cancellation initiated')}

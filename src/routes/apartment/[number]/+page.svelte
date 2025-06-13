@@ -210,6 +210,7 @@
 
         // Combine and dedupe
         const finalBlocked = [...new Set([...originalBlocked, ...additionalBlocked])];
+        console.log(finalBlocked)
         
         return finalBlocked;
       } catch (err) {

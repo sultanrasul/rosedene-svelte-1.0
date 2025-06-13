@@ -35,46 +35,7 @@
 
             // If the response is successful, parse the checkout URL
             // @ts-ignore
-            bookingData = await response.json();
-            // @ts-ignore
-            bookingData = bookingData["reservation_data"]
-
-            // @ts-ignore
-            showBookingDetails = true;
-            // @ts-ignore
-            apartmentDetails = apartments[bookingData.Apartment.match(/\d+/)?.[0]]
-            // @ts-ignore
-            apartmentNumber = bookingData.Apartment.match(/\d+/)?.[0];
-
-            // @ts-ignore
-            startDate = parseDate(formatDate(bookingData?.DateFrom));
-            // @ts-ignore
-            endDate = parseDate(formatDate(bookingData?.DateTo));
-            // @ts-ignore
-            nights = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
-
-            // @ts-ignore
-            confetti({
-                colors: ['#C09A5B','#233441'],
-                particleCount: 100,
-                spread: 70,
-                origin: {
-                    y: 0.9,
-                    x: 0.2
-                }
-            });
-
-            // @ts-ignore
-            confetti({
-                colors: ['#C09A5B','#233441'],
-                particleCount: 100,
-                spread: 70,
-                origin: {
-                    y: 0.9,
-                    x: 0.8
-                }
-            });
-
+            window.location.href = `/details?ref_number=${bookingReference}&email=${email}`
 
 
             // @ts-ignore
@@ -145,7 +106,7 @@
             This action <span class="font-bold">cannot</span> be undone. Cancelling your booking will:
           </p>
 
-          <ul class="text-gray-700 mb-5 w-full max-w-xs space-y-3">
+          <ul class="text-gray-700 mb-5 w-full max-w-xs space-y-4">
             <li class="flex items-start">
               <div class="bg-red-400 rounded-full p-1 mr-3">
                 <X class="text-white w-4 h-4" />
@@ -156,14 +117,14 @@
               <div class="bg-red-400 rounded-full p-1 mr-3">
                 <X class="text-white w-4 h-4" />
               </div>
-              <span>Initiate the refund process (if applicable)</span>
+              <span>Initiate the refund process <br>(if applicable)</span>
             </li>
-            <li class="flex items-start">
+            <!-- <li class="flex items-start">
               <div class="bg-red-400 rounded-full p-1 mr-3">
                 <X class="text-white w-4 h-4" />
               </div>
               <span>Remove your booking from our system</span>
-            </li>
+            </li> -->
           </ul>
 
           <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 w-full rounded-md">
