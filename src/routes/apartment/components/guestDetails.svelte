@@ -442,8 +442,6 @@
             {#if refundable}
               <div class="flex items-center gap-1 bg-green-50 px-2 py-1 rounded">
                 <span>+£{calculateRefundableRate(basePrice)}</span>
-                <div class="w-1 h-1 rounded-full bg-gray-400"></div>
-                <span>5.75% of base price</span>
               </div>
               <span class="text-gray-500 text-xs">
                 (Added to your total)
@@ -451,8 +449,6 @@
             {:else}
               <div class="flex items-center gap-1 bg-red-50 px-2 py-1 rounded">
                 <span>Save £{calculateRefundableRate(basePrice)}</span>
-                <div class="w-1 h-1 rounded-full bg-gray-400"></div>
-                <span>5.75% savings</span>
               </div>
             {/if}
           </div>
