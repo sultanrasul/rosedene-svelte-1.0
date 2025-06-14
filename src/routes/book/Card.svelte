@@ -34,8 +34,8 @@
                     <div class="space-y-3">
                         {#each priceBreakDown as line}
                             <div class="flex justify-between items-center">
-                                <span class="text-gray-400 dark:text-gray-600 text-sm">{line["label"]}</span>
-                                <span class="text-gray-300 dark:text-gray-700">£{line["amount"]}</span>
+                                <span class="text-gray-600 text-sm">{line["label"]}</span>
+                                <span class="text-gray-700">£{line["amount"]}</span>
                             </div>
                         {/each}
                         <div class="flex justify-between items-center border-t pt-3 border-gray-200">
