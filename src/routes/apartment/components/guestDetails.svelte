@@ -439,17 +439,19 @@
           
           <!-- Cost information section -->
           <div class="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-gray-600">
-            {#if refundable}
-              <div class="flex items-center gap-1 bg-green-50 px-2 py-1 rounded">
-                <span>+£{calculateRefundableRate(basePrice)}</span>
-              </div>
-              <span class="text-gray-500 text-xs">
-                (Added to your total)
-              </span>
-            {:else}
-              <div class="flex items-center gap-1 bg-red-50 px-2 py-1 rounded">
-                <span>Save £{calculateRefundableRate(basePrice)}</span>
-              </div>
+            {#if displayPrice}
+              {#if refundable}
+                <div class="flex items-center gap-1 bg-green-50 px-2 py-1 rounded">
+                  <span>+£{calculateRefundableRate(basePrice)}</span>
+                </div>
+                <span class="text-gray-500 text-xs">
+                  (Added to your total)
+                </span>
+              {:else}
+                <div class="flex items-center gap-1 bg-red-50 px-2 py-1 rounded">
+                  <span>Save £{calculateRefundableRate(basePrice)}</span>
+                </div>
+              {/if}
             {/if}
           </div>
         </div>
