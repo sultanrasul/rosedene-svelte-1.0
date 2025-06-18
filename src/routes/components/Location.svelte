@@ -3,6 +3,11 @@
 
     export let city = "Inverness";
     export let tagline = "Gateway to the Scottish Highlands";
+    let mapConsent = false;
+
+	function loadMap() {
+		mapConsent = true;
+	}
 </script>
 
 
@@ -93,21 +98,41 @@
                  
      
                  <!-- Map Container -->
-                 <div class="relative h-[500px] rounded-xl overflow-hidden ">
-                     <div class="absolute inset-0 bg-[#C09A5B]/10 animate-pulse"></div>
-                     
-                     <!-- Interactive Map -->
-                     <!-- svelte-ignore a11y_missing_attribute -->
-                     <iframe 
-                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7372.50179950599!2d-4.2331814622549455!3d57.465740049978514!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x488f71faaed71d69%3A0xeca808584e8190e2!2sRosedene%20Highland%20House!5e0!3m2!1sen!2suk!4v1741047505489!5m2!1sen!2suk"
-                         class="absolute inset-0 w-full h-full border-0"
-                         loading="lazy"
-                         referrerpolicy="no-referrer-when-downgrade"
-                     ></iframe>
-     
-     
-                 </div>
-     
+                <div class="relative h-[500px] rounded-xl overflow-hidden bg-[#1f2d3a] border border-[#C09A5B]/20">
+                    <!-- Static Map Background with Blur -->
+                    {#if !mapConsent}
+                        <img
+                            src="/blurred-map.png"
+                            alt="Map preview"
+                            class="absolute inset-0 w-full h-full object-cover filter blur scale-105 transition duration-500"
+                        />
+                        <div class="absolute inset-0 flex items-center justify-center text-center px-6 
+                                    bg-gradient-to-b from-transparent via-black/30 to-black/50">
+                            <div class="space-y-4 max-w-md mx-auto">
+                                <p class="text-white text-sm sm:text-base">
+                                    This map is provided by Google and may set cookies. By clicking <strong>“Load Map”</strong>, you consent to cookies.
+                                </p>
+
+                                <button on:click={loadMap} 
+                                        class="px-6 py-2 bg-[#C09A5B] text-white font-semibold rounded-lg 
+                                            hover:bg-[#b3874e] transition-all duration-300 
+                                            shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                    Load Map
+                                </button>
+                            </div>
+                        </div>
+                    {:else}
+                        <!-- svelte-ignore a11y_missing_attribute -->
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7372.50179950599!2d-4.2331814622549455!3d57.465740049978514!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x488f71faaed71d69%3A0xeca808584e8190e2!2sRosedene%20Highland%20House!5e0!3m2!1sen!2suk!4v1741047505489!5m2!1sen!2suk"
+                            class="absolute inset-0 w-full h-full border-0 transition-opacity duration-700"
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            allowfullscreen
+                        ></iframe>
+                    {/if}
+                </div>
+                    
                  <style>
                      .clip-marker {
                          clip-path: polygon(50% 0%, 0% 100%, 100% 100%);

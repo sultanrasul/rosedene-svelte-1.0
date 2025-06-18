@@ -10,45 +10,28 @@
 
 
     let isMobile = false;
-    let dynamicHeight = 'min-h-screen';
+    let dynamicHeight;
     
     onMount(() => {
       // Detect mobile devices
-      isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      
-      const updateHeight = () => {
-          if (isMobile) {
-              dynamicHeight = window.innerHeight;
-          }
-      };
+      let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      console.log(isMobile ? "it is mobile":  "not mobile")
 
-      if (isMobile) {
-          // Set initial height
-          updateHeight();
-          
-          // Update height on resize with debounce
-          let resizeTimer;
-          window.addEventListener('resize', () => {
-              clearTimeout(resizeTimer);
-              resizeTimer = setTimeout(() => {
-                  updateHeight();
-                  // Reset scroll position
-                  window.scrollTo(0, window.pageYOffset - 1);
-              }, 100);
-          });
-
-          // Lock scroll position on input focus
-          document.addEventListener('focusin', () => {
-              window.scrollTo(0, window.pageYOffset);
-          });
+      if (!isMobile){
+        dynamicHeight = "min-h-screen";
+      } else {
+        dynamicHeight = `min-h-auto`
       }
+
+      
+
     });
 
 
 </script>
   
 
-<div class="relative overflow-hidden bg-[#233441] {isMobile ? `h-[${$dynamicHeight}px]` : 'min-h-screen'}">  
+<div class="relative overflow-hidden bg-[#233441] {dynamicHeight}">  
   <!-- Image Container -->
   <div class="absolute inset-0  filter brightness-50"
   style="background-image: url('background.png'); 
