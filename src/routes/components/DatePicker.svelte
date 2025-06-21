@@ -1,152 +1,192 @@
 <script>
   // @ts-nocheck
   
-    import { DatePicker } from '@svelte-plugins/datepicker';
-    import { format, startOfHour } from 'date-fns';
-    import { Search, UserCircle, CalendarDays, LucideMinus, Plus, Baby, UserRound, UserRoundIcon } from 'lucide-svelte';
-    import FormInputs from '../../lib/components/formInputs.svelte';
-    import { onMount } from 'svelte';
-    import { toast } from 'svelte-sonner';
+  import { DatePicker } from '@svelte-plugins/datepicker';
+  import { format, startOfHour } from 'date-fns';
+  import { Search, UserCircle, CalendarDays, LucideMinus, Plus, Baby, UserRound, UserRoundIcon } from 'lucide-svelte';
+  import FormInputs from '../../lib/components/formInputs.svelte';
+  import { onMount } from 'svelte';
+  import { toast } from 'svelte-sonner';
   import BlurFade from '@/components/BlurFade.svelte';
+
+  const today = new Date();
+  const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
+
+  const getDateFromToday = (days) => Date.now() - days * MILLISECONDS_IN_DAY;
+
+  let isGuestPopupOpen = false;
+
+
+
+  // Function to toggle the pop-up
+  const toggleGuestPopup = () => {
+    isGuestPopupOpen = !isGuestPopupOpen;
+  };
+
+  export let startDate;
+  export let endDate;
+  export let isSearch = false;  
+  let screenWidth = 800;
+  let datepickerElementMobile;
+  let datepickerElementDesktop;
+
+
+  export let children = 0;
+  export let adults = 1;
   
+  let dateFormatDMY = 'dd/MM/yyyy';
+  let dateFormat = 'dd MMMM';
+  let isOpenMobile = false;
+  let isOpenDesktop = false;
+  export let childrenAges = [];
+  console.log(childrenAges);
+  
+  // function toggleDatePicker(){
+  //   isOpenMobile = !isOpenMobile;
+  //   isOpenDesktop = !isOpenDesktop
+  // }
+
+  function toggleDatePicker(){
+    if (!isOpenMobile){
+      isOpenMobile = true
+    } else {
+      isOpenMobile = false
+    }
+
+    if (!isOpenDesktop){
+      isOpenDesktop = true
+    } else {
+      isOpenDesktop = false
+    }
+  }
+
+
+  const formatDate = (dateString) =>
+      dateString && format(new Date(dateString), dateFormat) || '';
+
+  const formatDateDMY = (dateString) =>
+      dateString && format(new Date(dateString), dateFormatDMY) || '';
+
+
+  function incrementAdults() {
+    if ((parseInt(adults, 10) + parseInt(children, 10)) <  6) {
+      adults = parseInt(adults, 10) + 1;
+    }
+  }
+
+  function decrementAdults() {
+    if (parseInt(adults, 10) > 1) {
+      adults = parseInt(adults, 10) - 1;
+    }
+  }
+
+  function incrementChildren() {
+    if (parseInt(adults, 10) + parseInt(children, 10) < 6) {
+      children = parseInt(children, 10) + 1;
+    }
+  }
+
+  function decrementChildren() {
+    if (parseInt(children, 10) > 0) {
+      children = parseInt(children, 10) - 1;
+    }
+  }
+  
+  function callToast(){
+    toast.warning('Minimum 2 Night Stay');
+  }  
+
+  $: {
+    if (startDate && endDate) {
+      const millisecondsPerDay = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
+      if (Math.floor((endDate - startDate) / millisecondsPerDay) < 2){
+        callToast();
+        startDate = null;
+        endDate = null;
+        isOpenMobile = true;
+        
+      }
+    }
+  }
+  $: {
+    if (startDate && endDate) {
+      const millisecondsPerDay = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
+      if (Math.floor((endDate - startDate) / millisecondsPerDay) < 2){
+        callToast();
+        startDate = null;
+        endDate = null;
+        isOpenMobile = true;
+        
+      }
+    }
+  }
+
+  $: formattedStartDate = formatDate(startDate);
+  $: formattedEndDate = formatDate(endDate);
+
+  $: formattedStartDateDMY = formatDateDMY(startDate);
+  $: formattedEndDateDMY = formatDateDMY(endDate);
+
+  // Ensure the array length matches the number of children
+  $: {
+    if (children > childrenAges.length) {
+      // Add new -1 entries for additional children
+      childrenAges = [...childrenAges, ...Array(children - childrenAges.length).fill(-1)];
+    } else if (children < childrenAges.length) {
+      // Remove extra entries if children count decreases
+      childrenAges = childrenAges.slice(0, children);
+    }
+  }
+
+  const updateWidth = () => {
+      screenWidth = window.innerWidth;
+      console.log(screenWidth)
+  };
+
+  onMount(() => {
+    updateWidth(); // Set initial width
+    window.addEventListener('resize', updateWidth);
+  })
+    
+  // This function will handle the navigation event
+  const handleNavigationChange = ({ direction, type, currentPeriod, isPastPeriod }) => {
+
+    const currentDate = new Date(currentPeriod.start);
     const today = new Date();
-    const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
-  
-    const getDateFromToday = (days) => Date.now() - days * MILLISECONDS_IN_DAY;
-  
-    let isGuestPopupOpen = false;
-  
-  
-  
-    // Function to toggle the pop-up
-    const toggleGuestPopup = () => {
-      isGuestPopupOpen = !isGuestPopupOpen;
-    };
-  
-    export let startDate;
-    export let endDate;
-    export let isSearch = false;  
-    let screenWidth = 800;
-  
-  
-    export let children = 0;
-    export let adults = 1;
-    
-    let dateFormatDMY = 'dd/MM/yyyy';
-    let dateFormat = 'dd MMMM';
-    let isOpenMobile = false;
-    let isOpenDesktop = false;
-    export let childrenAges = [];
-    console.log(childrenAges);
-    
-    // function toggleDatePicker(){
-    //   isOpenMobile = !isOpenMobile;
-    //   isOpenDesktop = !isOpenDesktop
-    // }
 
-    function toggleDatePicker(){
-      if (!isOpenMobile){
-        isOpenMobile = true
-      } else {
-        isOpenMobile = false
-      }
+    // Calculate the limit: 3 years from today, first of the month
+    const maxDate = new Date(today.getFullYear() + 2, today.getMonth(), 1);
 
-      if (!isOpenDesktop){
-        isOpenDesktop = true
-      } else {
-        isOpenDesktop = false
-      }
+    if (currentDate >= maxDate) {
+      disableNextMonthButton(true); // Custom function you already wrote
+    } else {
+      disableNextMonthButton(false); // Re-enable if you're not at the limit
     }
-  
-  
-    const formatDate = (dateString) =>
-        dateString && format(new Date(dateString), dateFormat) || '';
-  
-    const formatDateDMY = (dateString) =>
-        dateString && format(new Date(dateString), dateFormatDMY) || '';
-  
-  
-    function incrementAdults() {
-      if ((parseInt(adults, 10) + parseInt(children, 10)) <  6) {
-        adults = parseInt(adults, 10) + 1;
-      }
-    }
-  
-    function decrementAdults() {
-      if (parseInt(adults, 10) > 1) {
-        adults = parseInt(adults, 10) - 1;
-      }
-    }
-  
-    function incrementChildren() {
-      if (parseInt(adults, 10) + parseInt(children, 10) < 6) {
-        children = parseInt(children, 10) + 1;
-      }
-    }
-  
-    function decrementChildren() {
-      if (parseInt(children, 10) > 0) {
-        children = parseInt(children, 10) - 1;
-      }
-    }
-    
-    function callToast(){
-      toast.warning('Minimum 2 Night Stay');
-    }  
-  
-    $: {
-      if (startDate && endDate) {
-        const millisecondsPerDay = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
-        if (Math.floor((endDate - startDate) / millisecondsPerDay) < 2){
-          callToast();
-          startDate = null;
-          endDate = null;
-          isOpenMobile = true;
-          
-        }
-      }
-    }
-    $: {
-      if (startDate && endDate) {
-        const millisecondsPerDay = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
-        if (Math.floor((endDate - startDate) / millisecondsPerDay) < 2){
-          callToast();
-          startDate = null;
-          endDate = null;
-          isOpenMobile = true;
-          
-        }
-      }
-    }
-  
-    $: formattedStartDate = formatDate(startDate);
-    $: formattedEndDate = formatDate(endDate);
-  
-    $: formattedStartDateDMY = formatDateDMY(startDate);
-    $: formattedEndDateDMY = formatDateDMY(endDate);
-  
-    // Ensure the array length matches the number of children
-    $: {
-      if (children > childrenAges.length) {
-        // Add new -1 entries for additional children
-        childrenAges = [...childrenAges, ...Array(children - childrenAges.length).fill(-1)];
-      } else if (children < childrenAges.length) {
-        // Remove extra entries if children count decreases
-        childrenAges = childrenAges.slice(0, children);
-      }
-    }
+  };
 
-    const updateWidth = () => {
-        screenWidth = window.innerWidth;
-        console.log(screenWidth)
-    };
 
-    onMount(() => {
-      updateWidth(); // Set initial width
-      window.addEventListener('resize', updateWidth);
-    })
+
+function disableNextMonthButton(disabled) {
+  const datepickerEl = screenWidth <= 767 ? datepickerElementMobile : datepickerElementDesktop;
+  const nextIcons = datepickerEl?.querySelectorAll('[aria-label="Next month"]');
+  console.log(nextIcons)
   
-  </script>
+  if (!nextIcons || nextIcons.length === 0) return;
+
+  const index = screenWidth <= 767 ? 0 : 1;
+  const nextIcon = nextIcons[index] || nextIcons[0]; // fallback just in case
+
+  const nextBtn = nextIcon?.closest('button');
+  if (!nextBtn) return;
+
+  nextBtn.disabled = disabled;
+  nextBtn.style.opacity = disabled ? "0.22" : "1";
+  nextBtn.style.cursor = disabled ? "not-allowed" : "pointer";
+}
+
+
+
+</script>
   
   <div class="min-w-[350px] flex items-center justify-center py-6 relative z-50">
     <BlurFade class="flex flex-col md:flex-row items-center gap-2 md:gap-4 px-5 py-3 md:px-6 bg-white rounded-2xl md:rounded-full shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100 relative w-full md:w-auto">
@@ -170,9 +210,12 @@
               {/if}
             </span>
           </div>
-          {#if screenWidth <= 767}
-                <DatePicker theme={"homepage-datepicker"} class="w-full" bind:isOpen={isOpenMobile} bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}/>
-          {/if}
+          <div bind:this={datepickerElementMobile}>
+            {#if screenWidth <= 767}
+            
+            <DatePicker onNavigationChange={handleNavigationChange} theme={"homepage-datepicker"} class="w-full" bind:isOpen={isOpenMobile} bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}/>
+            {/if}
+          </div>
         </div>
     
         <div class="md:w-px md:h-8 w-full h-px bg-gray-200/60"></div>
@@ -291,11 +334,11 @@
 
     </BlurFade>
   </div>
+  <div class="w-full justify-center flex" bind:this={datepickerElementDesktop}>
   {#if screenWidth > 767}
-    <div class="w-full justify-center flex">
-      <DatePicker theme={"homepage-datepicker"} bind:isOpen={isOpenDesktop} bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}/>
+      <DatePicker onNavigationChange={handleNavigationChange} theme={"homepage-datepicker"} bind:isOpen={isOpenDesktop} bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}/>
+      {/if}
     </div>
-  {/if}
   <!-- DatePicker Component -->
   <style>
     select:focus {

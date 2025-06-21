@@ -10,7 +10,9 @@
   import { load } from '../old';
   import BlurFade from '@/components/BlurFade.svelte';
   import { calculateRefundableRate } from '../../calculateApartmentPrice';
-  
+  import { root } from 'postcss';
+
+  let datepickerElement;
 
   const today = new Date();
   const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
@@ -48,19 +50,32 @@
   export let isOpen = false;
 
   export let disabledDates;
+  export let lastDate;
   let urlInitialized = false;
   
 
 
 
-  const handleNavigationChange = async ({ direction, type, currentPeriod, isPastPeriod }) => {
-    
-    // Log the start and end dates from currentPeriod
-    console.log('start', currentPeriod.start);
-    console.log('end', currentPeriod.end);
-    console.log('past period', isPastPeriod);
+  // This function will handle the navigation event
+  const handleNavigationChange = ({ direction, type, currentPeriod, isPastPeriod }) => {
+    const currentDate = new Date(currentPeriod.start);
+    const lastAllowedDate = new Date(lastDate);
 
+    // Go to the **first day of the current month** we're navigating to
+    const currentMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+    // Get the **first day of the month of the last allowed date**
+    const lastAllowedMonthStart = new Date(lastAllowedDate.getFullYear(), lastAllowedDate.getMonth(), 1);
+
+    if (currentMonthStart >= lastAllowedMonthStart) {
+      console.log("disabling the date")
+      disableNextMonthButton(true);
+    } else {
+      console.log("not disabling the date")
+      disableNextMonthButton(false);
+    }
   };
+
 
 
 
@@ -153,11 +168,39 @@
 
   function toggleDatePicker(){
     console.log(displayPrice, "this is from guestDetails component ")
+
     if (!isOpen){
       isOpen = true
     } else {
       isOpen = false
     }
+  }
+
+  function disableNextMonthButton(disabled){
+    // const nextIcon = datepickerElement?.querySelector('[aria-label="Next month"]');
+    const nextIcons = datepickerElement?.querySelectorAll('[aria-label="Next month"]');
+    console.log(nextIcons)
+    // const nextIcon = nextIcons[nextIcons.length - 1]
+    const nextIcon = dropdownID === "mobile" ? nextIcons[0] : nextIcons[1]
+
+    const prevIcon = datepickerElement?.querySelector('[aria-label="Previous month"]');
+
+
+
+    const nextBtn = nextIcon?.closest('button');
+    const prevBtn = prevIcon?.closest('button');
+
+    if (disabled) {
+      if (nextBtn) nextBtn.disabled = true;
+      if (nextBtn) nextBtn.style.opacity = "0.22";
+      if (nextBtn) nextBtn.style.cursor  = "not-allowed";
+    } else {
+      if (nextBtn) nextBtn.disabled = false;
+      if (nextBtn) nextBtn.style.opacity = "1";
+      if (nextBtn) nextBtn.style.cursor  = "pointer";
+    }
+
+
   }
 
   const formatDate = (dateString) =>
@@ -241,10 +284,10 @@
 
 <div class="flex justify-center items-center relative z-[10] w-full" id="guestDetails">
   <div class="flex flex-col gap-4 w-full max-w-2xl">
+  
     <!-- Date Input -->
-    
-    <div class="w-full group justify-center text-center">
-      <DatePicker bind:disabledDates={disabledDates} theme={"custom-datepicker"}  class="w-full" align="{dropdownID == "mobile" ? 'left' : 'right'}" bind:isOpen bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}>
+    <div class="w-full group justify-center text-center" bind:this={datepickerElement}>
+      <DatePicker onNavigationChange={handleNavigationChange} bind:enabledDates={disabledDates} theme={"custom-datepicker"}  class="w-full" align="{dropdownID == "mobile" ? 'left' : 'right'}" bind:isOpen bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}>
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
         <BlurFade delay={delayAnimation}>
@@ -470,5 +513,36 @@
       --datepicker-calendar-range-selected-background: #C09A5B;
       --datepicker-calendar-day-color-disabled: rgba(255, 0, 43, 0.5);
 
+      /* Month Navigation Alteration */
+      --datepicker-calendar-header-month-nav-background: transparent;
+      --datepicker-calendar-header-month-nav-background-hover: #f5f5f5;
+      --datepicker-calendar-header-month-nav-border: 0;
+      --datepicker-calendar-header-month-nav-cursor: pointer;
+      --datepicker-calendar-header-month-nav-border-radius: 20px;
+      --datepicker-calendar-header-month-nav-color: var(--datepicker-color);
+      --datepicker-calendar-header-month-nav-cursor: pointer;
+      --datepicker-calendar-header-month-nav-font-size: var(--datepicker-font-size-large);
+      --datepicker-calendar-header-month-nav-height: 32px;
+      --datepicker-calendar-header-month-nav-margin-left: -8px;
+      --datepicker-calendar-header-month-nav-padding: var(--datepicker-padding-small);
+      --datepicker-calendar-header-month-nav-text-align: center;
+      --datepicker-calendar-header-month-nav-width: 32px;
+
+      --datepicker-calendar-header-month-nav-icon-next-background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACLSURBVHgB7ZTLCYAwEERHbcASUpIlaAd2YDoxlmIX3ixFEwwYQQL5kCWwD94ph5mwywIMUzmLlYRBe1lXENBrT+oSgktwiepLNJ63EWkl3AOltBMCkHh/kEv5F9SCGN8IzKntEYfAdwQb0kYaHO4uoUJBBIdzOAoiKMMNQ47wDvEceA7Zrp3BMLVyA56LVFYQOkngAAAAAElFTkSuQmCC') no-repeat center center;
+      --datepicker-calendar-header-month-nav-icon-next-background-size: 16px 16px;
+      --datepicker-calendar-header-month-nav-icon-next-filter: invert(0);
+      --datepicker-calendar-header-month-nav-icon-next-height: 16px;
+      --datepicker-calendar-header-month-nav-icon-next-margin: auto;
+      --datepicker-calendar-header-month-nav-icon-next-width: 16px;
+
+      --datepicker-calendar-header-month-nav-icon-prev-background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACKSURBVHgB7ZbBDYAgDEW/xgEcgZHcQDYRJ5ER3EhHcAPtAQMHQwIiSNKXvAMH+CUNDQDDVM5kLMJCnsYBmXHDN1IgIxzO4QIZ+Ty8gT9cOuuZ3BHHQa4hGxTszVOpnoJaFMbXAk2OzvpNC+7zojYVewFcBBdRVRE9CqCR4EvWIR4JO5iC5jzD/IoLU/FXPXheCj0AAAAASUVORK5CYII=') no-repeat center center;
+      --datepicker-calendar-header-month-nav-icon-prev-background-size: 16px 16px;
+      --datepicker-calendar-header-month-nav-icon-prev-filter: invert(0);
+      --datepicker-calendar-header-month-nav-icon-prev-height: 16px;
+      --datepicker-calendar-header-month-nav-icon-prev-margin: auto;
+      --datepicker-calendar-header-month-nav-icon-prev-width: 16px;
+      --datepicker-calendar-header-month-nav-display: none;
+
     }
+
 </style>
