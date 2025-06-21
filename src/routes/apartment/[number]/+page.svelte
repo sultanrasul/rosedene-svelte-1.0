@@ -3,7 +3,7 @@
     // @ts-nocheck
 
     export let data;
-    console.log(data, "logging the data");
+    // console.log(data, "logging the data");
     const number = data.number
     const apartmentDetails = data.apartmentDetails
   
@@ -66,7 +66,6 @@
       .map((line) => line.trim())   // Trim leading and trailing whitespaces from each line
       .filter((line) => line !== ""); // Remove empty strings
       
-      console.log("Parsed Description:", details);
       return details;
     }
     
@@ -78,6 +77,7 @@
     let nights = 0;
     let guests = '1';
     let disabledDates = [];
+    let lastDate = "";
 
 
     // if (browser){
@@ -182,9 +182,12 @@
         // Sort dates chronologically
         const sortedData = data.sort((a, b) => a["@Date"].localeCompare(b["@Date"]));
 
-        // Extract original blocked dates
-        const originalBlocked = sortedData
-          .filter(item => item.IsBlocked === "true")
+        const lastDate = sortedData[sortedData.length - 1]["@Date"];
+
+        
+        // Extract original available dates
+        const originalAvailable = sortedData
+          .filter(item => item.IsBlocked === "false")
           .map(item => item["@Date"]);
 
         // Track sequences of available dates
@@ -209,10 +212,9 @@
           .flat();
 
         // Combine and dedupe
-        const finalBlocked = [...new Set([...originalBlocked, ...additionalBlocked])];
-        console.log(finalBlocked)
+        const finalBlocked = [...new Set([...originalAvailable, ...additionalBlocked])];
         
-        return finalBlocked;
+        return {finalBlocked, lastDate};
       } catch (err) {
         console.error('Failed to fetch blocked apartments:', err);
         throw err;
@@ -263,17 +265,20 @@
         if (!apartmentDetails) throw new Error('Invalid apartment number');
 
         // Fetch price and calendar data
-        const [prices, blocked] = await Promise.all([
+        const [prices, blockedData] = await Promise.all([
           fetchApartmentPrice(apartmentDetails.id),
           fetchBlockedApartments(apartmentDetails.id),
         ]);
 
+        const blocked = blockedData["finalBlocked"]
+        lastDate = blockedData["lastDate"]
+
         Prices = prices["Prices"];
-        console.log(prices);
         disabledDates = blocked;
         error = null;
         } catch (err) {
         error = err.message;
+        console.log(err)
         } finally {
         loading = false;
         }
@@ -472,6 +477,7 @@
                   bind:displayPrice={basePrice}
                   bind:basePrice={basePrice}
                   bind:refundable={refundable}
+                  bind:lastDate={lastDate}
 
                 />              
               </div>
@@ -506,6 +512,7 @@
               bind:bookNowLoading={bookNowLoading}
               bind:loading={loading}
               bind:error={error}
+              bind:lastDate={lastDate}
               bookNow={bookNow}
             />
           {/if}

@@ -23,6 +23,7 @@
   export let error;
   export let apartmentDetails;
   export let basePrice;
+  export let lastDate;
   console.log(apartmentDetails)
 
 </script>
@@ -75,6 +76,7 @@
              bind:displayPrice={displayPrice}
              bind:basePrice={basePrice}
              bind:refundable={refundable}
+             bind:lastDate={lastDate}
      
           />
         </div>
