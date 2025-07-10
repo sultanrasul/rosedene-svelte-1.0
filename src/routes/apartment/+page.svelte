@@ -13,8 +13,6 @@
     import { innerWidth, innerHeight } from 'svelte/reactivity/window';
     import { page } from '$app/stores'; // Import the page store to access URL data
     import { Toaster, toast } from 'svelte-sonner'
-
-
     import { apartments } from '../apartments';
     import { CalendarDays ,Info , LogIn, LogOut,Home, Building , BedDouble, Wifi, UtensilsCrossed, Ruler, TvMinimal, User, Moon, Banknote, WashingMachine, Check, Camera, ShowerHead, Monitor, Flower2, ParkingCircle, Users, PersonStanding, CigaretteOff, PawPrint, UserRoundIcon} from "lucide-svelte";
     import { amenities } from "./amenities";
