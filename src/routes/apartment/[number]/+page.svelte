@@ -356,7 +356,9 @@
         nights = stayLength;
 
         // Update price only if it's changed
+
         const newPrice = calculateApartmentPrice(Prices, guests, startDate, endDate);
+        console.log(newPrice,"updating prices based on guests changed and dates changed", newPrice,Prices, guests, startDate, endDate)
         if (newPrice !== basePrice) {
           updatePrice(newPrice);
         }
@@ -381,6 +383,8 @@
     // --- Fallback price update if only guests change (e.g., no dates yet selected) ---
     $: if (Prices && guests && !startDate && !endDate) {
       const newPrice = calculateApartmentPrice(Prices, guests);
+      // updating prices based on guests changed
+    
       if (newPrice !== basePrice) {
         updatePrice(newPrice);
       }
