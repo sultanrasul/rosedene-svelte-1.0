@@ -1,41 +1,52 @@
 // src/utils/calculateApartmentPrice.js
 
 // @ts-ignore
+// This function is used so that when they check the dates it ignores the time
+// @ts-ignore
+function normalizeDate(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+// @ts-ignore
 export function calculateApartmentPrice(prices, guests, dateFrom, dateTo) {
-    let totalPrice = 0;
-  
-    if (prices && prices["Season"]) {
-      if (!Array.isArray(prices["Season"])) {
-        prices["Season"] = [prices["Season"]];
-      }
-  
-      let currentDate = new Date(dateFrom);
-  
-      while (currentDate < new Date(dateTo)) {
-        // @ts-ignore
-        prices["Season"].forEach(season => {
-          const seasonStart = new Date(season["@DateFrom"]);
-          const seasonEnd = new Date(season["@DateTo"]);
-  
-          if (!isNaN(seasonStart.getTime()) && !isNaN(seasonEnd.getTime())) {
-            const price = parseFloat(season.Price) || 0;
-            const extraCharge = parseFloat(season.Extra) || 0;
-  
-            if (seasonStart <= currentDate && currentDate <= seasonEnd) {
-              totalPrice += price;
-              if (guests > 2) {
-                totalPrice += extraCharge * (guests - 2);
-              }
-            }
-          }
-        });
-  
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
+  let totalPrice = 0;
+
+  if (prices && prices["Season"]) {
+    if (!Array.isArray(prices["Season"])) {
+      prices["Season"] = [prices["Season"]];
     }
-  
-    return parseFloat(totalPrice.toFixed(2));
+
+    // @ts-ignore
+    const normalizeDate = date => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+    let currentDate = normalizeDate(new Date(dateFrom));
+    const endDate = normalizeDate(new Date(dateTo));
+
+    while (currentDate < endDate) {
+      // @ts-ignore
+      const matchedSeason = prices["Season"].find(season => {
+        const seasonStart = normalizeDate(new Date(season["@DateFrom"]));
+        const seasonEnd = normalizeDate(new Date(season["@DateTo"]));
+        return seasonStart <= currentDate && currentDate <= seasonEnd;
+      });
+
+      if (matchedSeason) {
+        const price = parseFloat(matchedSeason.Price) || 0;
+        const extraCharge = parseFloat(matchedSeason.Extra) || 0;
+
+        totalPrice += price;
+        if (guests > 2) {
+          totalPrice += extraCharge * (guests - 2);
+        }
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
   }
+
+  return parseFloat(totalPrice.toFixed(2));
+}
+
   
   
   
