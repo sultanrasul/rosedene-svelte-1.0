@@ -51,6 +51,7 @@
 
   export let disabledDates;
   export let lastDate;
+  let diffDays = null;
   let urlInitialized = false;
   
 
@@ -115,6 +116,12 @@
     }
   }
 
+  $: diffDays = startDate ? Math.floor((startDate - today) / MILLISECONDS_IN_DAY) : null;
+
+  $: if (diffDays !== null) {
+    console.log('Reactive diffDays:', diffDays);
+  }
+
 
   onMount(async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -128,6 +135,7 @@
     refundable = urlParams.has('refundable');
     
     childrenAges = urlParams.getAll('ages').map(Number); // Convert to numbers
+    console.log("Children Ages", childrenAges)
 
     if (checkIn && checkOut) {
       // Convert day/month/year string to Date object
@@ -138,6 +146,8 @@
 
       startDate = parseDate(checkIn);
       endDate = parseDate(checkOut);
+      
+      diffDays = Math.floor((startDate - today) / MILLISECONDS_IN_DAY);
 
       // Get the first day of the start month
       const firstDayOfMonth = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
@@ -162,7 +172,7 @@
       console.error('Missing check_in or check_out parameters in URL');
     }
     urlInitialized = true;
-
+    console.log("differnt days",diffDays)
   });
 
 
@@ -209,21 +219,18 @@
   const formatDateDMY = (dateString) =>
       dateString && format(new Date(dateString), dateFormatDMY) || '';
 
-  // Ensure the array length matches the number of children
-  $: {
+  // Adjust childrenAges only after initial URL values are loaded
+  $: if (urlInitialized && typeof window !== 'undefined') {
     if (children > childrenAges.length) {
-      // Add new -1 entries for additional children
       childrenAges = [...childrenAges, ...Array(children - childrenAges.length).fill(-1)];
-      
-      
     } else if (children < childrenAges.length) {
-      // Remove extra entries if children count decreases
       childrenAges = childrenAges.slice(0, children);
     }
   }
 
+
   $: {
-    if (typeof window !== 'undefined' && childrenAges) {
+    if (typeof window !== 'undefined' && childrenAges && urlInitialized) {
       const url = new URL(window.location.href);
       
       // Remove all existing age parameters
@@ -246,6 +253,10 @@
 
   $: formattedStartDateDMY = formatDateDMY(startDate);
   $: formattedEndDateDMY = formatDateDMY(endDate);
+
+  $: if (diffDays < 14) {
+    refundable = false;
+  }
 
   export function flashInputs() {
     const elements = document.querySelectorAll('#flashGuestsInput');
@@ -412,18 +423,17 @@
               <div class="pt-4 space-y-3">
                 <h4 class="text-sm font-medium text-gray-700">Children's Ages</h4>
                 {#key children}
-                  {#each Array(children) as _, index}
+                  {#each childrenAges as age, index (index)}
                     <select
-                    bind:value={childrenAges[index]}
-                    on:change={() => {
-                      // Force array update detection
-                      childrenAges = childrenAges;
-                    }}
+                      bind:value={childrenAges[index]}
+                      on:change={() => {
+                        childrenAges = [...childrenAges]; // force reactivity
+                      }}
                       class="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#C09A5B] focus:border-[#C09A5B]"
                     >
-                    <option value={-1} disabled>Select Age</option>
-                      {#each Array.from({ length: 18 }, (_, i) => i) as age}
-                        <option value={age}>{age} years old</option>
+                      <option value={-1} disabled>Select Age</option>
+                      {#each Array.from({ length: 18 }, (_, i) => i) as ageOption}
+                        <option value={ageOption}>{ageOption} years old</option>
                       {/each}
                     </select>
                   {/each}
@@ -437,17 +447,33 @@
 
     <!-- Refundable Toggle - Improved Version -->
     <BlurFade delay={delayAnimation + 0.3}>
-      <button on:click={() => {refundable=!refundable}} id="flashGuestsInput" class="w-full flex flex-col items-start bg-white border-2 border-gray-300 rounded-lg px-4 py-3 transition-all duration-200 hover:border-[#C09A5B]">
+      <button 
+        on:click={() => { if (diffDays >= 14) refundable = !refundable }} 
+        id="flashGuestsInput" 
+        class="w-full flex flex-col items-start bg-white border-2 rounded-lg px-4 py-3 transition-all duration-200 
+              {diffDays >= 14 ? 'border-gray-300 hover:border-[#C09A5B] cursor-pointer' : 'border-gray-200 cursor-not-allowed'}"
+        disabled={diffDays < 14}
+      >
         <div class="flex justify-between items-center w-full">
           <div class="flex items-center gap-2">
-            <RotateCcw class="text-[#C09A5B]"/>
-            <span class="text-base md:text-[17px] font-medium text-gray-700">Refundable Rate</span>
+            <RotateCcw class={diffDays >= 14 ? 'text-[#C09A5B]' : 'text-gray-400'} />
+            <span class={`text-base md:text-[17px] font-medium ${diffDays >= 14 ? 'text-gray-700' : 'text-gray-400'}`}>
+              Refundable Rate
+              {#if diffDays < 14}
+                <span class="text-xs text-gray-500 block">(Not available)</span>
+              {/if}
+            </span>
           </div>
           
           <label class="relative inline-flex items-center cursor-pointer">
-            <input disabled type="checkbox" class="sr-only peer" bind:checked={refundable} />
-            <div class="w-12 h-6 bg-gray-300 peer-checked:bg-[#C09A5B]/80 rounded-full transition-colors duration-300"></div>
-            <div class="absolute top-1/2 -translate-y-1/2 left-[2px] w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 peer-checked:translate-x-[24px] peer-checked:bg-white flex items-center justify-center">
+            <input 
+              type="checkbox" 
+              class="sr-only peer" 
+              bind:checked={refundable} 
+              disabled
+            />
+            <div class={`w-12 h-6 rounded-full transition-colors duration-300 ${diffDays >= 14 ? 'bg-gray-300 peer-checked:bg-[#C09A5B]/80' : 'bg-gray-200'}`}></div>
+            <div class={`absolute top-1/2 -translate-y-1/2 left-[2px] w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 peer-checked:translate-x-[24px] peer-checked:bg-white flex items-center justify-center ${diffDays < 14 ? 'opacity-70' : ''}`}>
               {#if refundable}
                 <svg class="w-3 h-3 text-[#C09A5B]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
@@ -497,6 +523,17 @@
               {/if}
             {/if}
           </div>
+
+          <!-- Refund eligibility text -->
+          {#if diffDays >= 14}
+            <p class="text-xs text-gray-500 mt-1 text-left">
+              Refundable if canceled 2 weeks before check-in date.
+            </p>
+          {:else}
+            <p class="text-xs text-red-500 mt-2">
+              Refunds are not available for check-ins within 14 days.
+            </p>
+          {/if}
         </div>
       </button>
     </BlurFade>

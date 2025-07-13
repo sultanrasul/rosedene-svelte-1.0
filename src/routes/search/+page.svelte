@@ -151,10 +151,10 @@
             {:else if !error && !loading}
                 <!-- Once loading is false, show apartments -->
                 {#if apartments && apartments["properties"]["available"].length > 0}
-                    {#each apartments["properties"]["available"] as apartment}
-                        <a
+                {#each apartments["properties"]["available"] as apartment}
+                <a
+                    href={`/apartment/${apartment.name.match(/\d+/)?.[0]}?check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}&${childrenAges.map(age => `ages=${age}`).join('&')}`}
                             class="block"
-                            href={`/apartment/${apartment.name.match(/\d+/)?.[0]}?check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}&${childrenAges.map(age => `ages=${age}`).join('&')}`}
                         >
                             <Card
                                 nights={nights}

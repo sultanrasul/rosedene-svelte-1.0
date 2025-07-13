@@ -65,9 +65,7 @@
                     <!-- Description -->
                      <BoxReveal boxColor={"#C09A5B"} duration={0.5}>
                          <p class="text-lg text-white/80 leading-relaxed max-w-2xl">
-                             Where misty lochs meet ancient castles. Cruise Loch Ness' mysterious waters, 
-                             wander through 14th-century ruins, and savor world-class whisky as the 
-                             Highland breeze whispers tales of Norse kings and mythical creatures.
+                            Where misty lochs meet ancient castles. Cruise Loch Ness' mysterious waters, wander through 14th-century ruins, and let the Highland breeze whisper tales of Norse kings and mythical creatures.
                          </p>
                      </BoxReveal>
                 </div>
