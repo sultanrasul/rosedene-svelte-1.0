@@ -420,7 +420,7 @@
                                     <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} nights={nights} totalPrice={bookingData?.ClientPrice} priceBreakDown={bookingData?.breakdown}/>
                                 </div>
                                 
-                                <TripInformation refundable={bookingData?.refundable} bookingReference={bookingData?.ReservationID} startDate={bookingData.DateFrom} endDate={bookingData.DateTo} adults={bookingData?.GuestDetailsInfo?.NumberOfAdults} children={bookingData?.GuestDetailsInfo?.NumberOfChildren} childrenAges={bookingData?.GuestDetailsInfo?.ChildrenAges?.Age}/>
+                                <TripInformation diffDays={bookingData?.diffDays} refundable={bookingData?.refundable} bookingReference={bookingData?.ReservationID} startDate={bookingData.DateFrom} endDate={bookingData.DateTo} adults={bookingData?.GuestDetailsInfo?.NumberOfAdults} children={bookingData?.GuestDetailsInfo?.NumberOfChildren} childrenAges={bookingData?.GuestDetailsInfo?.ChildrenAges?.Age}/>
                                 
                                 
                             {/if}

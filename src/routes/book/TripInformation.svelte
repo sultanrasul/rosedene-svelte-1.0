@@ -17,6 +17,7 @@
     export let childrenAges = [];
     
     export let bookingReference;
+    export let diffDays;
 
     async function copyButton() {
         try {
@@ -84,44 +85,56 @@
 
 <!-- Refundable Rate -->
 <div class="mt-4 mb-4 flex items-center gap-3 p-4 border rounded-lg shadow-sm"
-    class:border-green-300={refundable}
-    class:border-red-300={!refundable}
-    class:bg-green-50={refundable}
-    class:bg-red-50={!refundable}>
+    class:border-green-300={refundable && (diffDays === undefined || diffDays >= 13)}
+    class:bg-green-50={refundable && (diffDays === undefined || diffDays >= 13)}
     
+    class:border-red-300={!refundable || (refundable && diffDays !== undefined && diffDays < 13)}
+    class:bg-red-50={!refundable || (refundable && diffDays !== undefined && diffDays < 13)}>
+
     <div class="p-2 rounded-full"
-            class:bg-green-200={refundable}
-            class:bg-red-200={!refundable}>
+        class:bg-green-200={refundable && (diffDays === undefined || diffDays >= 13)}
+        class:bg-red-200={!refundable || (refundable && diffDays !== undefined && diffDays < 13)}>
         <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        class:text-green-700={refundable}
-        class:text-red-700={!refundable}>
-        {#if refundable}
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M5 13l4 4L19 7" />
-        {:else}
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M6 18L18 6M6 6l12 12" />
-        {/if}
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            class:text-green-700={refundable && (diffDays === undefined || diffDays >= 13)}
+            class:text-red-700={!refundable || (refundable && diffDays !== undefined && diffDays < 13)}>
+            {#if refundable}
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d={diffDays === undefined || diffDays >= 13 ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"} />
+            {:else}
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12" />
+            {/if}
         </svg>
     </div>
 
     <div>
         <p class="text-sm font-medium text-gray-700">
-        {refundable ? "Refundable Booking" : "Non-Refundable Booking"}
+            {#if !refundable}
+                Non-Refundable Booking
+            {:else if diffDays !== undefined && diffDays < 13}
+                Refundable Booking — But the Refund Window Has Passed
+            {:else}
+                Refundable Booking
+            {/if}
         </p>
         <p class="text-xs text-gray-500 mt-1">
-            
-            {refundable
-            ? "You are eligible for a refund if canceled 2 weeks before your check-in date."
-            : "This booking cannot be refunded after cancellation."}
+            {#if !refundable}
+                This booking cannot be refunded after cancellation.
+            {:else if diffDays !== undefined && diffDays < 13}
+                This booking was refundable, but the 14-day cancellation window has expired.
+            {:else}
+                You are eligible for a refund if canceled at least 14 days before your check-in date.
+            {/if}
         </p>
     </div>
 </div>
+
+
 
 
 <!-- Guest Details they picked from page before -->
