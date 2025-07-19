@@ -27,14 +27,8 @@
     let email = '';
     let phone = '';
     // @ts-ignore
+
     // @ts-ignore
-    let cardNumber = '';
-    // @ts-ignore
-    // @ts-ignore
-    let expiry = '';
-    // @ts-ignore
-    // @ts-ignore
-    let cvc = '';
     let specialRequests = '';
     let bookingReference;
     let returnedEmail;
@@ -322,11 +316,8 @@
 
         } catch (err) {
         // @ts-ignore
-            if (err.status){
-                error = "This apartment is not available for these dates! Please Refresh the page or select other dates.";
-            } else {
-                error = err.message;
-            }
+            error = err.message;
+            
 
             console.error('Payment error:', err);
         } finally {
@@ -363,7 +354,7 @@
                 elements,
                 confirmParams: {
                     payment_method_data: {
-                    billing_details: { name, email, phone },
+                        billing_details: { name, email, phone },
                     },
                 },
                 redirect: "if_required",

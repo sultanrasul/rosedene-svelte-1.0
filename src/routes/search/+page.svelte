@@ -1,6 +1,6 @@
 <script lang="ts">
     // @ts-nocheck
-    import { Home, Building, House, InfoIcon } from "lucide-svelte";
+    import { Home, Building, House, InfoIcon, FastForward } from "lucide-svelte";
     import { onMount } from 'svelte';
     import Navbar from '../Navbar.svelte';
     import Card from './Card.svelte';
@@ -16,6 +16,101 @@
     let error = null;
     let formattedStartDateDMY, formattedEndDateDMY;
     let adults, children, guests, childrenAges = [];
+
+        // Add these new variables
+    let sortOption = 'default';
+    let sortedApartments = [];
+    
+    // Function to sort apartments
+    function sortApartments() {
+        console.log('Running sortApartments() with option:', sortOption);
+        
+        if (!apartments) {
+            console.warn('No apartments data available');
+            return;
+        }
+        
+        console.log('Original apartments data:', apartments);
+        
+        // Combine available and blocked apartments
+        const combined = [
+            ...apartments["properties"]["available"].map(a => ({ ...a, status: 'available' })),
+            ...apartments["properties"]["blocked"].map(a => ({ ...a, status: 'blocked' }))
+        ];
+        
+        console.log('Combined apartments before sorting:', combined);
+        
+        let result;
+        switch(sortOption) {
+            case 'price_asc':
+                result = [...combined].sort((a, b) => {
+                    const priceA = calculateApartmentPrice(a.Prices);
+                    const priceB = calculateApartmentPrice(b.Prices);
+                    console.log(`Comparing ${a.name} ($${priceA}) vs ${b.name} ($${priceB})`);
+                    return priceA - priceB;
+                });
+                break;
+                
+            case 'price_desc':
+                result = [...combined].sort((a, b) => {
+                    const priceA = calculateApartmentPrice(a.Prices);
+                    const priceB = calculateApartmentPrice(b.Prices);
+                    console.log(`Comparing ${a.name} ($${priceA}) vs ${b.name} ($${priceB})`);
+                    return priceB - priceA;
+                });
+                break;
+                
+            case 'apartment_asc':
+                result = [...combined].sort((a, b) => {
+                    const numA = parseInt(a.name.match(/\d+/)?.[0]);
+                    const numB = parseInt(b.name.match(/\d+/)?.[0]);
+                    console.log(`Comparing ${a.name} (#${numA}) vs ${b.name} (#${numB})`);
+                    return numA - numB;
+                });
+                break;
+                
+            case 'apartment_desc':
+                result = [...combined].sort((a, b) => {
+                    const numA = parseInt(a.name.match(/\d+/)?.[0]);
+                    const numB = parseInt(b.name.match(/\d+/)?.[0]);
+                    console.log(`Comparing ${a.name} (#${numA}) vs ${b.name} (#${numB})`);
+                    return numB - numA;
+                });
+                break;
+                
+            default: // Default sort (available first, then by apartment number)
+                result = [...combined].sort((a, b) => {
+                    // Available first
+                    if (a.status === 'available' && b.status !== 'available') return -1;
+                    if (b.status === 'available' && a.status !== 'available') return 1;
+                    
+                    // Then by apartment number
+                    const numA = parseInt(a.name.match(/\d+/)?.[0]);
+                    const numB = parseInt(b.name.match(/\d+/)?.[0]);
+                    console.log(`Default sort comparing ${a.name} (#${numA}) vs ${b.name} (#${numB})`);
+                    return numA - numB;
+                });
+        }
+        
+        console.log('Sorted result:', result);
+        sortedApartments = result;
+    }
+    
+    // React to sort option changes
+    $: {
+        console.log('Reactive statement triggered - sortOption:', sortOption, 'apartments:', apartments);
+        if (apartments) {
+            sortApartments();
+        }
+    }
+    
+    // React to initial apartment load
+    $: {
+        console.log('Initial load check - apartments:', apartments, 'sortedApartments:', sortedApartments);
+        if (apartments && !sortedApartments.length) {
+            sortApartments();
+        }
+    }
 
     onMount(async () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -125,11 +220,43 @@
 <!-- Main Menu -->
 <div class="relative bg-primary-100 dark:bg-[#233441]" id="Home">
     <Navbar/>   
-    <DatePicker isSearch startDate={startDate} endDate={endDate} children={children} adults={adults} childrenAges={childrenAges}/>
+    <div class="relative z-20 px-4 sm:px-6 w-full max-w-screen-xl mx-auto">
+        <DatePicker isSearch startDate={startDate} endDate={endDate} children={children} adults={adults} childrenAges={childrenAges}/>
+    </div>
 
     
     <!-- <BlurFade delay={0.3}> -->
-        <div class="min-h-screen relative z-10 pb-20 pl-5 pr-5">
+    <div class="min-h-screen relative z-10 pb-20 pl-5 pr-5">
+
+        {#if apartments && !loading && !error}
+        <div class="max-w-7xl mx-auto mb-6 mt-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                        Our Apartments
+                    </h1>
+                    <p class="text-gray-600 dark:text-gray-300 mt-1">
+                        {apartments["properties"]["available"].length} available • 
+                        {apartments["properties"]["blocked"].length} booked
+                    </p>
+                </div>
+                
+                <div class="flex gap-3 items-center">
+                    <span class="text-gray-700 dark:text-gray-300 text-sm hidden sm:block">Sort by:</span>
+                    <select 
+                        bind:value={sortOption}
+                        class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C09A5B]"
+                    >
+                        <option value="default">Default (Availability)</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                        <option value="apartment_asc">Apartment: 1-4</option>
+                        <option value="apartment_desc">Apartment: 4-1</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        {/if}
         <!-- </BlurFade> -->
 
         <div class="flex flex-wrap justify-center gap-4 pt-10">
@@ -150,13 +277,15 @@
                 </div>
             {:else if !error && !loading}
                 <!-- Once loading is false, show apartments -->
-                {#if apartments && apartments["properties"]["available"].length > 0}
-                {#each apartments["properties"]["available"] as apartment}
-                <a
-                    href={`/apartment/${apartment.name.match(/\d+/)?.[0]}?check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}&${childrenAges.map(age => `ages=${age}`).join('&')}`}
-                            class="block"
+                    {#each sortedApartments as apartment}
+                        <a
+                            href={apartment.status === 'available' 
+                                ? `/apartment/${apartment.name.match(/\d+/)?.[0]}?check_in=${formattedStartDateDMY}&check_out=${formattedEndDateDMY}&adults=${adults}&children=${children}&${childrenAges.map(age => `ages=${age}`).join('&')}`
+                                : `/apartment/${apartment.name.match(/\d+/)?.[0]}?adults=${adults}&children=${children}&${childrenAges.map(age => `ages=${age}`).join('&')}`}
+                            class="block transform transition-transform hover:-translate-y-1"
                         >
                             <Card
+                                available={apartment.status === 'available'}
                                 nights={nights}
                                 price={calculateApartmentPrice(apartment.Prices)}
                                 apartmentName={apartment.name}
@@ -164,19 +293,24 @@
                             />
                         </a>
                     {/each}
-                {:else}
-                    <!-- If no apartments are available -->
-                    <div class="flex flex-col items-center text-center max-w-xl mx-auto">
-                        <Home size="100px" class="text-[#BF9A5B]"/>
-                        <h1 class="text-2xl font-bold mb-4 mt-4">No Apartments Available</h1>
-                        <p class="text-base-content/70 mb-8">
-                            We couldn't find any apartments matching your dates and guests.
-                        </p>                            
-                    </div>
-                {/if}
             {/if}
 
         </div>
+
+        <!-- Availability Note -->
+        {#if apartments && apartments["properties"]["blocked"].length > 0}
+            <div class="max-w-7xl mx-auto mt-10 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 text-gray-500 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Some apartments appear as "Booked" because they're not available for your selected dates.
+                        You can still view their details and check availability for other dates.
+                    </p>
+                </div>
+            </div>
+        {/if}
 
     </div>
     <Footer/>

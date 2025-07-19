@@ -188,7 +188,7 @@ function disableNextMonthButton(disabled) {
 
 </script>
   
-  <div class="min-w-[350px] flex items-center justify-center py-6 relative z-50">
+  <div class=" flex items-center justify-center py-6 relative z-50">
     <BlurFade class="flex flex-col md:flex-row items-center gap-2 md:gap-4 px-5 py-3 md:px-6 bg-white rounded-2xl md:rounded-full shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100 relative w-full md:w-auto">
         <!-- Date Input -->
         <div class=" w-full md:w-auto group">

@@ -1,37 +1,48 @@
 <script>
 // @ts-nocheck
-
     // @ts-ignore
     import { BedDouble, Wifi, UtensilsCrossed, Ruler, TvMinimal, User } from "lucide-svelte";
     import { apartments } from '../apartments.js';
 
     export let apartmentNumber;
     export let apartmentName;
-    export let price; // Default price
+    export let price;
     export let nights;
+    export let available;
 
     // @ts-ignore
     const apartmentDetails = apartments[apartmentNumber];
 </script>
 
-<div class="flex flex-col cursor-pointer max-w-sm bg-gray-800  rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden dark:bg-white ">
+<div class="flex flex-col cursor-pointer max-w-sm bg-gray-800 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden dark:bg-white relative">
+    <!-- Booked Badge -->
+    {#if !available}
+        <div class="absolute top-4 right-4 z-10 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full tracking-wide shadow-lg">
+            BOOKED
+        </div>
+    {/if}
+
     <!-- Image Section -->
     <div class="relative overflow-hidden">
-        <img class="w-full object-cover hover:scale-105 transition-transform duration-300" src={`/${apartmentNumber}.jpg`} alt={apartmentName}/>
+        <img 
+            class="w-full object-cover hover:scale-105 transition-transform duration-300 {!available ? 'opacity-80 saturate-50' : ''}" 
+            src={`/${apartmentNumber}.jpg`} 
+            alt={apartmentName}
+        />
     </div>
 
     <!-- Content Section -->
     <div class="flex-1 text-2xl flex flex-col p-6">
         <!-- Apartment Name -->
-        <h3 class="mb-4  font-bold text-[#C09A5B] ">{apartmentName}</h3>
-
-        <!-- Apartment Description -->
-        <!-- <p class="mb-4 text-gray-300 dark:text-gray-600 text-base leading-relaxed">
-            Located in Nakagyo Ward, this hotel is known for its helpful staff, great location, and additional amenities like a bath and laundry.
-        </p> -->
+        <h3 class="mb-4 font-bold text-[#C09A5B] {!available ? 'opacity-90' : ''}">
+            {apartmentName}
+            <!-- {#if !available}
+                <span class="ml-2 text-sm text-red-400 align-middle">(Not Available)</span>
+            {/if} -->
+        </h3>
 
         <!-- Features Section -->
-        <div class="flex flex-wrap gap-2 mt-auto mb-5">
+        <div class="flex flex-wrap gap-2 mt-auto mb-5 {!available ? 'opacity-90' : ''}">
             {#each [
                 { icon: User, text: `${apartmentDetails['maxGuests']} Max Guests` },
                 { icon: TvMinimal, text: `${apartmentDetails['tvSize']}" TV` },
@@ -55,12 +66,17 @@
 
         <!-- Price Section -->
         <div class="flex items-center justify-between pt-4 border-t border-gray-700 dark:border-gray-100">
-            <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-bold text-[#C09A5B]">£{price}</span>
+            <div class="flex items-baseline gap-2 {price === 0 ? 'opacity-0' : (!available ? 'opacity-90' : '')}">
+                <span class="text-3xl font-bold {!available ? 'text-gray-500 line-through' : 'text-[#C09A5B]'}">£{price}</span>
                 <span class="text-gray-400 dark:text-gray-500 text-sm">/{nights} nights</span>
             </div>
-            <button class="px-4 py-2 text-sm font-semibold text-white bg-[#C09A5B] rounded-lg hover:bg-[#B08A4F] transition-colors duration-200">
-                View Details
+            <button 
+                class="px-4 py-2 text-sm font-semibold rounded-lg transition-colors duration-200
+                    {available 
+                        ? 'text-white bg-[#C09A5B] hover:bg-[#B08A4F]' 
+                        : 'text-gray-300 bg-gray-700 border border-gray-600'}"
+            >
+                    View Details
             </button>
         </div>
     </div>

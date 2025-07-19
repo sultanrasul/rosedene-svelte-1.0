@@ -49,8 +49,8 @@
               <img src="/Logo.svg" class="max-w-lg w-full" alt="">
             </div>
           </BlurFade>
-          <div class="pl-5 pr-5 w-full  justify-center text-center flex">
-            <BlurFade delay={0.3}>
+          <div class=" w-full  justify-center text-center flex">
+            <BlurFade delay={0.3} class="min-w-[320px]">
               <DatePicker/>
             </BlurFade>
           </div>
