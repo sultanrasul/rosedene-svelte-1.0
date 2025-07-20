@@ -220,9 +220,11 @@
 <!-- Main Menu -->
 <div class="relative bg-primary-100 dark:bg-[#233441]" id="Home">
     <Navbar/>   
-    <div class="relative z-20 px-4 sm:px-6 w-full max-w-screen-xl mx-auto">
-        <DatePicker isSearch startDate={startDate} endDate={endDate} children={children} adults={adults} childrenAges={childrenAges}/>
-    </div>
+    <div class="w-full  justify-center text-center flex pt-10">
+        <div>
+            <DatePicker isSearch startDate={startDate} endDate={endDate} children={children} adults={adults} childrenAges={childrenAges}/>
+        </div>
+     </div>
 
     
     <!-- <BlurFade delay={0.3}> -->

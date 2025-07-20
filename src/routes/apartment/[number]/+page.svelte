@@ -181,19 +181,17 @@
 
         // Sort dates chronologically
         const sortedData = data.sort((a, b) => a["@Date"].localeCompare(b["@Date"]));
-
         const lastDate = sortedData[sortedData.length - 1]["@Date"];
 
-        
-        // Extract original available dates
+        // Extract all dates marked available
         const originalAvailable = sortedData
           .filter(item => item.IsBlocked === "false")
           .map(item => item["@Date"]);
 
-        // Track sequences of available dates
+        // Find sequences of consecutive available dates
         let currentSequence = [];
         const availableSequences = [];
-        
+
         for (const item of sortedData) {
           if (item.IsBlocked === "false") {
             currentSequence.push(item["@Date"]);
@@ -204,17 +202,16 @@
             }
           }
         }
-        if (currentSequence.length) availableSequences.push(currentSequence);
+        if (currentSequence.length) {
+          availableSequences.push(currentSequence);
+        }
 
-        // Block short sequences (length < 3)
-        const additionalBlocked = availableSequences
-          .filter(seq => seq.length < 3)
+        // Only keep dates that are in sequences >= 3 (i.e. 2-night stay minimum)
+        const validAvailable = availableSequences
+          .filter(seq => seq.length >= 3)
           .flat();
 
-        // Combine and dedupe
-        const finalBlocked = [...new Set([...originalAvailable, ...additionalBlocked])];
-        
-        return {finalBlocked, lastDate};
+        return { finalBlocked: validAvailable, lastDate };
       } catch (err) {
         console.error('Failed to fetch blocked apartments:', err);
         throw err;

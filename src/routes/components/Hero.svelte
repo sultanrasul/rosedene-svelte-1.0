@@ -31,7 +31,7 @@
 </script>
   
 
-<div class="relative overflow-hidden bg-[#233441] {dynamicHeight}">  
+<div class="relative bg-[#233441] {dynamicHeight}">  
   <!-- Image Container -->
   <div class="absolute inset-0  filter brightness-50"
   style="background-image: url('background.png'); 

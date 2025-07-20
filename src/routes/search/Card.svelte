@@ -25,7 +25,7 @@
     <!-- Image Section -->
     <div class="relative overflow-hidden">
         <img 
-            class="w-full object-cover hover:scale-105 transition-transform duration-300 {!available ? 'opacity-80 saturate-50' : ''}" 
+            class="w-full object-cover transition-transform duration-300 {!available ? 'opacity-80 saturate-50' : ''}" 
             src={`/${apartmentNumber}.jpg`} 
             alt={apartmentName}
         />

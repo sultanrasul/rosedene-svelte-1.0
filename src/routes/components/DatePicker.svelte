@@ -188,7 +188,7 @@ function disableNextMonthButton(disabled) {
 
 </script>
   
-  <div class=" flex items-center justify-center py-6 relative z-50">
+  <div class=" flex items-center justify-center py-6 relative z-[150]">
     <BlurFade class="flex flex-col md:flex-row items-center gap-2 md:gap-4 px-5 py-3 md:px-6 bg-white rounded-2xl md:rounded-full shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100 relative w-full md:w-auto">
         <!-- Date Input -->
         <div class=" w-full md:w-auto group">
@@ -236,14 +236,14 @@ function disableNextMonthButton(disabled) {
     
           <!-- Enhanced Dropdown Menu -->
           <div id="dropdownDefaultCheckbox"
-          class={`text-black min-w-[240px] hidden z-50 absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white border-2 border-gray-200 rounded-lg shadow-xl`}
+          class={`text-black min-w-[240px] hidden z-[150] absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white border-2 border-gray-200 rounded-lg shadow-xl`}
         >
           <div class="p-4 space-y-4">
             <!-- Adults -->
             <div class="flex justify-between items-center">
               <div>
                 <span class="block text-sm font-medium text-gray-700 mb-1">Adults</span>
-                <p class="text-xs text-gray-400">Ages 13+</p>
+                <p class="text-xs text-gray-400">Ages 18+</p>
               </div>
               <div class="flex items-center gap-3">
                 <button 
@@ -267,7 +267,7 @@ function disableNextMonthButton(disabled) {
             <div class="flex justify-between items-center">
               <div>
                 <span class="block text-sm font-medium text-gray-700 mb-1">Children</span>
-                <p class="text-xs text-gray-400">Ages 2-12</p>
+                <p class="text-xs text-gray-400">Ages 0-17</p>
               </div>
               <div class="flex items-center gap-3">
                 <button 
@@ -334,7 +334,7 @@ function disableNextMonthButton(disabled) {
 
     </BlurFade>
   </div>
-  <div class="w-full justify-center flex" bind:this={datepickerElementDesktop}>
+  <div class="w-full justify-center  left-[-27%]" bind:this={datepickerElementDesktop}>
   {#if screenWidth > 767}
       <DatePicker onNavigationChange={handleNavigationChange} theme={"homepage-datepicker"} bind:isOpen={isOpenDesktop} bind:startDate bind:endDate isRange isMultipane showYearControls={false} enableFutureDates enablePastDates={false}/>
       {/if}
@@ -351,7 +351,7 @@ function disableNextMonthButton(disabled) {
         --datepicker-container-background: #fff;
         --datepicker-container-box-shadow: 0 1px 20px rgba(0, 0, 0, 0.1);
         --datepicker-calendar-range-selected-background: #C09A5B;
-        --datepicker-container-position: relative;
+        --datepicker-container-position: absolute;
 
         --datepicker-calendar-day-color-disabled: rgba(255, 0, 43, 0.5);
         --datepicker-container-top: auto;
