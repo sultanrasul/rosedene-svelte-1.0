@@ -58,7 +58,7 @@
   
   <!-- Gradient Overlay (Smooth Transition Effect) -->
 
-  <div class="relative flex flex-col max-[498px]:items-center sm:flex-row sm:justify-between items-center mb-4 z-50 gap-4 max-[498px]:gap-2">
+  <div class="relative flex flex-col max-[498px]:items-center sm:flex-row sm:justify-between items-center mb-4 gap-4 max-[498px]:gap-2">
     <GradualSpacing
       class="text-4xl max-[400px]:text-3xl max-[330px]:text-2xl font-bold text-[#C09A5B] text-center max-[498px]:order-1"
       words="View All 10 Apartments"
