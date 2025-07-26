@@ -50,6 +50,7 @@
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <li><a data-hs-overlay="#hs-sidebar-offcanvas" href="/" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">View Our Apartments</a></li>
         <li><a data-hs-overlay="#hs-sidebar-offcanvas" href="/aparthotel" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">What is an aparthotel?</a></li>
+        <li><a data-hs-overlay="#hs-sidebar-offcanvas" href="/gallery" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Gallery</a></li>
         <li><a data-hs-overlay="#hs-sidebar-offcanvas" href="/reviews" class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">Reviews </a></li>
         <!-- <li><a on:click={() => { window.location.href = "/"; }} class="block p-2 text-gray-700 hover:bg-[#C09A5B]/60 rounded">About Us</a></li> -->
         <!-- <li><a href="#" class="block p-2 text-gray-700 hover:bg-[#tygyC09A5B]/60 rounded">Press & Media</a></li> -->
