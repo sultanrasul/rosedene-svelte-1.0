@@ -34,7 +34,7 @@
 <div class="relative bg-[#233441] {dynamicHeight}">  
   <!-- Image Container -->
   <div class="absolute inset-0  filter brightness-50"
-  style="background-image: url('background.png'); 
+  style="background-image: url('background-test.png'); 
   background-size: cover; 
   background-position: center;
   background-repeat: no-repeat;">

@@ -47,7 +47,7 @@
     import Footer from "../../Footer.svelte";
     import { calculateApartmentPrice, calculateRefundableRate } from "../../calculateApartmentPrice";
   import { browser } from "$app/environment";
-  import SlideshowModal from "../components/information/SlideshowModal.svelte";
+  import SlideshowModal from "../components/desktop/SlideshowModal.svelte";
   import { base } from "$app/paths";
   
   
