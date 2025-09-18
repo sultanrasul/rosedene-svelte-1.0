@@ -50,6 +50,7 @@
 		"@preline/carousel": "^2.5.2",
 		"@preline/overlay": "^3.0.0",
 		"@stripe/stripe-js": "^6.1.0",
+		"@supabase/supabase-js": "^2.57.4",
 		"@svelte-plugins/datepicker": "^1.0.9",
 		"@sveltejs/adapter-static": "^3.0.8",
 		"add": "^2.0.6",

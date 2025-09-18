@@ -36,7 +36,7 @@
             <div class="mt-3 grid space-y-3 text-sm">
               <p><a href = "/contact" class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">Contact Us</a></p>
               <p><a href = "/details" class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">Manage Booking</a></p>
-              <p><a href = "/faq" class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">FAQ</a></p>
+              <!-- <p><a href = "/faq" class="cursor-pointer inline-flex gap-x-2 text-[#C09A5B]/80 hover:text-[#C09A5B] focus:outline-hidden focus:text-[#C09A5B] transition-colors">FAQ</a></p> -->
             </div>
           </div>
           <!-- End Col -->
