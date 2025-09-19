@@ -13,6 +13,7 @@
     import Reviews from './components/Reviews.svelte';
     import Footer from './Footer.svelte';
     import Amenities from './components/Amenities.svelte';
+    import { supabase } from '@/supabase';
 
 
     
@@ -24,6 +25,14 @@
         const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({ top: y, behavior: 'smooth' });
     }
+    
+    onMount(async () => {
+        const { data, error } = await supabase.functions.invoke('hyper-worker', {
+            body: { name: 'Functions' },
+        })
+
+        console.log(data);
+    });
 
     // export const prerender = true;
 </script>
@@ -42,18 +51,14 @@
         <div class="max-w-[85rem] px-4 py-1.5 sm:px-6 lg:px-8 sm:py-2 mx-auto relative"> <!-- Reduced vertical padding -->
             <div class="flex items-center gap-2 sm:gap-3 h-6 sm:h-8"> <!-- Fixed height matching helix -->
                 <!-- Animated decoration -->
-                <div class="relative flex-shrink-0 top-[1px]"> <!-- Fine-tuned vertical alignment -->
-                    <div class="animate-helix-spin w-6 h-6 sm:w-8 sm:h-8 border-2 border-[#C09A5B]/50 rounded-full">
-                        <div class="absolute w-1 h-3 sm:h-4 bg-[#C09A5B] left-1/2 -translate-x-1/2 top-0 rounded-full"></div>
-                        <div class="absolute w-1 h-3 sm:h-4 bg-[#C09A5B]/80 left-1/2 -translate-x-1/2 bottom-0 rounded-full"></div>
-                    </div>
+                <div class="relative flex-shrink-0 top-[1px]">
+                    <img src = "favicon.svg" alt="R" width="25"/>
                 </div>
 
                 <!-- Text Content -->
                 <div class="flex-1 min-w-0">
-                    <p class="text-[11px] sm:text-xs font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#C09A5B] via-[#D4B67E] to-[#C09A5B] leading-tight"> <!-- Smaller text size -->
-                        <span class="font-bold tracking-wide uppercase">This website is currently under development</span>
-                        <span class="opacity-90">Crafting your perfect digital journey</span>
+                    <p class="text-xs font-medium text-transparent bg-clip-text bg-gradient-to-r text-white leading-tight"> <!-- Smaller text size -->
+                        <span class="text-[13px]">10% off every time you book! <a class=" normal-case underline underline-offset-4" href="login">Save Now</a></span>
                     </p>
                 </div>
 
@@ -71,41 +76,6 @@
             </div>
         </div>
     </div>
-
-    <style>
-        /* Entrance animation */
-        #dev-banner {
-            animation: hologram-rise 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-
-        @keyframes hologram-rise {
-            0% {
-                transform: translateY(100%) skewY(2deg);
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(0) skewY(0);
-                opacity: 1;
-            }
-        }
-
-        /* Grid pulse */
-        @keyframes grid-pulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.15; }
-        }
-        .animate-grid-pulse {
-            animation: grid-pulse 3s ease-in-out infinite;
-        }
-
-        /* Helix spin */
-        @keyframes helix-spin {
-            to { transform: rotate(360deg); }
-        }
-        .animate-helix-spin {
-            animation: helix-spin 8s linear infinite;
-        }
-    </style>
 </div>
 
 <!-- Main Menu -->

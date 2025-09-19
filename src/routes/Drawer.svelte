@@ -3,6 +3,7 @@
   
   import { onDestroy } from "svelte";
   import { supabase } from '@/supabase';
+  import { UserRoundIcon } from "lucide-svelte";
   let currentUser;
   const unsubscribe = user.subscribe(u => currentUser = u);
   onDestroy(unsubscribe);
@@ -42,13 +43,18 @@
       <!-- Login Button -->
       {#if currentUser}
         <div class="hs-dropdown relative inline-flex [--placement:top-right]">
-          <div id="hs-dropdown-with-header" class="bg-[#233441] rounded-full p-[2px] shadow-lg">
-            <a href="#" id="hs-dropdown-with-header"
-              class="h-[32px] bg-[#C09A5B]/50 inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white border border-[#C09A5B]/80 rounded-full hover:bg-[#C09A5B]/70 transition-all duration-300  focus:outline-none focus:ring-2 focus:ring-[#C09A5B] focus:ring-opacity-50">
-              
-                {currentUser["user_metadata"]["full_name"]}
-    
-            </a>
+
+          <div class="relative">
+            <button
+              id="hs-dropdown-with-header"
+              class="flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-white/20 hover:shadow-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-[#C09A5B] focus:ring-opacity-50"
+            >
+              <UserRoundIcon class="w-5 h-5 text-[#C09A5B]" />
+              <span class="capitalize hidden sm:block">{currentUser["user_metadata"]["first_name"] ? currentUser["user_metadata"]["first_name"]: currentUser["user_metadata"]["name"]}</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
           </div>
 
           <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg mt-2" role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-with-header">
@@ -90,17 +96,16 @@
 
       {:else}
 
-        <div class="bg-[#233441] rounded-full p-[2px] shadow-lg">
-          <a href="/login" 
-            class="h-[32px] bg-[#C09A5B]/50 inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white border border-[#C09A5B]/80 rounded-full hover:bg-[#C09A5B]/70 transition-all duration-300  focus:outline-none focus:ring-2 focus:ring-[#C09A5B] focus:ring-opacity-50">
-            
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-              </svg>
-              Login
-  
-          </a>
-        </div>
+        <div class="relative cursor-pointer">
+            <a
+              href="/login"
+              id="hs-dropdown-with-header"
+              class="flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-white/20 hover:shadow-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-[#C09A5B] focus:ring-opacity-50"
+            >
+                  <UserRoundIcon class="w-5 h-5 text-[#C09A5B]" />
+                  <span class="hidden sm:block">Login</span>
+            </a>
+          </div>
        {/if}
       
       <button type="button" 
