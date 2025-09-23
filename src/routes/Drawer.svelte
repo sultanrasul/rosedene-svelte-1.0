@@ -4,6 +4,7 @@
   import { onDestroy } from "svelte";
   import { supabase } from '@/supabase';
   import { UserRoundIcon } from "lucide-svelte";
+  
   let currentUser;
   const unsubscribe = user.subscribe(u => currentUser = u);
   onDestroy(unsubscribe);

@@ -20,14 +20,41 @@
     import TripInformation from "./TripInformation.svelte";
     import ChevronRight from "@lucide/svelte/icons/chevron-right";
     import { calculateApartmentPrice } from "../calculateApartmentPrice";
+    import { user } from "@/stores/user";
+    import { onDestroy } from "svelte";
 
+    
     // Initialize variables
     // @ts-ignore
     let name = '';
     let email = '';
     let phone = '';
     // @ts-ignore
+    
+    let currentUser;
+    const unsubscribe = user.subscribe(u => {
+        currentUser = u;
 
+        if (currentUser) {
+            // Always set email
+            email = currentUser.email ?? '';
+
+            // Build name
+            const meta = currentUser.user_metadata || {};
+            if (meta.first_name) {
+                name = `${meta.first_name} ${meta.last_name ?? ''}`.trim();
+            } else {
+                name = meta.name ?? '';
+            }
+        } else {
+            // Reset if logged out
+            name = '';
+            email = '';
+            phone = '';
+        }
+    });
+    onDestroy(unsubscribe);
+    
     // @ts-ignore
     let specialRequests = '';
     let bookingReference;
@@ -262,7 +289,8 @@
                     special_requests: specialRequests,
                     name: name,
                     email: email,
-                    phone: phone
+                    phone: phone,
+                    user_id: currentUser?.id
                 }),
             });
 

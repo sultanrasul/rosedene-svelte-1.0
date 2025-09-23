@@ -14,6 +14,10 @@
     import Footer from './Footer.svelte';
     import Amenities from './components/Amenities.svelte';
     import { supabase } from '@/supabase';
+    import { user } from "@/stores/user";
+    import { onDestroy } from 'svelte';
+
+
 
 
     
@@ -25,14 +29,7 @@
         const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({ top: y, behavior: 'smooth' });
     }
-    
-    onMount(async () => {
-        const { data, error } = await supabase.functions.invoke('hyper-worker', {
-            body: { name: 'Functions' },
-        })
 
-        console.log(data);
-    });
 
     // export const prerender = true;
 </script>
