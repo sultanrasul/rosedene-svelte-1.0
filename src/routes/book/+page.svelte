@@ -22,6 +22,9 @@
     import { calculateApartmentPrice } from "../calculateApartmentPrice";
     import { user } from "@/stores/user";
     import { onDestroy } from "svelte";
+    import { supabase } from "@/supabase";
+    import { tick } from 'svelte';
+
 
     
     // Initialize variables
@@ -58,6 +61,7 @@
     // @ts-ignore
     let specialRequests = '';
     let bookingReference;
+    let booking_uuid;
     let returnedEmail;
     // @ts-ignore
     /**
@@ -74,21 +78,13 @@
       }
       return ""
     };
+    const formatDateDMY = (dateString) =>
+        dateString && format(new Date(dateString), dateFormatDMY) || '';
     
-    const url = $page.url;
-    const number = url.searchParams.get('number');
-    const check_in = url.searchParams.get('check_in');
-    const check_out = url.searchParams.get('check_out');
-    const refundable = url.searchParams.has('refundable');
-    console.log("checking refundable: ", refundable)
-    // @ts-ignore
-    const apartmentDetails = apartments[number];
-    let adults = parseInt(url.searchParams.get('adults'),10) || 1;
+    let number, check_in, check_out, refundable, children, adults, childrenAges, apartmentDetails;
     // @ts-ignore
     // @ts-ignore
     let nights = Math.floor((parseDate(check_out) - parseDate(check_in)) / (1000 * 60 * 60 * 24));
-    let children = parseInt(url.searchParams.get('children'),10) || 0;
-    let childrenAges = children ? url.searchParams.getAll('ages').map(Number) : []; // Convert ages to an array of numbers
     // @ts-ignore
     // @ts-ignore
     let guests = (adults ? parseInt(adults, 10) : 0) + (children ? parseInt(children, 10) : 0);
@@ -114,6 +110,7 @@
     let termsError = '';
 
 
+    let dateFrom, dateTo;
 
     async function fetchApartmentPrice(propertyId, refundable) {
         console.log(propertyId)
@@ -140,34 +137,142 @@
         throw err;
       }
     }
-    
+
+    async function fetchBookingFromSupabase(uuid) {
+        const { data, error } = await supabase
+            .from('bookings')
+            .select('*')
+            .eq('id', uuid)
+            .single(); // we expect only one row
+
+        if (error) {
+            console.error('Error fetching booking:', error);
+            return null;
+        }
+
+        return data;
+    }
+
+    async function initBookingData() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const uuid = urlParams.get('booking_uuid');
+
+        if (uuid) {
+            // --- Flow: Returning booking
+            const booking = await fetchBookingFromSupabase(uuid);
+            if (!booking) return; // maybe redirect or show error
+            
+            console.log(booking.apartment_id)
+            const entry = Object.entries(apartments).find(([key, apt]) => apt.id == booking.apartment_id);
+            if (!entry) {
+                console.error("❌ No apartment found for id", booking.apartment_id);
+                return;
+            }
+
+            const [numberKey, aptDetails] = entry;
+            number = parseInt(numberKey, 10);
+            apartmentDetails = aptDetails;
+
+            refundable = booking.refundable;
+            adults = booking.adults || 1;
+            children = booking.children || 0;
+            childrenAges = booking.children_ages || [];
+
+            name = booking.name;
+            email = booking.email;
+            phone = booking.phone;
+            specialRequests = booking.special_requests;
+            clientSecret = booking.client_secret
+
+            // ✅ Dates from Supabase come as YYYY-MM-DD
+            startDate = new Date(booking.date_from);
+            endDate = new Date(booking.date_to);
+
+            stripe = await loadStripe(PK);
+            // Load Stripe Elements
+            paymentIntent = await stripe.retrievePaymentIntent(clientSecret);
+
+            console.log("Payment Intent: ",paymentIntent)
+
+            // Now you can access the amount
+            console.log('Amount:', paymentIntent.paymentIntent?.amount);
+            console.log('Currency:', paymentIntent.paymentIntent?.currency);
+            
+            // @ts-ignore
+            totalPrice = paymentIntent.paymentIntent?.amount / 100;
+            console.log('Total Price amount:', `£${totalPrice.toFixed(2)}`);
+
+            // Initialize Elements AFTER getting clientSecret
+            elements = stripe.elements({ 
+                clientSecret,
+                appearance: {
+                    type: 'tabs',
+                    defaultCollapsed: false,
+                    theme: 'stripe',
+                    variables: {
+                        colorPrimary: '#C09A5B',
+                        colorBackground: '#FFF',
+                    },
+                },
+            });
+
+            paymentElement = elements.create('payment');
+            paymentElement.mount('#payment-element');
+            guestInformationConfirmed = true;
+
+            scrollToElementWithOffset("terms");
+        } else {
+            // --- Flow: Fresh booking via URL
+            number = urlParams.get('number');
+            const check_in = urlParams.get('check_in');   // DD/MM/YYYY
+            const check_out = urlParams.get('check_out');
+
+            refundable = urlParams.has('refundable');
+            adults = parseInt(urlParams.get('adults'), 10) || 1;
+            children = parseInt(urlParams.get('children'), 10) || 0;
+            childrenAges = children ? urlParams.getAll('ages').map(Number) : [];
+            apartmentDetails = apartments[number];
+
+            // ✅ Dates from URL come as DD/MM/YYYY
+            startDate = parseDate(check_in);
+            endDate = parseDate(check_out);
+        }
+
+        // ✅ Common derived values
+        nights = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+        guests = (adults || 0) + (children || 0);
+
+        dateFrom = {
+            day: startDate.getDate(),
+            month: startDate.getMonth() + 1,
+            year: startDate.getFullYear()
+        };
+
+        dateTo = {
+            day: endDate.getDate(),
+            month: endDate.getMonth() + 1,
+            year: endDate.getFullYear()
+        };
+
+        console.log("initBookingData →", { startDate, endDate, dateFrom, dateTo, nights });
+    }
+
+
     onMount(async () => {
+        await initBookingData();
+        
         console.log(apartmentDetails["id"]);
         apartmentPrice = await fetchApartmentPrice(apartmentDetails["id"], refundable);
         console.log(apartmentPrice, "backend price");
 
         priceBreakDown = apartmentPrice["breakdown"];
         totalPrice = apartmentPrice["total"];
+
         // console.log(newPrice);
 
     });
     
 
-    // @ts-ignore
-    const formatDateDMY = (dateString) =>
-        dateString && format(new Date(dateString), dateFormatDMY) || '';
-    
-    let dateFrom = {
-      day: parseInt(formatDateDMY(startDate).split('/')[0]),
-      month: parseInt(formatDateDMY(startDate).split('/')[1]),
-      year: parseInt(formatDateDMY(startDate).split('/')[2])
-    };
-  
-    let dateTo = {
-      day: parseInt(formatDateDMY(endDate).split('/')[0]),
-      month: parseInt(formatDateDMY(endDate).split('/')[1]),
-      year: parseInt(formatDateDMY(endDate).split('/')[2])
-    };
 
     // Validation functions
     const validateForm = () => {
@@ -307,6 +412,7 @@
             
             const data = await response.json();
             clientSecret = data.clientSecret;
+            booking_uuid = data.booking_uuid;
             // @ts-ignore
             paymentIntent = await stripe.retrievePaymentIntent(clientSecret);
 
@@ -319,7 +425,12 @@
             // @ts-ignore
             totalPrice = paymentIntent.paymentIntent?.amount / 100;
             console.log('Total Price amount:', `£${totalPrice.toFixed(2)}`);
-            
+
+            // Update URL with booking_uuid
+            const newUrl = new URL(window.location.href);
+            newUrl.search = `?booking_uuid=${booking_uuid}`;
+            window.history.replaceState({}, "", newUrl);
+
             // Initialize Elements AFTER getting clientSecret
             // @ts-ignore
             elements = stripe.elements({ 
@@ -340,7 +451,7 @@
             paymentElement.mount('#payment-element');
             guestInformationConfirmed = true;
 
-            scrollToElementWithOffset("payment-element");
+            scrollToElementWithOffset("terms");
 
         } catch (err) {
         // @ts-ignore
@@ -406,7 +517,8 @@
         }
     }
 
-    function scrollToElementWithOffset(id) {
+    async function scrollToElementWithOffset(id) {
+        await tick(); // wait for DOM update
         const element = document.getElementById(id);
         const yOffset = 0; // Adjust this value as needed
         const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
@@ -439,150 +551,180 @@
         
             <h1 class="text-3xl font-bold text-[#C09A5B]">Confirm and pay</h1>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-10 items-start">
-            <!-- Left Column (50%) -->
-            <div class="space-y-6 bg-white rounded-xl relative overflow-visible min-h-[600px]">
-                
-                {#if bookingReference || error}
-                    <div class="z-[10] absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                        <div class={`flex items-center justify-center p-2 rounded-full shadow-2xl ${error ? 'bg-red-100' : 'bg-green-100'} animate-[pulse_1.5s_ease-out]`}>
-                            <div class={`w-16 h-16 flex items-center justify-center rounded-full ${error ? 'bg-red-500' : 'bg-green-500'} shadow-lg`}>
-                                {#if error}
-                                    <X class="w-8 h-8 lg:w-10 lg:h-10" color="white" />
-                                {:else}
-                                    <Check class="w-8 h-8 lg:w-10 lg:h-10" color="white" />
-                                {/if}
-                            </div>
-                        </div>
-                    </div>
-
-                    {#if bookingReference}
-                        <div class="space-y-3 mb-8 pt-8">
-                            <h1 class="text-center text-3xl lg:text-4xl font-bold text-green-600">Payment Successful!</h1>
-                            <p class="text-center text-gray-600 lg:text-lg">Your reservation is confirmed</p>
-                        </div>
-                    {:else if error}
-                        <div class="space-y-3 mb-8 pt-8">
-                            <h1 class="text-center text-3xl lg:text-4xl font-bold text-red-600">Error!</h1>
-                            <p class="text-center text-gray-600 lg:text-lg p-5">{error}</p>
-                        </div>
+        {#if number}
+            <div class="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-10 items-start">
+                <!-- Left Column (50%) -->
+                <div class="space-y-6 bg-white rounded-xl relative overflow-visible min-h-[600px]">
                     
-                    {/if}
-                {/if}
-
-                {#if loading}
-                    <div class="space-y-6 p-6 animate-pulse">
-                        <!-- Trip Summary Skeleton -->
-                        <div class="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
-                        <div class="space-y-4">
-                            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-                            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-                            <div class="h-px bg-gray-200 my-8"></div>
-                            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-                        </div>
-
-                        <!-- Guest Info Skeleton -->
-                        <div class="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
-                        <div class="space-y-4">
-                            <div class="h-12 bg-gray-200 rounded"></div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="h-12 bg-gray-200 rounded"></div>
-                                <div class="h-12 bg-gray-200 rounded"></div>
-                            </div>
-                        </div>
-
-                        <!-- Payment Details Skeleton -->
-                        <div class="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
-                        <div class="h-32 bg-gray-200 rounded-lg"></div>
-                    </div>
-                {/if}
-                <div class="{!loading & !error ? 'block' : 'hidden'}">
-    
-                    <!-- Guest Details Section -->
-                    <div class="bg-white rounded-xl p-6">
-                        <h2 class="text-2xl font-bold mb-6" style="color: #233441">Your Trip</h2>
-                        <!-- Apartment Details Card -->
-                        <div class="pb-10 block md:hidden">
-                            <Card apartmentNumber={number} apartmentDetails={apartmentDetails} totalPrice={totalPrice} priceBreakDown={priceBreakDown} nights={nights} refundable={refundable} />
-                        </div>
-                        
-                        <!-- Trip Summary -->
-                        <TripInformation refundable={refundable} bookingReference={bookingReference} startDate={startDate} endDate={endDate} adults={adults} children={children} childrenAges={childrenAges}/>
-                        
-                    </div>
-    
-                    <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6" id="guestInformation">
-    
-                    <!-- Guest Information -->
-                    <GuestInformation 
-                        bind:guestInformationConfirmed={guestInformationConfirmed}
-                        bind:specialRequests={specialRequests} 
-                        bind:name={name}
-                        bind:nameError={nameError}
-                        bind:phone={phone}
-                        bind:phoneError={phoneError}
-                        bind:email={email}
-                        bind:emailError={emailError}
-                        bind:clientSecret={clientSecret}
-                    />   
-
-                    <!-- Payment Card -->
-
-                    <div class="{guestInformationConfirmed ? 'block' : 'hidden'}">
-                        <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
-
-                        <div class="bg-white rounded-xl  p-6">
-                            <h2 class="text-2xl font-bold mb-6" style="color: #233441">Payment details</h2>
-                            <div id="payment-element" class="payment-form"></div>
-                        </div>
-        
-                        <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
-        
-                        <!-- <div class="bg-white rounded-xl  p-6">
-                            <h3 class="font-semibold mb-2" style="color: #233441">Cancellation policy</h3>
-                            <p class="text-sm text-gray-600">
-                                Free cancellation before  May. Cancel before 2 Jun for a partial refund.
-                                <a href="#" class="underline" style="color: #C09A5B">Learn more</a>
-                            </p>
-                        </div>
-        
-                        <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6"> -->
-
-                        
-                        <div class="bg-white rounded-xl p-6">
-                            <!-- Agree to Terms -->
-                            <div class="mb-10">
-                                <div class="flex items-center">  <!-- Changed from items-start to items-center -->
-                                    <input
-                                        type="checkbox"
-                                        id="termsAgreement"
-                                        bind:checked={agreedToTerms}
-                                        on:input={() => termsError = ''}
-                                        class="mr-3 h-6 w-6 rounded border-gray-300 text-[#C09A5B] focus:ring-[#C09A5B] transition-all duration-150 ease-in-out
-                                            {termsError ? 
-                                                'border-red-500 shadow-[0_0_0_1px_#ef4444,0_0_0_3px_#fca5a5]' 
-                                                : ''}"
-                                    />
-                                    <label for="termsAgreement" class="text-sm text-gray-700">
-                                        I agree to the 
-                                        <a href="/terms" target="_blank" class="underline text-[#C09A5B] hover:text-[#a17843] transition-colors duration-150">Terms and Conditions</a> 
-                                        and understand the cancellation policy.
-                                    </label>
+                    {#if bookingReference || error}
+                        <div class="z-[10] absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                            <div class={`flex items-center justify-center p-2 rounded-full shadow-2xl ${error ? 'bg-red-100' : 'bg-green-100'} animate-[pulse_1.5s_ease-out]`}>
+                                <div class={`w-16 h-16 flex items-center justify-center rounded-full ${error ? 'bg-red-500' : 'bg-green-500'} shadow-lg`}>
+                                    {#if error}
+                                        <X class="w-8 h-8 lg:w-10 lg:h-10" color="white" />
+                                    {:else}
+                                        <Check class="w-8 h-8 lg:w-10 lg:h-10" color="white" />
+                                    {/if}
                                 </div>
-                                
-                                {#if termsError}
-                                    <p class="text-red-500 text-sm mt-2 ml-9">{termsError}</p>  <!-- Adjusted ml-8 to ml-9 to account for larger checkbox -->
-                                {/if}
+                            </div>
+                        </div>
+
+                        {#if bookingReference}
+                            <div class="space-y-3 mb-8 pt-8">
+                                <h1 class="text-center text-3xl lg:text-4xl font-bold text-green-600">Payment Successful!</h1>
+                                <p class="text-center text-gray-600 lg:text-lg">Your reservation is confirmed</p>
+                            </div>
+                        {:else if error}
+                            <div class="space-y-3 mb-8 pt-8">
+                                <h1 class="text-center text-3xl lg:text-4xl font-bold text-red-600">Error!</h1>
+                                <p class="text-center text-gray-600 lg:text-lg p-5">{error}</p>
+                            </div>
+                        
+                        {/if}
+                    {/if}
+
+                    {#if loading}
+                        <div class="space-y-6 p-6 animate-pulse">
+                            <!-- Trip Summary Skeleton -->
+                            <div class="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
+                            <div class="space-y-4">
+                                <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+                                <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                                <div class="h-px bg-gray-200 my-8"></div>
+                                <div class="h-4 bg-gray-200 rounded w-1/3"></div>
                             </div>
 
+                            <!-- Guest Info Skeleton -->
+                            <div class="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
+                            <div class="space-y-4">
+                                <div class="h-12 bg-gray-200 rounded"></div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="h-12 bg-gray-200 rounded"></div>
+                                    <div class="h-12 bg-gray-200 rounded"></div>
+                                </div>
+                            </div>
 
-                            <!-- Update the Confirm Button -->
+                            <!-- Payment Details Skeleton -->
+                            <div class="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
+                            <div class="h-32 bg-gray-200 rounded-lg"></div>
+                        </div>
+                    {/if}
+                    <div class="{!loading & !error ? 'block' : 'hidden'}">
+        
+                        <!-- Guest Details Section -->
+                        <div class="bg-white rounded-xl p-6">
+                            <h2 class="text-2xl font-bold mb-6" style="color: #233441">Your Trip</h2>
+                            <!-- Apartment Details Card -->
+                            <div class="pb-10 block md:hidden">
+                                <Card apartmentNumber={number} apartmentDetails={apartmentDetails} totalPrice={totalPrice} priceBreakDown={priceBreakDown} nights={nights} refundable={refundable} />
+                            </div>
+                            
+                            <!-- Trip Summary -->
+                            <TripInformation refundable={refundable} bookingReference={bookingReference} startDate={startDate} endDate={endDate} adults={adults} children={children} childrenAges={childrenAges}/>
+                            
+                        </div>
+        
+                        <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6" id="guestInformation">
+        
+                        <!-- Guest Information -->
+                        <GuestInformation 
+                            bind:guestInformationConfirmed={guestInformationConfirmed}
+                            bind:specialRequests={specialRequests} 
+                            bind:name={name}
+                            bind:nameError={nameError}
+                            bind:phone={phone}
+                            bind:phoneError={phoneError}
+                            bind:email={email}
+                            bind:emailError={emailError}
+                            bind:clientSecret={clientSecret}
+                        />   
+
+                        <!-- Payment Card -->
+
+                        <div class="{guestInformationConfirmed ? 'block' : 'hidden'}">
+                            <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
+
+                            <div class="bg-white rounded-xl  p-6">
+                                <h2 class="text-2xl font-bold mb-6" style="color: #233441">Payment details</h2>
+                                <div id="payment-element" class="payment-form"></div>
+                            </div>
+            
+                            <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6">
+            
+                            <!-- <div class="bg-white rounded-xl  p-6">
+                                <h3 class="font-semibold mb-2" style="color: #233441">Cancellation policy</h3>
+                                <p class="text-sm text-gray-600">
+                                    Free cancellation before  May. Cancel before 2 Jun for a partial refund.
+                                    <a href="#" class="underline" style="color: #C09A5B">Learn more</a>
+                                </p>
+                            </div>
+            
+                            <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6"> -->
+
+                            
+                            <div class="bg-white rounded-xl p-6" id="terms">
+                                <!-- Agree to Terms -->
+                                <div class="mb-10">
+                                    <div class="flex items-center">  <!-- Changed from items-start to items-center -->
+                                        <input
+                                            type="checkbox"
+                                            id="termsAgreement"
+                                            bind:checked={agreedToTerms}
+                                            on:input={() => termsError = ''}
+                                            class="mr-3 h-6 w-6 rounded border-gray-300 text-[#C09A5B] focus:ring-[#C09A5B] transition-all duration-150 ease-in-out
+                                                {termsError ? 
+                                                    'border-red-500 shadow-[0_0_0_1px_#ef4444,0_0_0_3px_#fca5a5]' 
+                                                    : ''}"
+                                        />
+                                        <label for="termsAgreement" class="text-sm text-gray-700">
+                                            I agree to the 
+                                            <a href="/terms" target="_blank" class="underline text-[#C09A5B] hover:text-[#a17843] transition-colors duration-150">Terms and Conditions</a> 
+                                            and understand the cancellation policy.
+                                        </label>
+                                    </div>
+                                    
+                                    {#if termsError}
+                                        <p class="text-red-500 text-sm mt-2 ml-9">{termsError}</p>  <!-- Adjusted ml-8 to ml-9 to account for larger checkbox -->
+                                    {/if}
+                                </div>
+
+
+                                <!-- Update the Confirm Button -->
+                                <button
+                                    on:click={handlePayment}
+                                    class="w-full py-4 rounded-xl font-bold text-white transition-colors hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
+                                    style="background-color: #C09A5B;"
+                                    disabled={paymentProcessing}
+                                >
+                                    {#if paymentProcessing}
+                                        <div class="flex items-center justify-center gap-2">
+                                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            Processing...
+                                        </div>
+                                    {:else}
+                                        Confirm and pay
+                                    {/if}
+                                </button>
+                                
+                                <div class="mt-4 flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="#C09A5B">
+                                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                                    </svg>
+                                    <span class="text-sm" style="color: #233441">Secure payment</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="flex justify-end p-6 {guestInformationConfirmed ? 'hidden' : 'block'}">
                             <button
-                                on:click={handlePayment}
-                                class="w-full py-4 rounded-xl font-bold text-white transition-colors hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
+                                on:click={confirmDetails}
+                                class="w-auto px-4 py-2  rounded-xl text-white transition-colors hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
                                 style="background-color: #C09A5B;"
-                                disabled={paymentProcessing}
+                                disabled={paymentProcessing || clientSecretProcessing}
                             >
                                 {#if paymentProcessing}
                                     <div class="flex items-center justify-center gap-2">
@@ -593,62 +735,34 @@
                                         Processing...
                                     </div>
                                 {:else}
-                                    Confirm and pay
+                                <div class="flex items-center gap-2">
+                                    Continue to Payment  
+                                    {#if clientSecretProcessing}
+                                        <svg class="mx-1.5 my-1.5 animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        
+                                    {:else}
+                                        <ChevronRight size={30} class="mt-0.5" />
+                                    {/if}
+                                </div>
                                 {/if}
                             </button>
-                            
-                            <div class="mt-4 flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="#C09A5B">
-                                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
-                                </svg>
-                                <span class="text-sm" style="color: #233441">Secure payment</span>
-                            </div>
                         </div>
+
+                        
                     </div>
-
-
-                    <div class="flex justify-end p-6 {guestInformationConfirmed ? 'hidden' : 'block'}">
-                        <button
-                            on:click={confirmDetails}
-                            class="w-auto px-4 py-2  rounded-xl text-white transition-colors hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
-                            style="background-color: #C09A5B;"
-                            disabled={paymentProcessing || clientSecretProcessing}
-                        >
-                            {#if paymentProcessing}
-                                <div class="flex items-center justify-center gap-2">
-                                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    Processing...
-                                </div>
-                            {:else}
-                            <div class="flex items-center gap-2">
-                                Continue to Payment  
-                                {#if clientSecretProcessing}
-                                    <svg class="mx-1.5 my-1.5 animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    
-                                {:else}
-                                    <ChevronRight size={30} class="mt-0.5" />
-                                {/if}
-                            </div>
-                            {/if}
-                        </button>
-                    </div>
-
-                    
+                </div>
+                
+                <!-- Right Sticky Column (50%) -->
+                <div class="hidden md:sticky md:top-6 w-full max-w-xl md:max-w-none mx-auto md:mx-0 order-first md:order-none md:block">
+                    <!-- Apartment Details Card -->
+                    <Card loading={loading} error={error} apartmentNumber={number} apartmentDetails={apartmentDetails} totalPrice={totalPrice} priceBreakDown={priceBreakDown} nights={nights} />
                 </div>
             </div>
-            
-            <!-- Right Sticky Column (50%) -->
-            <div class="hidden md:sticky md:top-6 w-full max-w-xl md:max-w-none mx-auto md:mx-0 order-first md:order-none md:block">
-                <!-- Apartment Details Card -->
-                <Card loading={loading} error={error} apartmentNumber={number} apartmentDetails={apartmentDetails} totalPrice={totalPrice} priceBreakDown={priceBreakDown} nights={nights} />
-            </div>
-        </div>
+        {/if}
+
         <!-- Footer -->
         <div class="text-center text-sm text-gray-300 mt-12 ">
             <div class="flex justify-center gap-4 mb-2">
