@@ -34,8 +34,8 @@
         
         // Combine available and blocked apartments
         const combined = [
-            ...apartments["properties"]["available"].map(a => ({ ...a, status: 'available' })),
-            ...apartments["properties"]["blocked"].map(a => ({ ...a, status: 'blocked' }))
+            ...apartments["available"].map(a => ({ ...a, status: 'available' })),
+            ...apartments["blocked"].map(a => ({ ...a, status: 'blocked' }))
         ];
         
         console.log('Combined apartments before sorting:', combined);
@@ -136,7 +136,7 @@
             const dateTo = { day: endDate.getDate(), month: endDate.getMonth() + 1, year: endDate.getFullYear() };
 
             try {
-                const response = await fetch(`${BACKEND_URL}/blocked_apartments`, {
+                const response = await fetch(`${BACKEND_URL}/properties/blocked-apartments`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ date_from: dateFrom, date_to: dateTo }),
@@ -238,8 +238,8 @@
                         Our Apartments
                     </h1>
                     <p class="text-gray-600 dark:text-gray-300 mt-1">
-                        {apartments["properties"]["available"].length} available • 
-                        {apartments["properties"]["blocked"].length} booked
+                        {apartments["available"].length} available • 
+                        {apartments["blocked"].length} booked
                     </p>
                 </div>
                 
@@ -300,7 +300,7 @@
         </div>
 
         <!-- Availability Note -->
-        {#if apartments && apartments["properties"]["blocked"].length > 0}
+        {#if apartments && apartments["blocked"].length > 0}
             <div class="max-w-7xl mx-auto mt-10 pt-6 border-t border-gray-200 dark:border-gray-700">
                 <div class="flex items-start">
                     <svg class="w-5 h-5 text-gray-500 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

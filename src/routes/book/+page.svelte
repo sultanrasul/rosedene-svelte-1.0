@@ -32,6 +32,7 @@
     let name = '';
     let email = '';
     let phone = '';
+    let bookingData;
     // @ts-ignore
     
     let currentUser;
@@ -62,6 +63,7 @@
     let specialRequests = '';
     let bookingReference;
     let booking_uuid;
+    let token;
     let returnedEmail;
     // @ts-ignore
     /**
@@ -112,60 +114,95 @@
 
     let dateFrom, dateTo;
 
-    async function fetchApartmentPrice(propertyId, refundable) {
-        console.log(propertyId)
-      try {
-        const response = await fetch(`${BACKEND_URL}/verify_price`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                date_from: dateFrom,
-                date_to: dateTo,
-                property_id: apartmentDetails.id,
-                adults: adults,
-                children: children,
-                childrenAges: childrenAges,
-                url: window.location.href,
-                refundable: refundable
-            }),
-        });
-
-        if (!response.ok) throw new Error('Price check failed');
-            return await response.json();
-      } catch (err) {
-        console.error('Failed to fetch apartment price:', err);
-        throw err;
-      }
-    }
-
-    async function fetchBookingFromSupabase(uuid) {
-        const { data, error } = await supabase
-            .from('bookings')
-            .select('*')
-            .eq('id', uuid)
-            .single(); // we expect only one row
-
-        if (error) {
-            console.error('Error fetching booking:', error);
-            return null;
+    function fetchApartmentPrice(basePrice, clientPrice, refundable, nights) {
+        // Helper to format as £ with 2 decimal places (always includes .00)
+        const formatGBP = (amount) => `£${amount.toFixed(2)}`;
+        const perNightPrice = basePrice / nights;
+        const breakdown = [
+            {
+                label: `${formatGBP(perNightPrice)} x ${nights} nights`,
+                amount: basePrice.toFixed(2) // keep as string so .00 stays
+            }
+        ];
+        if (refundable) {
+            const refundableFee = basePrice * 0.0575;
+            breakdown.push({
+                label: "Refundable rate",
+                amount: refundableFee.toFixed(2)
+            });
         }
 
-        return data;
+        return {
+            total: clientPrice.toFixed(2),
+            breakdown
+        };
     }
+
+
+
+    async function hashToken(token) {
+        const msgBuffer = new TextEncoder().encode(token);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Fetch booking from Supabase — supports guest-token logic
+    // Fetch booking — supports guest-token logic
+    async function fetchBooking(uuid, token = null) {
+        if (token) {
+            // Guest booking: fetch via backend endpoint
+            try {
+                const res = await fetch(`${BACKEND_URL}/bookings/${uuid}?token=${encodeURIComponent(token)}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (!res.ok) {
+                    console.error("Error fetching guest booking:", res.statusText);
+                    return null;
+                }
+
+                const data = await res.json();
+                return data.booking || data; // Adjust depending on backend response format
+            } catch (err) {
+                console.error("Network error fetching guest booking:", err);
+                return null;
+            }
+        } else {
+            // Logged-in user: fetch directly from Supabase
+            const { data, error } = await supabase
+                .from('bookings')
+                .select('*')
+                .eq('id', uuid)
+                .single();
+
+            if (error) {
+                console.error('Error fetching booking:', error);
+                return null;
+            }
+
+            return data;
+        }
+    }
+
 
     async function initBookingData() {
         const urlParams = new URLSearchParams(window.location.search);
         const uuid = urlParams.get('booking_uuid');
+        const token = urlParams.get('token'); // token is optional
 
         if (uuid) {
             // --- Flow: Returning booking
-            const booking = await fetchBookingFromSupabase(uuid);
-            if (!booking) return; // maybe redirect or show error
+            bookingData = await fetchBooking(uuid, token);
+            if (!bookingData) return; // maybe redirect or show error
             
-            console.log(booking.apartment_id)
-            const entry = Object.entries(apartments).find(([key, apt]) => apt.id == booking.apartment_id);
+            console.log(bookingData.apartment_id)
+            const entry = Object.entries(apartments).find(([key, apt]) => apt.id == bookingData.apartment_id);
             if (!entry) {
-                console.error("❌ No apartment found for id", booking.apartment_id);
+                console.error("❌ No apartment found for id", bookingData.apartment_id);
                 return;
             }
 
@@ -173,20 +210,20 @@
             number = parseInt(numberKey, 10);
             apartmentDetails = aptDetails;
 
-            refundable = booking.refundable;
-            adults = booking.adults || 1;
-            children = booking.children || 0;
-            childrenAges = booking.children_ages || [];
+            refundable = bookingData.refundable;
+            adults = bookingData.adults || 1;
+            children = bookingData.children || 0;
+            childrenAges = bookingData.children_ages || [];
 
-            name = booking.name;
-            email = booking.email;
-            phone = booking.phone;
-            specialRequests = booking.special_requests;
-            clientSecret = booking.client_secret
+            name = bookingData.name;
+            email = bookingData.email;
+            phone = bookingData.phone;
+            specialRequests = bookingData.special_requests;
+            clientSecret = bookingData.client_secret
 
             // ✅ Dates from Supabase come as YYYY-MM-DD
-            startDate = new Date(booking.date_from);
-            endDate = new Date(booking.date_to);
+            startDate = new Date(bookingData.date_from);
+            endDate = new Date(bookingData.date_to);
 
             stripe = await loadStripe(PK);
             // Load Stripe Elements
@@ -262,7 +299,7 @@
         await initBookingData();
         
         console.log(apartmentDetails["id"]);
-        apartmentPrice = await fetchApartmentPrice(apartmentDetails["id"], refundable);
+        apartmentPrice = fetchApartmentPrice(bookingData.ru_price, bookingData.client_price, refundable, nights);
         console.log(apartmentPrice, "backend price");
 
         priceBreakDown = apartmentPrice["breakdown"];
@@ -378,18 +415,17 @@
             // Initialize Stripe FIRST
             stripe = await loadStripe(PK);
             // THEN fetch client secret
-            const response = await fetch(`${BACKEND_URL}/create-checkout`, {
+            const response = await fetch(`${BACKEND_URL}/payments/create-checkout-session`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     date_from: dateFrom,
                     date_to: dateTo,
-                    property_id: apartmentDetails.id,
+                    apartment_id: apartmentDetails.id,
                     adults: adults,
                     children: children,
-                    childrenAges: childrenAges,
+                    children_ages: childrenAges,
                     refundable: refundable,
-                    url: window.location.href,
 
                     special_requests: specialRequests,
                     name: name,
@@ -413,6 +449,8 @@
             const data = await response.json();
             clientSecret = data.clientSecret;
             booking_uuid = data.booking_uuid;
+            token = data?.token;
+            
             // @ts-ignore
             paymentIntent = await stripe.retrievePaymentIntent(clientSecret);
 
@@ -428,7 +466,12 @@
 
             // Update URL with booking_uuid
             const newUrl = new URL(window.location.href);
-            newUrl.search = `?booking_uuid=${booking_uuid}`;
+            if (data.token){
+                token = data.token;
+                newUrl.search = `?booking_uuid=${booking_uuid}&token=${data.token}`
+            } else {
+                newUrl.search = `?booking_uuid=${booking_uuid}`
+            }
             window.history.replaceState({}, "", newUrl);
 
             // Initialize Elements AFTER getting clientSecret

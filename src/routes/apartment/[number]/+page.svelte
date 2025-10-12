@@ -152,10 +152,10 @@
     // @ts-ignore
     async function fetchApartmentPrice(propertyId) {
       try {
-        const response = await fetch(`${BACKEND_URL}/check_price`, {
+        const response = await fetch(`${BACKEND_URL}/properties/check-price`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ property_id: propertyId }),
+          body: JSON.stringify({ apartment_id: propertyId }),
         });
 
         if (!response.ok) throw new Error('Price check failed');
@@ -170,10 +170,10 @@
     // @ts-ignore
     async function fetchBlockedApartments(propertyId) {
       try {
-        const response = await fetch(`${BACKEND_URL}/check_calendar`, {
+        const response = await fetch(`${BACKEND_URL}/properties/check-calendar`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ property_id: propertyId }),
+          body: JSON.stringify({ apartment_id: propertyId }),
         });
 
         if (!response.ok) throw new Error('Calendar check failed');

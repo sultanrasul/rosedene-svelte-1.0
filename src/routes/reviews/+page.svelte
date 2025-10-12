@@ -113,13 +113,13 @@
         isLoading = true;
         try {
             reviews = []
-            const response = await fetch(`${BACKEND_URL}/get_reviews`, {
+            const response = await fetch(`${BACKEND_URL}/reviews/get-reviews`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                 page,
                 limit: reviewsPerPage,
-                search: searchTerm,
+                search_term: searchTerm,
                 sort_by: sortBy,
                 topics: topics,
                 sort_order: sortOrder

@@ -8,7 +8,7 @@ supabase.auth.getSession().then(({ data: { session } }) => {
   user.set(session?.user ?? null);
 
   if (session?.user) {
-    console.log("📥 Initial session loaded:", session.user);
+    console.log("📥 Initial session loaded:", session);
   }
 });
 // react to login/logout/refresh events
