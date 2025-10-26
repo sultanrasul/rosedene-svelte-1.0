@@ -17,7 +17,10 @@
     import WordPullUp from "@/components/WordPullUp.svelte";
     import Drawer from "../Drawer.svelte";
     import CancelationModal from "./CancelationModal.svelte";
+    import Input from "../components/Input.svelte";
+    import DateInput from "../components/dateInput.svelte";
 
+    let authError = "";
 
     let bookingData;
 
@@ -25,7 +28,7 @@
 
     let showErrorDetails = false;
 
-    let bookingReferenceinput = "";
+    let bookingReferenceinput;
 
     let coundNotFind = false;
     
@@ -33,7 +36,14 @@
 
     let email = "";
 
+    let arrivalDate;
+
     let isProcessing = false;
+
+    let priceBreakDown;
+    let totalPrice;
+    let apartmentPrice;
+
 
     function formatDate(dateStr) {
         if (!dateStr) return "";
@@ -51,22 +61,56 @@
     let endDate = ""
     let apartmentNumber;
     let breakdown;
+    let last_name;
 
 
-    async function getBookingDetails(bookingReference, email){
+    function fetchApartmentPrice(basePrice, clientPrice, refundable, nights) {
+        basePrice = Number(basePrice) || 0;
+        clientPrice = Number(clientPrice) || 0;
+        nights = Number(nights) || 1;
+
+        const formatGBP = (amount) => `£${amount.toFixed(2)}`;
+        const perNightPrice = basePrice / nights;
+        const breakdown = [
+            {
+                label: `${formatGBP(perNightPrice)} x ${nights} nights`,
+                amount: basePrice.toFixed(2)
+            }
+        ];
+
+        if (refundable) {
+            const refundableFee = basePrice * 0.0575;
+            breakdown.push({
+                label: "Refundable rate",
+                amount: refundableFee.toFixed(2)
+            });
+        }
+
+        return {
+            total: clientPrice.toFixed(2),
+            breakdown
+        };
+    }
+
+
+    async function getBookingDetails(bookingReference, arrival_date, last_name){
         isProcessing = true;
         try  {
-            const response = await fetch(`${BACKEND_URL}/get_booking`, {
+            const response = await fetch(`${BACKEND_URL}/bookings/get-booking-check-in`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    booking_ref: bookingReference,
-                    email: email,
+                    booking_id: bookingReference,
+                    last_name: last_name,
+                    checkin_date: arrival_date,
                 }),
             });
 
             // Check if the response is not OK (non-2xx status code)
             if (!response.ok) {
+                if (response.status === 404){
+                    authError = "Booking Not Found"
+                }
                 // Retrieve the error data and throw a custom error with status and details
                 const errorData = await response.json(); // This assumes the error response contains more details
                 throw {
@@ -79,15 +123,22 @@
 
             // If the response is successful, parse the checkout URL
             bookingData = await response.json();
-            bookingData = bookingData["reservation_data"]
 
             showBookingDetails = true;
-            apartmentDetails = apartments[bookingData.Apartment.match(/\d+/)?.[0]]
-            apartmentNumber = bookingData.Apartment.match(/\d+/)?.[0];
+            apartmentNumber = +Object.keys(apartments).find(k => apartments[k].id === bookingData["apartment_id"]) || null;
+            apartmentDetails = apartments[apartmentNumber]
 
-            startDate = parseDate(formatDate(bookingData?.DateFrom));
-            endDate = parseDate(formatDate(bookingData?.DateTo));
+
+
+            startDate = new Date(bookingData["date_from"]);
+            endDate = new Date(bookingData["date_to"]);
             nights = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+            apartmentPrice = fetchApartmentPrice(bookingData.ru_price, bookingData.client_price, bookingData.refundable, nights);
+            console.log(apartmentPrice, "backend price");
+
+            priceBreakDown = apartmentPrice["breakdown"];
+            totalPrice = apartmentPrice["total"];
 
             if (bookingData?.reservationStatusID === 1){
                 confetti({
@@ -154,11 +205,11 @@
 
     function searchButton(){
         // Validate both fields before making the request
-        if (bookingReferenceinput && email) {
-            getBookingDetails(bookingReferenceinput, email);
+        if (bookingReferenceinput && arrivalDate && last_name) {
+            getBookingDetails( String(bookingReferenceinput), arrivalDate, last_name);
         } else {
-            if (!bookingReferenceinput) toast.error("Please enter your booking reference");
-            if (!email) toast.error("Please enter your email address");
+            if (!bookingReferenceinput) authError="Please enter your booking reference";
+            if (!last_name) authError= "Please enter your Last Name";
         }
     }
 
@@ -168,16 +219,20 @@
 
         // Check for the refNumber in the URL
         const ref_number = urlParams.get("ref_number");
-        const email = urlParams.get("email");
+        const arrival_date = urlParams.get("arrival_date");
+        const last_name = urlParams.get("last_name");
         const error = urlParams.get("error");
-
-        if (ref_number && email) {
-            // Set the bookingData if refNumber exists
-            document.getElementById("email").value = email;
-            document.getElementById("bookingReference").value = ref_number;
-            getBookingDetails(ref_number,email);
-
+        console.log(ref_number, arrival_date, last_name);
+        if (ref_number && arrival_date && last_name){
+            getBookingDetails(ref_number, arrival_date, last_name);
         }
+
+        // if (ref_number && email && last_name) {
+        //     // Set the bookingData if refNumber exists
+        //     document.getElementById("email").value = email;
+        //     document.getElementById("bookingReference").value = ref_number;
+
+        // }
         if (error){
 
             urlParams.forEach((value, key) => {
@@ -256,55 +311,38 @@
             <!-- Form Content -->
             <div class="space-y-6">
                 <BlurFade delay={0.3/2}>
-                    <p class="text-center text-gray-400 mb-8">Enter your email and booking number below</p>
+                    <p class="text-center text-gray-400 mb-8">Enter your email and booking number below:</p>
+                </BlurFade>
+
+                <!-- Centralized Error Display -->
+                {#if authError}
+                    <div class="mb-6 p-3 bg-red-900/40 border border-red-700 rounded-lg flex items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p class="text-red-200 text-sm">{authError}</p>
+                    </div>
+                {/if}
+
+                <BlurFade delay={0.5/2} class="flex-1 relative">
+                    <Input type="number" label="Confirmation #" bind:value={bookingReferenceinput} bind:error={authError} placeholder={"Booking Reference Number"}/>
                 </BlurFade>
                 
                 <BlurFade delay={0.4/2} class="flex-1 relative">
-                    <input 
-                        id="email"
-                        type="email"
-                        bind:value={email}
-                        class="focus:ring-1 focus:ring-[#C09A5B] w-full pl-10 pr-4 py-3 text-gray-700 placeholder-gray-400 bg-white rounded-lg border-2 border-gray-200 focus:border-[#C09A5B] focus:outline-none transition-all shadow-sm"
-                        placeholder="name@example.com"
-                    />
+                    <Input type="text" label="Last Name" bind:value={last_name} bind:error={authError} placeholder={"Doe"}/>
                 </BlurFade>
 
-                <BlurFade delay={0.5/2} class="flex-1 relative">
-                    <input 
-                        type="number"
-                        id="bookingReference"
-                        bind:value={bookingReferenceinput}
-                        class="focus:ring-1 focus:ring-[#C09A5B] w-full pl-10 pr-4 py-3 text-gray-700 placeholder-gray-400 bg-white rounded-lg border-2 border-gray-200 focus:border-[#C09A5B] focus:outline-none transition-all shadow-sm"
-                        placeholder="Booking Reference Number"
-                        inputmode="numeric"
-                        pattern="[0-9]*"
-                        maxlength="10"
-                        on:input={e => {
-                            const value = e.target.value;
-                            const maxInt32 = 2147483647;
-                            
-                            // Validate numeric input
-                            const numericValue = value.replace(/\D/g, '');
-                            if (numericValue !== value) {
-                                e.target.value = numericValue;
-                                bookingReferenceinput = numericValue;
-                            }
-                            
-                            // Validate against Int32 limits
-                            if (numericValue > maxInt32) {
-                                e.target.value = numericValue.slice(0, 9);
-                                bookingReferenceinput = e.target.value;
-                            }
-                        }}
-                    />
+                <BlurFade delay={0.4/2} class="flex-1 relative">
+                    <DateInput label="Arrival date" bind:formattedDate={arrivalDate} bind:error={authError}/>
                 </BlurFade>
+                
 
                 <!-- Modified button section -->
                 <BlurFade delay={0.6/2} class="w-full sm:w-auto">
                     <button
                         on:click={searchButton}
                         class="w-full px-8 py-3 text-lg bg-[#C09A5B] hover:bg-[#B08A4F] text-white font-semibold rounded-xl transition-all transform hover:scale-100 active:scale-95 shadow-lg disabled:opacity-70 disabled:hover:scale-100 disabled:hover:bg-[#C09A5B]"                       
-                        disabled={!bookingReferenceinput || !email || isProcessing}
+                        disabled={!bookingReferenceinput || !last_name || !arrivalDate || isProcessing}
                     >
                         {#if isProcessing}
                             <div class="flex items-center justify-center gap-2">
@@ -417,10 +455,10 @@
                             {#if bookingData}
                                 <!-- Apartment Details Card -->
                                 <div class="pb-10 block md:hidden">
-                                    <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} nights={nights} totalPrice={bookingData?.ClientPrice} priceBreakDown={bookingData?.breakdown}/>
+                                    <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} nights={nights} totalPrice={totalPrice} priceBreakDown={priceBreakDown}/>
                                 </div>
                                 
-                                <TripInformation diffDays={bookingData?.diffDays} refundable={bookingData?.refundable} bookingReference={bookingData?.ReservationID} startDate={bookingData.DateFrom} endDate={bookingData.DateTo} adults={bookingData?.GuestDetailsInfo?.NumberOfAdults} children={bookingData?.GuestDetailsInfo?.NumberOfChildren} childrenAges={bookingData?.GuestDetailsInfo?.ChildrenAges?.Age}/>
+                                <TripInformation diffDays={bookingData?.diffDays} refundable={bookingData?.refundable} bookingReference={bookingData?.ReservationID} startDate={startDate} endDate={endDate} adults={bookingData?.adults} children={bookingData?.children} childrenAges={bookingData?.children_ages}/>
                                 
                                 
                             {/if}
@@ -431,7 +469,7 @@
                         <hr class="h-px my-8 bg-[#C09A5B] border-0 mx-6" id="guestInformation">
         
                         <!-- Guest Information -->
-                        <GuestInformation showEditButton={false} guestInformationConfirmed={true} specialRequests={bookingData?.SpecialRequest} name={bookingData?.CustomerInfo?.Name} phone={bookingData?.CustomerInfo?.Phone} email={bookingData?.CustomerInfo?.Email}/>
+                        <GuestInformation showEditButton={false} guestInformationConfirmed={true} specialRequests={bookingData?.special_requests} firstName={bookingData?.first_name} lastName={bookingData?.last_name} phone={bookingData?.phone} email={bookingData?.email}/>
                         
                         <!-- <div class="mt-8 flex justify-center"> -->
                         <div class="mt-8 flex justify-center {bookingData?.reservationStatusID === 2 ? 'hidden' : 'block'}">
@@ -453,7 +491,7 @@
                 <!-- Right Sticky Column (50%) -->
                 <div class="md:sticky md:top-6 w-full max-w-xl md:max-w-none mx-auto md:mx-0 order-first md:order-none hidden md:block">
                     <!-- Apartment Details Card -->
-                    <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} nights={nights} totalPrice={bookingData?.ClientPrice} priceBreakDown={bookingData?.breakdown}/>
+                    <Card apartmentNumber={apartmentNumber} apartmentDetails={apartmentDetails} nights={nights} totalPrice={totalPrice} priceBreakDown={priceBreakDown}/>
                 </div>
             </div>
             <!-- Footer -->
@@ -477,18 +515,6 @@
     }
 
 
-
-    /* Hide number input arrows for Chrome, Safari, Edge */
-    input[type=number]::-webkit-outer-spin-button,
-    input[type=number]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    /* Hide number input arrows for Firefox */
-    input[type=number] {
-        -moz-appearance: textfield;
-    }
 </style>
 
 <CancelationModal bookingReference={bookingData?.ReservationID} email={bookingData?.CustomerInfo?.Email}/>

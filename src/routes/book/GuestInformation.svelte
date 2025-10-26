@@ -1,18 +1,23 @@
 <script>
   import { BACKEND_URL } from "../conf";
 
-    export let name = "";
+    export let lastName = "";
+    export let firstName = "";
+
     export let phone = "";
     export let email = "";
     export let specialRequests = "";
-    export let nameError = "";
+    export let firstNameError = "";
+    export let LastNameError = "";
     export let emailError = "";
     export let phoneError = "";
     export let guestInformationConfirmed = false;
     export let clientSecret = "";
     export let showEditButton = true;
 
-    let originalName = "";
+    let originalFirstName = "";
+    let originalLastName = "";
+
     let originalPhone = "";
     let originalEmail = "";
     let originalSpecialRequests = "";
@@ -29,46 +34,8 @@
         window.scrollTo({ top: y, behavior: 'smooth' });
     }
 
-    const validateForm = () => {
-        let isValid = true;
-        
-        // Name validation
-        if (!name.trim()) {
-            nameError = 'Name is required';
-            isValid = false;
-        } else {
-            nameError = '';
-        }
-
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!email.trim()) {
-            emailError = 'Email is required';
-            isValid = false;
-        } else if (!emailRegex.test(email)) {
-            emailError = 'Invalid email format';
-            isValid = false;
-        } else {
-            emailError = '';
-        }
-
-        // Phone validation (basic international format validation)
-        const phoneRegex = /^\+?[0-9\s\-()]{7,}$/;
-        if (!phone.trim()) {
-            phoneError = 'Phone number is required';
-            isValid = false;
-        } else if (!phoneRegex.test(phone)) {
-            phoneError = 'Invalid phone number format';
-            isValid = false;
-        } else {
-            phoneError = '';
-        }
-
-        return isValid;
-    };
-
     async function updateDetails(){
-        if (originalName === name && originalPhone === phone && originalEmail === email && originalSpecialRequests === specialRequests){
+        if (originalFirstName === firstName && originalLastName === lastName && originalPhone === phone && originalEmail === email && originalSpecialRequests === specialRequests){
             editMode = false;
             return;
         }
@@ -117,7 +84,8 @@
     }
 
     function handleEdit() {
-        originalName = name;
+        originalFirstName = firstName;
+        originalLastName = lastName;
         originalPhone = phone;
         originalEmail = email;
         originalSpecialRequests = specialRequests;
@@ -132,7 +100,8 @@
     }
 
     function handleCancel() {
-        name =  originalName;
+        firstName =  originalFirstName;
+        lastName =  originalLastName;
         phone = originalPhone;
         email = originalEmail;
         specialRequests = originalSpecialRequests;
@@ -157,22 +126,41 @@
     </div>
     
     <div class="space-y-4">
-        <div>
-            <label class="block text-sm font-medium mb-2 {guestInformationConfirmed && !editMode ? 'text-gray-500' : 'text-[#233441]'}">Full name</label>
-            <input
-                type="text"
-                disabled={guestInformationConfirmed && !editMode}
-
-                bind:value={name}
-
-                on:input={() => nameError = ''}
-                class="w-full p-3 border rounded focus:ring-[3px] focus:outline-none font-light text-black {nameError ? 'border-red-400 focus:border-[#ff4444] focus:ring-[#ff4444]/25' : (guestInformationConfirmed && !editMode ? 'bg-gray-100 border-gray-300 text-gray-500' : 'border-[#CFD7DF] focus:border-[#C09A5B] focus:ring-[#C09A5B]/25 text-black')}"
-                placeholder="John Doe"
-                required
-            />
-            {#if nameError}
-                <p class="text-red-500 text-sm mt-1">{nameError}</p>
-            {/if}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium mb-2 {guestInformationConfirmed && !editMode ? 'text-gray-500' : 'text-[#233441]'}">First name</label>
+                <input
+                    type="text"
+                    disabled={guestInformationConfirmed && !editMode}
+    
+                    bind:value={firstName}
+    
+                    on:input={() => firstNameError = ''}
+                    class="w-full p-3 border rounded focus:ring-[3px] focus:outline-none font-light text-black {firstNameError ? 'border-red-400 focus:border-[#ff4444] focus:ring-[#ff4444]/25' : (guestInformationConfirmed && !editMode ? 'bg-gray-100 border-gray-300 text-gray-500' : 'border-[#CFD7DF] focus:border-[#C09A5B] focus:ring-[#C09A5B]/25 text-black')}"
+                    placeholder="John"
+                    required
+                />
+                {#if firstNameError}
+                    <p class="text-red-500 text-sm mt-1">{firstNameError}</p>
+                {/if}
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2 {guestInformationConfirmed && !editMode ? 'text-gray-500' : 'text-[#233441]'}">Last name</label>
+                <input
+                    type="text"
+                    disabled={guestInformationConfirmed && !editMode}
+    
+                    bind:value={lastName}
+    
+                    on:input={() => LastNameError = ''}
+                    class="w-full p-3 border rounded focus:ring-[3px] focus:outline-none font-light text-black {LastNameError ? 'border-red-400 focus:border-[#ff4444] focus:ring-[#ff4444]/25' : (guestInformationConfirmed && !editMode ? 'bg-gray-100 border-gray-300 text-gray-500' : 'border-[#CFD7DF] focus:border-[#C09A5B] focus:ring-[#C09A5B]/25 text-black')}"
+                    placeholder="Doe"
+                    required
+                />
+                {#if LastNameError}
+                    <p class="text-red-500 text-sm mt-1">{LastNameError}</p>
+                {/if}
+            </div>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

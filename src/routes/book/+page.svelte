@@ -29,7 +29,8 @@
     
     // Initialize variables
     // @ts-ignore
-    let name = '';
+    let first_name = '';
+    let last_name = '';
     let email = '';
     let phone = '';
     let bookingData;
@@ -46,13 +47,15 @@
             // Build name
             const meta = currentUser.user_metadata || {};
             if (meta.first_name) {
-                name = `${meta.first_name} ${meta.last_name ?? ''}`.trim();
+                first_name = meta.first_name
+                last_name = meta.last_name
             } else {
-                name = meta.name ?? '';
+                first_name = meta.first_name
             }
         } else {
             // Reset if logged out
-            name = '';
+            first_name = '';
+            last_name = '';
             email = '';
             phone = '';
         }
@@ -99,7 +102,8 @@
     // @ts-ignore
     let endDate = parseDate(check_out); // Variable for start date as a Date object
     console.log(startDate, endDate)
-    let nameError = '';
+    let firstNameError = '';
+    let lastNameError = '';
     let emailError = '';
     let phoneError = '';
     let paymentProcessing = false;
@@ -153,11 +157,12 @@
         if (token) {
             // Guest booking: fetch via backend endpoint
             try {
-                const res = await fetch(`${BACKEND_URL}/bookings/${uuid}?token=${encodeURIComponent(token)}`, {
-                    method: "GET",
+                const res = await fetch(`${BACKEND_URL}/bookings/get-booking`, {
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
+                    body: JSON.stringify({ booking_id: uuid, token: token })
                 });
 
                 if (!res.ok) {
@@ -315,12 +320,20 @@
     const validateForm = () => {
         let isValid = true;
         
-        // Name validation
-        if (!name.trim()) {
-            nameError = 'Name is required';
+        // First Name validation
+        if (!first_name.trim()) {
+            firstNameError = 'First name is required';
             isValid = false;
         } else {
-            nameError = '';
+            firstNameError = '';
+        }
+
+        // Last Name validation
+        if (!last_name.trim()) {
+            lastNameError = 'Last name is required';
+            isValid = false;
+        } else {
+            lastNameError = '';
         }
 
         // Email validation
@@ -428,7 +441,8 @@
                     refundable: refundable,
 
                     special_requests: specialRequests,
-                    name: name,
+                    first_name: first_name,
+                    last_name: last_name,
                     email: email,
                     phone: phone,
                     user_id: currentUser?.id
@@ -673,8 +687,10 @@
                         <GuestInformation 
                             bind:guestInformationConfirmed={guestInformationConfirmed}
                             bind:specialRequests={specialRequests} 
-                            bind:name={name}
-                            bind:nameError={nameError}
+                            bind:firstName={first_name}
+                            bind:lastName={last_name}
+                            bind:firstNameError={firstNameError}
+                            bind:LastNameError={lastNameError}
                             bind:phone={phone}
                             bind:phoneError={phoneError}
                             bind:email={email}

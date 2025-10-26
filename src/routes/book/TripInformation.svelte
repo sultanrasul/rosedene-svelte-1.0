@@ -12,6 +12,8 @@
     let tooltipText = "Copy reference";
     let active = false;
 
+    console.log(startDate)
+
     export let adults = 1;
     export let children = 0;
     export let childrenAges = [];

@@ -80,7 +80,7 @@
             <div class="flex-1 relative">
                 <label class="block text-sm font-medium mb-2 text-white">Email</label>
                 <input
-                type="email"
+                type="Email"
                 bind:value={email}
                 on:input={() => { 
                     emailError = ''; 
