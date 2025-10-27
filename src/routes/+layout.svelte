@@ -85,7 +85,7 @@
 
 {#if show}
 	<div on:introend={initPackages}>
-		<!-- <slot/> -->
+		<slot/>
 	</div>
 {/if}
 
